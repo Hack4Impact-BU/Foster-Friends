@@ -12,16 +12,20 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Foster Friends',
       home: Container(
-        decoration: BoxDecoration(color: Colors.white),
-        child: Center(
-          child: Text('Foster Friends',
-            textDirection: TextDirection.ltr,
-            style: TextStyle(
-              fontSize: 32,
-              color: Colors.red,
-              decoration: TextDecoration.none
-            )),
-          )
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Center(
+              child: Text('Foster Friends', 
+                style: TextStyle(
+                  fontSize: 32,
+                  color: Colors.red,
+                  decoration: TextDecoration.none
+                ))
+            ),
+          ],
+        ),
+        color: Colors.white,
       )
     );
   }
