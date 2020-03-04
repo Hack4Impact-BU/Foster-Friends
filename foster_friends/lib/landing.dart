@@ -18,7 +18,6 @@ class MyApp extends StatelessWidget {
                     child: Text('Foster Friends',
                         style: TextStyle(
                             fontSize: 50,
-                            color: Colors.red,
                             decoration: TextDecoration.none))),
               ),
               Padding(
@@ -32,9 +31,8 @@ class MyApp extends StatelessWidget {
                         child: Text("Log In",
                             style: TextStyle(
                                 fontSize: 18,
-                                color: Colors.white,
                                 fontWeight: FontWeight.bold)),
-                        color: Colors.black)),
+                                )),
               ),
               Padding(
                   padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -44,12 +42,10 @@ class MyApp extends StatelessWidget {
                           child: Text("Sign Up",
                               style: TextStyle(
                                   fontSize: 18,
-                                  color: Colors.white,
                                   fontWeight: FontWeight.bold)),
-                          color: Colors.red))),
+                          ))),
             ],
           ),
-          color: Colors.white,
         ));
   }
 }

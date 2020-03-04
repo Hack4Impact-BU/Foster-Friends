@@ -8,6 +8,7 @@ import './landing.dart';
 
 void main() => runApp(MaterialApp(
   title: 'Navigation',
+  theme: ThemeData.dark(),
   initialRoute: '/',
   routes: {
     '/': (context) => MyApp(),
