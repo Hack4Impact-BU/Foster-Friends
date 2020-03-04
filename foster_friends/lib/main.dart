@@ -12,13 +12,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'Foster Friends',
         home: Container(
+          // padding: EdgeInsets.,
           child: Column(
             // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             // mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(bottom: 40.0),
+                padding: EdgeInsets.only(bottom: 0.0),
                 child: Center(
                     child: Text('Foster Friends',
                         style: TextStyle(
@@ -26,31 +27,29 @@ class MyApp extends StatelessWidget {
                             color: Colors.red,
                             decoration: TextDecoration.none))),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                // crossAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: Center(
-                        child: RaisedButton(
-                            onPressed: () {},
-                            child: Text("Log In",
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.white)),
-                            color: Colors.black)),
-                  ),
-                  Padding(
-                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Center(
-                          child: RaisedButton(
-                              onPressed: () {},
-                              child: Text("Sign Up",
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.white)),
-                              color: Colors.red))),
-                ],
-              )
+              Padding(
+                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: Center(
+                    child: RaisedButton(
+                        onPressed: () {print("Pressed Log In");},
+                        child: Text("Log In",
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold)),
+                        color: Colors.black)),
+              ),
+              Padding(
+                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: Center(
+                      child: RaisedButton(
+                          onPressed: () {print("Pressed Sign up");},
+                          child: Text("Sign Up",
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold)),
+                          color: Colors.red))),
             ],
           ),
           color: Colors.white,
