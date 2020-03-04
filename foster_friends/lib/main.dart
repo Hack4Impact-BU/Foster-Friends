@@ -3,8 +3,16 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import './login.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(MaterialApp(
+  title: 'Navigation',
+  initialRoute: '/',
+  routes: {
+    '/': (context) => MyApp(),
+    '/LogIn': (BuildContext context) => new LogIn()
+  }
+));
 
 class MyApp extends StatelessWidget {
   @override
@@ -31,7 +39,10 @@ class MyApp extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: Center(
                     child: RaisedButton(
-                        onPressed: () {print("Pressed Log In");},
+                        onPressed: () {
+                          print("Pressed Log In");
+                          Navigator.pushNamed(  context, '/LogIn');
+                          },
                         child: Text("Log In",
                             style: TextStyle(
                                 fontSize: 18,
