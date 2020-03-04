@@ -12,17 +12,41 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Foster Friends',
       home: Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          // mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Center(
               child: Text('Foster Friends', 
                 style: TextStyle(
-                  fontSize: 32,
+                  fontSize: 50,
                   color: Colors.red,
                   decoration: TextDecoration.none
                 ))
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              // crossAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Center(child: RaisedButton(
+                  onPressed: () {},
+                  child: Text("Log In", style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white
+                  )),
+                  color: Colors.black
+                  )),
+                Center(child: RaisedButton(
+                  onPressed: () {},
+                  child: Text("Sign Up", style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white
+                  )),
+                  color: Colors.red
+                  ))
+              ],
+            )
           ],
         ),
         color: Colors.white,
