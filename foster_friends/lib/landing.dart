@@ -17,10 +17,13 @@ class MyApp extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: 0.0),
                 child: Center(
                     child: Text('Foster Friends',
-                        style: TextStyle(
-                            fontSize: 50,
-                            decoration: TextDecoration.none,
-                            color: Theme.of(context).accentColor))),
+                        style: Theme.of(context).textTheme.headline
+                        // TextStyle(
+                        //     fontSize: Theme.of(context).,
+                        //     decoration: TextDecoration.none,
+                        //     color: Theme.of(context).accentColor)
+                            )
+                            ),
               ),
               Padding(
                 padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
