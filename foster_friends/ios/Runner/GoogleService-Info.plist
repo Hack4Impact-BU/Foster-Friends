@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>366301121640-fd5a8oin1gr11q6c0nggfrdgreqe7oa6.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.366301121640-fd5a8oin1gr11q6c0nggfrdgreqe7oa6</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAYT0dVGzSYICNChRPO4pflDuStd9HaIq4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>366301121640</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.h4ibu.fosterFriends</string>
+	<key>PROJECT_ID</key>
+	<string>foster-friends</string>
+	<key>STORAGE_BUCKET</key>
+	<string>foster-friends.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:366301121640:ios:f59f971f29419c974effdd</string>
+	<key>DATABASE_URL</key>
+	<string>https://foster-friends.firebaseio.com</string>
+</dict>
+</plist>
