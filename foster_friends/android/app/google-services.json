@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "366301121640",
+    "firebase_url": "https://foster-friends.firebaseio.com",
+    "project_id": "foster-friends",
+    "storage_bucket": "foster-friends.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:366301121640:android:ebf3e0b68db2478b4effdd",
+        "android_client_info": {
+          "package_name": "com.example.foster_friends"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "366301121640-uh3ag6sfo2an3oqstqi2oa0r24r7ci94.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBRIxjGONJgDgtYw_HUxj5_BgVFNQAOBM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "366301121640-uh3ag6sfo2an3oqstqi2oa0r24r7ci94.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "366301121640-fd5a8oin1gr11q6c0nggfrdgreqe7oa6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.h4ibu.fosterFriends"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
