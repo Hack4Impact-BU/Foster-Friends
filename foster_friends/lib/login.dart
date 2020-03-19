@@ -24,33 +24,53 @@ class LogInState extends State<LogIn> {
     return Form(
         key: _formKey,
         child: Scaffold(
-            body: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-              TextFormField(
-                  decoration: const InputDecoration(
-                    hintText: 'Enter your email',
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter your username';
-                    }
-                    return null;
-                  }),
+            body: Container(
+                margin: EdgeInsets.all(20),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      TextFormField(
+                          decoration: const InputDecoration(
+                            hintText: 'Enter your email',
+                          ),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter your email';
+                            }
+                            return null;
+                          }),
 
-              TextFormField(
-                  decoration: const InputDecoration(
-                    hintText: 'Enter your email',
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    return null;
-                  }),
+                      TextFormField(
+                          decoration: const InputDecoration(
+                            hintText: 'Enter your password',
+                          ),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter your password';
+                            }
+                            return null;
+                          }),
+                      Padding(
+                          padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
+                          child: Center(
+                              child: RaisedButton(
+                            color: Theme.of(context).buttonColor,
+                            onPressed: () {
+                              // Validate returns true if the form is valid, otherwise false.
+                              if (_formKey.currentState.validate()) {
+                                // If the form is valid, print valid on console
+                                print("Valid!");
+                              }
+                            },
+                            child: Text("Log In",
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).backgroundColor)),
+                          ))),
 
-              // Add TextFormFields and RaisedButton here.
-            ])));
+                      // Add TextFormFields and RaisedButton here.
+                    ]))));
   }
 }
 
