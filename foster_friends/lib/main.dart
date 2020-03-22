@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import './login.dart';
 import './landing.dart';
 import './search.dart';
-import './signup.dart'
+import './signup.dart';
 
 void main() => runApp(MaterialApp(
   title: 'Navigation',
