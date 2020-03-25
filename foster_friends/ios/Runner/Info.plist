@@ -41,5 +41,19 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>LSApplicationCategoryType</key>
+	<string>&lt;key&gt;CFBundleURLTypes&lt;/key&gt;
+&lt;array&gt;
+	&lt;dict&gt;
+		&lt;key&gt;CFBundleTypeRole&lt;/key&gt;
+		&lt;string&gt;Editor&lt;/string&gt;
+		&lt;key&gt;CFBundleURLSchemes&lt;/key&gt;
+		&lt;array&gt;
+			&lt;!-- TODO Replace this value: --&gt;
+			&lt;!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID --&gt;
+			&lt;string&gt;com.googleusercontent.apps.861823949799-vc35cprkp249096uujjn0vvnmcvjppkn&lt;/string&gt;
+		&lt;/array&gt;
+	&lt;/dict&gt;
+&lt;/array&gt;</string>
 </dict>
 </plist>

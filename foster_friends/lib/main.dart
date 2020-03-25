@@ -7,6 +7,7 @@ import './login.dart';
 import './landing.dart';
 import './search.dart';
 import './signup.dart';
+import 'package:foster_friends/login_page.dart';
 
 void main() => runApp(MaterialApp(
   title: 'Navigation',
@@ -32,7 +33,7 @@ void main() => runApp(MaterialApp(
 
   initialRoute: '/',
   routes: {
-    '/': (context) => MyApp(),
+    '/': (context) => LoginPage(),
     '/LogIn': (BuildContext context) => new LogIn(),
     '/SignUp': (BuildContext context) => new SignUp(),
     '/Search': (BuildContext context) => new Search()
