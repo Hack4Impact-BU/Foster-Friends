@@ -1,8 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:foster_friends/sign_in.dart';
 
-import 'first_screen.dart';
+import 'badProfile.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -41,16 +40,15 @@ class _LoginPageState extends State<LoginPage> {
         //         return FirstScreen();
         //       }
         //     ));
-              
+
         signInWithGoogle().whenComplete(() {
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(
-          //     builder: (context) {
-          //       return FirstScreen();
-          //     },
-        //     ),
-        //   );
-        print("Done");
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return BadProfile();
+              },
+              ),
+            );
         });
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
@@ -72,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                   color: Colors.grey,
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
