@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:foster_friends/login_page.dart';
-import 'package:foster_friends/sign_in.dart';
+import 'package:foster_friends/google.dart';
 
 class FirstScreen extends StatelessWidget {
   @override

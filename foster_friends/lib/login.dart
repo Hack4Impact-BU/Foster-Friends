@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import './loginEmail.dart';
 
-// Define a custom Form widget.
+// Unused, Gmail button migrated to login_page
 class LogIn extends StatefulWidget {
   @override
   LogInState createState() {

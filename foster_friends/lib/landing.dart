@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+// Default landing page with buttons to different pages, currently unused
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
