@@ -33,7 +33,7 @@ void main() => runApp(MaterialApp(
 
   initialRoute: '/',
   routes: {
-    '/': (context) => LoginPage(),
+    '/': (context) => Search(),
     '/LogIn': (BuildContext context) => new LogIn(),
     '/SignUp': (BuildContext context) => new SignUp(),
     '/Search': (BuildContext context) => new Search()
