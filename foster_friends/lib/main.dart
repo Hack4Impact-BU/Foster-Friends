@@ -7,7 +7,8 @@ import './login.dart';
 import './landing.dart';
 import './search.dart';
 import './signup.dart';
-import 'package:foster_friends/login_page.dart';
+
+
 
 void main() => runApp(MaterialApp(
   title: 'Navigation',

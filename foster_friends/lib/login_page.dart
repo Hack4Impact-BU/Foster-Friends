@@ -22,6 +22,13 @@ class _LoginPageState extends State<LoginPage> {
               FlutterLogo(size: 150),
               SizedBox(height: 50),
               _signInButton(),
+              Padding(
+                  padding: EdgeInsets.all(20),
+                  child: RaisedButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/');
+                      },
+                      child: Text("Go Back")))
             ],
           ),
         ),
@@ -34,21 +41,8 @@ class _LoginPageState extends State<LoginPage> {
       splashColor: Colors.grey,
       onPressed: () {
         print('Pressed');
-        // Navigator.of(context).push(
-        //     MaterialPageRoute(
-        //       builder: (context) {
-        //         return FirstScreen();
-        //       }
-        //     ));
-
-        signInWithGoogle().whenComplete(() {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return BadProfile();
-              },
-              ),
-            );
+        signInWithGoogle().then((user) {
+          Navigator.of(context).pushNamed('/');
         });
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),

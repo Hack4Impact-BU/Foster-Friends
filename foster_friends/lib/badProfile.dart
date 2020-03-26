@@ -1,19 +1,26 @@
-
 import 'package:flutter/material.dart';
 import 'package:foster_friends/login_page.dart';
 import 'package:foster_friends/sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+String photoUrl = '';
+String displayName = '';
+String email = '';
 
 class BadProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    _getUser();// make wait
+    print('User is: ' + displayName);
+
     return Scaffold(
       body: Container(
         // decoration: BoxDecoration(
-          // gradient: LinearGradient(
-          //   begin: Alignment.topRight,
-          //   end: Alignment.bottomLeft,
-          //   colors: [Colors.blue[100], Colors.blue[400]],
-          // ),
+        // gradient: LinearGradient(
+        //   begin: Alignment.topRight,
+        //   end: Alignment.bottomLeft,
+        //   colors: [Colors.blue[100], Colors.blue[400]],
+        // ),
         // ),
         child: Center(
           child: Column(
@@ -22,7 +29,7 @@ class BadProfile extends StatelessWidget {
             children: <Widget>[
               CircleAvatar(
                 backgroundImage: NetworkImage(
-                  imageUrl,
+                  photoUrl.toString(),
                 ),
                 radius: 60,
                 backgroundColor: Colors.transparent,
@@ -36,7 +43,7 @@ class BadProfile extends StatelessWidget {
                     color: Colors.black54),
               ),
               Text(
-                name,
+                displayName,
                 style: TextStyle(
                     fontSize: 25,
                     color: Colors.deepPurple,
@@ -60,8 +67,9 @@ class BadProfile extends StatelessWidget {
               SizedBox(height: 40),
               RaisedButton(
                 onPressed: () {
+                  print('Pressed signout');
                   signOutGoogle();
-                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) {return LoginPage();}), ModalRoute.withName('/'));
+                  Navigator.of(context).pushNamed('/');
                 },
                 color: Colors.deepPurple,
                 child: Container(
@@ -80,5 +88,16 @@ class BadProfile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _getUser() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    auth.currentUser().then((firebaseUser) {
+      if(firebaseUser != null){
+        displayName  =firebaseUser.displayName;
+        photoUrl = firebaseUser.photoUrl;
+        email = firebaseUser.email;
+      }
+    });
   }
 }
