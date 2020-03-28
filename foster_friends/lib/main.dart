@@ -7,6 +7,7 @@ import './login.dart';
 import './landing.dart';
 import './search.dart';
 import './signup.dart';
+import './uploadPet.dart';
 
 void main() => runApp(MaterialApp(
   title: 'Navigation',
@@ -35,7 +36,8 @@ void main() => runApp(MaterialApp(
     '/': (context) => MyApp(),
     '/LogIn': (BuildContext context) => new LogIn(),
     '/SignUp': (BuildContext context) => new SignUp(),
-    '/Search': (BuildContext context) => new Search()
+    '/Search': (BuildContext context) => new Search(),
+    '/UploadPet': (BuildContext context) => new UploadPet()
   }
 ));
 
