@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:foster_friends/redirect.dart';
-import './login.dart';
+import './login_page.dart';
 import './landing.dart';
 import './search.dart';
 import './signup.dart';
@@ -40,8 +40,8 @@ void main() => runApp(MaterialApp(
 
   initialRoute: '/',
   routes: {
-    '/': (context) => LoginPage(),
-    '/LogIn': (BuildContext context) => new LogIn(),
+    '/': (context) => MyApp(),
+    '/LogIn': (BuildContext context) => new LoginPage(),
     '/Redirect': (BuildContext context) => new Redirect(auth: new Auth()),
     '/SignUp': (BuildContext context) => new SignUp(),
     '/Search': (BuildContext context) => new Search(),

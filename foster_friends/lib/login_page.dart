@@ -1,9 +1,6 @@
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:foster_friends/google.dart';
-
-import 'first_screen.dart';
 
 // Current default page, includes google, email, and gmail sign in
 

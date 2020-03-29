@@ -4,7 +4,7 @@ import 'package:foster_friends/login_page.dart';
 import 'package:foster_friends/google.dart';
 
 // Unused, not landing screen
-class FirstScreen extends StatelessWidget {
+class BadProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
