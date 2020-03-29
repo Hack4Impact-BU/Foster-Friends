@@ -71,8 +71,39 @@ class MyApp extends StatelessWidget {
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Theme.of(context).backgroundColor)),
-                                )),
-              ),
+                                ))),
+              Padding(
+                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: Center(
+                    child: RaisedButton(
+                      color: Theme.of(context).buttonColor,
+                        onPressed: () {
+                          print("Pressed Upload Pet");
+                          Navigator.pushNamed(  context, '/UploadPet');
+                          },
+                        
+                        child: Text("Upload Pet",
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).backgroundColor)),
+                                ))),
+              Padding(
+                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: Center(
+                    child: RaisedButton(
+                      color: Theme.of(context).buttonColor,
+                        onPressed: () {
+                          print("Pressed org");
+                          Navigator.pushNamed(  context, '/Org_Profile');
+                          },
+                        
+                        child: Text("Org Profile",
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).backgroundColor)),
+                                ))),
             ],
           ),
         ));
