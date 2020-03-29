@@ -46,8 +46,8 @@ void main() => runApp(MaterialApp(
     '/SignUp': (BuildContext context) => new SignUp(),
     '/Search': (BuildContext context) => new Search(),
     '/UploadPet': (BuildContext context) => new UploadPet(),
-    '/Org_Profile' : (BuildContext context) => new Org_Profile(),
-    '/Pet_Profile' : (BuildContext context) => new Pet_Profile()
+    '/Org_Profile' : (BuildContext context) => new OrgProfile(),
+    '/Pet_Profile' : (BuildContext context) => new PetProfile()
   }
 ));
 
