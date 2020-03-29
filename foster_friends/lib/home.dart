@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import './authentication.dart';
+
+// Blank home page as a stand in for login redirects
+
 class Home extends StatefulWidget {
   Home({Key key, this.auth, this.userId, this.logoutCallback}) : super(key: key);
 

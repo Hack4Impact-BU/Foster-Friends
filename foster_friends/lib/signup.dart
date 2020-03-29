@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import './authentication.dart';
 
-// Define a custom Form widget.
+// Email login and sign up page
+
 class SignUp extends StatefulWidget {
   SignUp({this.auth, this.loginCallback});
 

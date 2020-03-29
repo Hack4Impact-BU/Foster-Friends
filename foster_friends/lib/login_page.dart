@@ -5,6 +5,8 @@ import 'package:foster_friends/google.dart';
 
 import 'first_screen.dart';
 
+// Current default page, includes google, email, and gmail sign in
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();

@@ -3,13 +3,14 @@ import './authentication.dart';
 import './signup.dart';
 import './home.dart';
 
+// Redirects user based on AuthStatus either to signup.dart or homepage
+
 enum AuthStatus {
   NOT_DETERMINED,
   NOT_LOGGED_IN,
   LOGGED_IN,
 }
 
-// Define a custom Form widget.
 class Redirect extends StatefulWidget {
   Redirect({this.auth});
 
@@ -20,8 +21,6 @@ class Redirect extends StatefulWidget {
   }
 }
 
-// Define a corresponding State class.
-// This class holds data related to the form.
 class RedirectState extends State<Redirect> {
   AuthStatus authStatus = AuthStatus.NOT_DETERMINED;
   String _userId = "";
