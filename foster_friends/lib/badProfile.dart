@@ -9,7 +9,7 @@ String email = '';
 class BadProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    await _getUser(); // make wait
+    _getUser(); // make wait
     print('User is: ' + displayName);
 
     return Scaffold(
