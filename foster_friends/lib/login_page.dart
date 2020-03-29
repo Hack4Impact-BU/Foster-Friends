@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:foster_friends/sign_in.dart';
 
-import 'badProfile.dart';
+import 'package:flutter/material.dart';
+import 'package:foster_friends/google.dart';
+import 'package:foster_friends/first_screen.dart';
+
+// Current default page, includes google, email, and gmail sign in
 
 class LoginPage extends StatefulWidget {
   @override
@@ -21,14 +23,11 @@ class _LoginPageState extends State<LoginPage> {
             children: <Widget>[
               FlutterLogo(size: 150),
               SizedBox(height: 50),
-              _signInButton(),
-              Padding(
-                  padding: EdgeInsets.all(20),
-                  child: RaisedButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamed('/');
-                      },
-                      child: Text("Go Back")))
+              _gsignInButton(),
+              SizedBox(height: 25),
+              _gmsignInButton(),
+              SizedBox(height: 25),
+              _esignInButton(),
             ],
           ),
         ),
@@ -36,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _signInButton() {
+  Widget _gsignInButton() {
     return OutlineButton(
       splashColor: Colors.grey,
       onPressed: () {
@@ -65,6 +64,81 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _gmsignInButton() {
+    return OutlineButton(
+      splashColor: Colors.grey,
+      onPressed: () {
+        print('Pressed');
+        signInWithGoogle().whenComplete(() {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return FirstScreen();
+              },
+            ),
+          );
+        print("Done");
+        });
+      },
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+      highlightElevation: 0,
+      borderSide: BorderSide(color: Colors.grey),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image(image: AssetImage("assets/gmail.ico"), height: 35.0),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(
+                'Sign in with Gmail',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.grey,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _esignInButton() {
+    return OutlineButton(
+      splashColor: Colors.grey,
+      onPressed: () {
+        print('Pressed');
+        Navigator.pushNamed(  context, '/Redirect');
+      },
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+      highlightElevation: 0,
+      borderSide: BorderSide(color: Colors.grey),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(Icons.email, size:35.0),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(
+                'Sign in with Email',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.grey,
+                ),
+              ),
+            )
           ],
         ),
       ),

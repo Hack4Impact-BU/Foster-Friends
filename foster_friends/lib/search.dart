@@ -5,6 +5,7 @@ import 'package:foster_friends/login_page.dart';
 import './badProfile.dart';
 
 FirebaseUser user;
+
 // main application build
 class Search extends StatelessWidget {
   static const String _title = 'Flutter Code Sample';

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import './loginEmail.dart';
+import './uploadPetForm.dart';
 
-// Unused, Gmail button migrated to login_page
-class LogIn extends StatefulWidget {
+// Define a custom Form widget.
+class UploadPet extends StatefulWidget {
   @override
-  LogInState createState() {
-    return LogInState();
+  UploadPetState createState() {
+    return UploadPetState();
   }
 }
 
 // Define a corresponding State class.
 // This class holds data related to the form.
-class LogInState extends State<LogIn> {
+class UploadPetState extends State<UploadPet> {
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
@@ -22,9 +22,8 @@ class LogInState extends State<LogIn> {
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      LogInEmail(),
-                      Padding(padding: EdgeInsets.all(10),
-                       child: Text( "OR")),
+                      UploadPetForm(),
+                      
                       Padding(
                           padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                           child: Center(
@@ -33,7 +32,7 @@ class LogInState extends State<LogIn> {
                             onPressed: () {
                               // Validate returns true if the form is valid, otherwise false.
                             },
-                            child: Text("Log In with Gmail",
+                            child: Text("Submit",
                                 style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,

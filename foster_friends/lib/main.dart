@@ -3,11 +3,17 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:foster_friends/redirect.dart';
 import './login.dart';
 import './landing.dart';
 import './search.dart';
 import './signup.dart';
 
+import './authentication.dart';
+import 'package:foster_friends/login_page.dart';
+import './uploadPet.dart';
+import './org_profile.dart';
+import './pet_profile.dart';
 
 
 void main() => runApp(MaterialApp(
@@ -36,8 +42,12 @@ void main() => runApp(MaterialApp(
   routes: {
     '/': (context) => Search(),
     '/LogIn': (BuildContext context) => new LogIn(),
+    '/Redirect': (BuildContext context) => new Redirect(auth: new Auth()),
     '/SignUp': (BuildContext context) => new SignUp(),
-    '/Search': (BuildContext context) => new Search()
+    '/Search': (BuildContext context) => new Search(),
+    '/UploadPet': (BuildContext context) => new UploadPet(),
+    '/Org_Profile' : (BuildContext context) => new Org_Profile(),
+    '/Pet_Profile' : (BuildContext context) => new Pet_Profile()
   }
 ));
 
