@@ -1,6 +1,8 @@
 //import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flutter/material.dart';
 
+// Empty search page
+
 class Search extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
