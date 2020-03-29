@@ -1,9 +1,7 @@
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:foster_friends/google.dart';
-
-import 'first_screen.dart';
+import 'package:foster_friends/first_screen.dart';
 
 // Current default page, includes google, email, and gmail sign in
 
@@ -42,22 +40,8 @@ class _LoginPageState extends State<LoginPage> {
       splashColor: Colors.grey,
       onPressed: () {
         print('Pressed');
-        // Navigator.of(context).push(
-        //     MaterialPageRoute(
-        //       builder: (context) {
-        //         return FirstScreen();
-        //       }
-        //     ));
-              
-        signInWithGoogle().whenComplete(() {
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(
-          //     builder: (context) {
-          //       return FirstScreen();
-          //     },
-        //     ),
-        //   );
-        print("Done");
+        signInWithGoogle().then((user) {
+          Navigator.of(context).pushNamed('/');
         });
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
@@ -79,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
                   color: Colors.grey,
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -91,23 +75,16 @@ class _LoginPageState extends State<LoginPage> {
       splashColor: Colors.grey,
       onPressed: () {
         print('Pressed');
-        // Navigator.of(context).push(
-        //     MaterialPageRoute(
-        //       builder: (context) {
-        //         return FirstScreen();
-        //       }
-        //     ));
-              
-        // signInWithGoogle().whenComplete(() {
-        //   // Navigator.of(context).push(
-        //   //   MaterialPageRoute(
-        //   //     builder: (context) {
-        //   //       return FirstScreen();
-        //   //     },
-        // //     ),
-        // //   );
-        // print("Done");
-        // });
+        signInWithGoogle().whenComplete(() {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return FirstScreen();
+              },
+            ),
+          );
+        print("Done");
+        });
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       highlightElevation: 0,
