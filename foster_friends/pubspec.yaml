@@ -52,6 +52,7 @@ flutter:
   assets:
     - dog.png
     - google_logo.png
+    - logo.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

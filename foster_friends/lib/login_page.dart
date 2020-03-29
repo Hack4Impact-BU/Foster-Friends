@@ -21,11 +21,9 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              FlutterLogo(size: 150),
+              Image(image: AssetImage('assets/logo.png')),
               SizedBox(height: 50),
               _gsignInButton(),
-              SizedBox(height: 25),
-              _gmsignInButton(),
               SizedBox(height: 25),
               _esignInButton(),
             ],
@@ -65,55 +63,6 @@ class _LoginPageState extends State<LoginPage> {
               padding: const EdgeInsets.only(left: 10),
               child: Text(
                 'Sign in with Google',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.grey,
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _gmsignInButton() {
-    return OutlineButton(
-      splashColor: Colors.grey,
-      onPressed: () {
-        print('Pressed');
-        // Navigator.of(context).push(
-        //     MaterialPageRoute(
-        //       builder: (context) {
-        //         return FirstScreen();
-        //       }
-        //     ));
-              
-        // signInWithGoogle().whenComplete(() {
-        //   // Navigator.of(context).push(
-        //   //   MaterialPageRoute(
-        //   //     builder: (context) {
-        //   //       return FirstScreen();
-        //   //     },
-        // //     ),
-        // //   );
-        // print("Done");
-        // });
-      },
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-      highlightElevation: 0,
-      borderSide: BorderSide(color: Colors.grey),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image(image: AssetImage("assets/google_logo.png"), height: 35.0),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Text(
-                'Sign in with Gmail',
                 style: TextStyle(
                   fontSize: 20,
                   color: Colors.grey,
