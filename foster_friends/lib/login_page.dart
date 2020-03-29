@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:foster_friends/google.dart';
+import 'package:foster_friends/search.dart';
 
 // Current default page, includes google, email, and gmail sign in
 
@@ -39,21 +40,14 @@ class _LoginPageState extends State<LoginPage> {
       splashColor: Colors.grey,
       onPressed: () {
         print('Pressed');
-        // Navigator.of(context).push(
-        //     MaterialPageRoute(
-        //       builder: (context) {
-        //         return FirstScreen();
-        //       }
-        //     ));
-              
         signInWithGoogle().whenComplete(() {
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(
-          //     builder: (context) {
-          //       return FirstScreen();
-          //     },
-        //     ),
-        //   );
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return Search();
+              },
+            ),
+          );
         print("Done");
         });
       },
@@ -115,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image(image: AssetImage("assets/gmail.ico"), height: 35.0),
+            Image(image: AssetImage("assets/google_logo.png"), height: 35.0),
             Padding(
               padding: const EdgeInsets.only(left: 10),
               child: Text(

@@ -38,12 +38,10 @@ class _SearchState extends State<SearchState> {
     ),
     LoginPage(),
     BadProfile()
-    // BadProfile()
   ];
 
   void _onItemTapped(int index) {
     setState(() {
-      // print('index'+index.toString());
       _selectedIndex = index;
     });
   }
