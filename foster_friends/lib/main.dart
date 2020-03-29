@@ -8,6 +8,8 @@ import './landing.dart';
 import './search.dart';
 import './signup.dart';
 import './uploadPet.dart';
+import './org_profile.dart';
+import './pet_profile.dart';
 
 void main() => runApp(MaterialApp(
   title: 'Navigation',
@@ -37,7 +39,9 @@ void main() => runApp(MaterialApp(
     '/LogIn': (BuildContext context) => new LogIn(),
     '/SignUp': (BuildContext context) => new SignUp(),
     '/Search': (BuildContext context) => new Search(),
-    '/UploadPet': (BuildContext context) => new UploadPet()
+    '/UploadPet': (BuildContext context) => new UploadPet(),
+    '/Org_Profile' : (BuildContext context) => new Org_Profile(),
+    '/Pet_Profile' : (BuildContext context) => new Pet_Profile()
   }
 ));
 
