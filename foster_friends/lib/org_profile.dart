@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 // Define a custom Form widget.
-class Org_Profile extends StatefulWidget {
+class OrgProfile extends StatefulWidget {
   @override
-  Org_state createState() {
-    return Org_state();
+  OrgState createState() {
+    return OrgState();
   }
 }
 
 
-class Org_state extends State<Org_Profile> {
+class OrgState extends State<OrgProfile> {
   @override
   Widget build(BuildContext context) {
     return Container(

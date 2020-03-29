@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foster_friends/login_page.dart';
-import 'package:foster_friends/sign_in.dart';
+import 'package:foster_friends/google.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 
 String photoUrl = '';

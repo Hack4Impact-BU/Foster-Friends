@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 // Define a custom Form widget.
-class Pet_Profile extends StatefulWidget {
+class PetProfile extends StatefulWidget {
   @override
-  Pet_state createState() {
-    return Pet_state();
+  PetState createState() {
+    return PetState();
   }
 }
 
 
-class Pet_state extends State<Pet_Profile> {
+class PetState extends State<PetProfile> {
   @override
   Widget build(BuildContext context) {
     return Container(
