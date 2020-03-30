@@ -1,7 +1,9 @@
-
 import 'package:flutter/material.dart';
+import 'package:foster_friends/authentication.dart';
 import 'package:foster_friends/google.dart';
+import 'package:foster_friends/redirect.dart';
 import 'package:foster_friends/search.dart';
+import 'package:path/path.dart' as Path;
 
 // Current default page, includes google, email, and gmail sign in
 
@@ -46,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
               },
             ),
           );
-        print("Done");
+          print("Done");
         });
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
@@ -80,7 +82,13 @@ class _LoginPageState extends State<LoginPage> {
       splashColor: Colors.grey,
       onPressed: () {
         print('Pressed');
-        Navigator.pushNamed(  context, '/Redirect');
+
+        // Navigator.pushNamed(context, '/');
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    new Redirect(auth: new Auth())));
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       highlightElevation: 0,
@@ -91,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(Icons.email, size:35.0),
+            Icon(Icons.email, size: 35.0),
             Padding(
               padding: const EdgeInsets.only(left: 10),
               child: Text(
