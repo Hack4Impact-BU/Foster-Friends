@@ -2,10 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:foster_friends/login_page.dart';
-import './badProfile.dart';
+import 'package:foster_friends/badProfile.dart';
 
 FirebaseUser user;
-
 // main application build
 class Search extends StatelessWidget {
   static const String _title = 'Flutter Code Sample';

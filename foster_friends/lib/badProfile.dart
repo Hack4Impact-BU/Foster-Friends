@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:foster_friends/google.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 
 String photoUrl = '';
@@ -10,7 +9,7 @@ String email = '';
 class BadProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    _getUser();// make wait
+    _getUser(); // make wait
     print('User is: ' + displayName);
 
     return Scaffold(
@@ -27,13 +26,13 @@ class BadProfile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              CircleAvatar(
-                backgroundImage: NetworkImage(
-                  photoUrl.toString(),
-                ),
-                radius: 60,
-                backgroundColor: Colors.transparent,
-              ),
+              // CircleAvatar(
+              //   backgroundImage: NetworkImage(
+              //     photoUrl,
+              //   ),
+              //   radius: 60,
+              //   backgroundColor: Colors.transparent,
+              // ),
               SizedBox(height: 40),
               Text(
                 'NAME',
@@ -90,14 +89,20 @@ class BadProfile extends StatelessWidget {
     );
   }
 
-  void _getUser() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    auth.currentUser().then((firebaseUser) {
-      if(firebaseUser != null){
-        displayName  =firebaseUser.displayName;
-        photoUrl = firebaseUser.photoUrl;
-        email = firebaseUser.email;
-      }
+  Future<void> _getUser() async {
+    await FirebaseAuth.instance.currentUser().then((user) {
+      print('user ' + user.displayName.toString());
+      displayName = user.displayName;
+      photoUrl = user.photoUrl;
+      email = user.email;
     });
+
+    // await auth.currentUser().then((firebaseUser) {
+    //   if(firebaseUser != null){
+    //     displayName  =firebaseUser.displayName;
+    //     photoUrl = firebaseUser.photoUrl;
+    //     email = firebaseUser.email;
+    //   }
+    // });
   }
 }
