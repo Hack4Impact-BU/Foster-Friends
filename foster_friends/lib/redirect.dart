@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import './authentication.dart';
-import './signup.dart';
+import './email.dart';
 import './home.dart';
 
 // Redirects user based on AuthStatus either to signup.dart or homepage

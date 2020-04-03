@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:foster_friends/authentication.dart';
 import 'package:foster_friends/google.dart';
 import 'package:foster_friends/redirect.dart';
-import 'package:foster_friends/search.dart';
 
 // Current default page, includes google, email, and gmail sign in
 
@@ -40,13 +39,13 @@ class _LoginPageState extends State<LoginPage> {
       onPressed: () {
         print('Pressed');
         signInWithGoogle().whenComplete(() {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return Search();
-              },
-            ),
-          );
+          // Navigator.of(context).push(
+          //   MaterialPageRoute(
+          //     builder: (context) {
+          //       return Search();
+          //     },
+          //   ),
+          // );
           print("Done");
         });
       },

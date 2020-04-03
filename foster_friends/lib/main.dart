@@ -7,7 +7,7 @@ import 'package:foster_friends/redirect.dart';
 import './login_page.dart';
 import './landing.dart';
 import './search.dart';
-import './signup.dart';
+import './email.dart';
 
 import './authentication.dart';
 // import 'package:foster_friends/login_page.dart';
