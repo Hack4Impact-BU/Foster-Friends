@@ -3,7 +3,6 @@ import 'package:foster_friends/authentication.dart';
 import 'package:foster_friends/google.dart';
 import 'package:foster_friends/redirect.dart';
 import 'package:foster_friends/search.dart';
-import 'package:path/path.dart' as Path;
 
 // Current default page, includes google, email, and gmail sign in
 
