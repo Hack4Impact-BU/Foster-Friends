@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -14,33 +13,25 @@ String error;
 Future<String> signInWithGoogle() async {
   print('In signInWithGoogle');
   GoogleSignInAccount _googleSignInAccount;
-  try{
+  try {
     _googleSignInAccount = await googleSignIn.signIn();
-  } catch(e){
+    final GoogleSignInAuthentication googleSignInAuthentication =
+        await _googleSignInAccount.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleSignInAuthentication.accessToken,
+      idToken: googleSignInAuthentication.idToken,
+    );
+    await _auth.signInWithCredential(credential);
+  } catch (e) {
     print('Error $e');
-    error = e;
+    error = 'Google Sign In Error. Please Try Again.';
   }
-  
-   
-  final GoogleSignInAuthentication googleSignInAuthentication =
-      await _googleSignInAccount.authentication;
 
-  final AuthCredential credential = GoogleAuthProvider.getCredential(
-    accessToken: googleSignInAuthentication.accessToken,
-    idToken: googleSignInAuthentication.idToken,
-  );
-
-
-  final AuthResult authResult = await _auth.signInWithCredential(credential);
-  final FirebaseUser user = authResult.user;
-
-  print('Signed into firebase');
-  print('User');
-  print(user.toString());
-  
   return error;
 }
-void signOutGoogle() async{
+
+void signOutGoogle() async {
   await googleSignIn.signOut();
   await FirebaseAuth.instance.signOut();
   print("User Sign Out");

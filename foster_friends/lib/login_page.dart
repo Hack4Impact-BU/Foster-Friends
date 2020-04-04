@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
               _gsignInButton(),
               SizedBox(height: 25),
               _esignInButton(),
-              showErrorMessage()
+              Padding(padding: EdgeInsets.fromLTRB(0, 50, 0, 0), child: showErrorMessage())
             ],
           ),
         ),
@@ -43,8 +43,12 @@ class _LoginPageState extends State<LoginPage> {
       onPressed: () {
         print('Pressed');
         signInWithGoogle().then((e) {
-          _errorMessage = e;
-          print("Done with $_errorMessage");
+          
+          print("Done with $e");
+          setState(() {
+            _errorMessage = e;
+          });
+          
         });
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
