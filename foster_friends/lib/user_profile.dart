@@ -14,13 +14,33 @@ class UserState extends State<UserProfile>{
     return Scaffold(
       body: ListView(
         children: <Widget>[
+          Container(child: Column(
+            children: <Widget>[
+              SizedBox(height: 20,),
+              CircleAvatar(
+                radius:70,
+                backgroundImage: NetworkImage("https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50"),
+              ),
+              SizedBox(height: 20,),
+              Text("John Doe", style: TextStyle(fontWeight: FontWeight.w600, fontSize:20)),
+              SizedBox(height: 10,),
+              Container(margin: EdgeInsets.symmetric(horizontal: 16), child: Column(children: <Widget>[
+                Text("Psychiatrist, pet lover, dogs > cat, looking for a pet to impress my girl", style: TextStyle(fontSize:18)),
+                SizedBox(height:15,),
+                Text("johndoe@gmail.com", style: TextStyle(fontSize:18)),
+                Text("626-215-2500", style: TextStyle(fontSize:18)),
+              ],))
+            ],
+            )
+          ),
+          SizedBox(height: 40,),
           Container(child: Wrap(
             children: <Widget>[
               for(int i=0; i<5; i++)
                 Container(
-                  height: 110,
-                  width: 110,
-                  decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/dog.png"))),
+                  height: MediaQuery.of(context).size.width/3,
+                  width: MediaQuery.of(context).size.width/3,
+                  decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/dog.png"), fit: BoxFit.cover)),
                 )
             ],
             )
