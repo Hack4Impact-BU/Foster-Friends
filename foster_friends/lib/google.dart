@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -9,48 +8,30 @@ String name;
 String email;
 String imageUrl;
 
-Future<FirebaseUser> signInWithGoogle() async {
+String error;
+
+Future<String> signInWithGoogle() async {
   print('In signInWithGoogle');
-  final GoogleSignInAccount _googleSignInAccount = await googleSignIn.signIn();
-  final GoogleSignInAuthentication googleSignInAuthentication =
-      await _googleSignInAccount.authentication;
+  GoogleSignInAccount _googleSignInAccount;
+  try {
+    _googleSignInAccount = await googleSignIn.signIn();
+    final GoogleSignInAuthentication googleSignInAuthentication =
+        await _googleSignInAccount.authentication;
 
-  final AuthCredential credential = GoogleAuthProvider.getCredential(
-    accessToken: googleSignInAuthentication.accessToken,
-    idToken: googleSignInAuthentication.idToken,
-  );
-
-
-  final AuthResult authResult = await _auth.signInWithCredential(credential);
-  final FirebaseUser user = authResult.user;
-
-  print('Signed into firebase');
-  print('User');
-  print(user.toString());
-
-  // Checking if email and name is null
-  assert(user.email != null);
-  assert(user.displayName != null);
-  assert(user.photoUrl != null);
-
-  name = user.displayName;
-  email = user.email;
-  imageUrl = user.photoUrl;
-
-  // Only taking the first part of the name, i.e., First Name
-  if (name.contains(" ")) {
-    name = name.substring(0, name.indexOf(" "));
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleSignInAuthentication.accessToken,
+      idToken: googleSignInAuthentication.idToken,
+    );
+    await _auth.signInWithCredential(credential);
+  } catch (e) {
+    print('Error $e');
+    error = 'Google Sign In Error. Please Try Again.';
   }
 
-  // assert(!user.isAnonymous);
-  // assert(await user.getIdToken() != null);
-
-  final FirebaseUser currentUser = await _auth.currentUser();
-  assert(user.uid == currentUser.uid);
-  
-  return user;
+  return error;
 }
-void signOutGoogle() async{
+
+void signOutGoogle() async {
   await googleSignIn.signOut();
   await FirebaseAuth.instance.signOut();
   print("User Sign Out");
