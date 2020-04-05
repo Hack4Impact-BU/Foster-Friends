@@ -51,11 +51,13 @@ class UserState extends State<UserProfile>{
             crossAxisCount: 3,
             physics: ScrollPhysics(),
             shrinkWrap: true,
+            mainAxisSpacing: 1.5,
+            crossAxisSpacing: 1.5,
             children: <Widget>[
-              for(int i=0; i<15; i++)
+              for(int i=0; i<10; i++)
                 Container(
-                  height: MediaQuery.of(context).size.width/3,
-                  width: MediaQuery.of(context).size.width/3,
+                  // height: MediaQuery.of(context).size.width/3,
+                  // width: MediaQuery.of(context).size.width/3,
                   decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/dog.png"), fit: BoxFit.cover)),
                 )
             ],
