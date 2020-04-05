@@ -42,9 +42,8 @@ class _LoginPageState extends State<LoginPage> {
         signInWithGoogle().whenComplete(() {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) {
-                return Search();
-              },
+               builder: (BuildContext context) =>
+                    new Redirect(auth: new Auth())
             ),
           );
           print("Done");
