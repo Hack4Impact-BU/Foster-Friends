@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import './authentication.dart';
-import './email.dart';
-import './home.dart';
+import 'package:foster_friends/authentication.dart';
+import 'package:foster_friends/search.dart';
+import 'package:foster_friends/email.dart';
 
 // Redirects user based on AuthStatus either to signup.dart or homepage
 
@@ -74,7 +74,7 @@ class RedirectState extends State<Redirect> {
         break;
       case AuthStatus.LOGGED_IN:
         if(_userId.length > 0 && _userId != null) {
-          return new Home(userId: _userId, auth: widget.auth, logoutCallback: logoutCallback,);
+          return new Search();
         } else
           return buildWaitingScreen();
         break;
