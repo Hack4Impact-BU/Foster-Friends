@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:foster_friends/authentication.dart';
 import 'package:foster_friends/google.dart';
 import 'package:foster_friends/redirect.dart';
-import 'package:foster_friends/search.dart';
 
 // Current default page, includes google, email, and gmail sign in
 
@@ -12,6 +11,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  String _errorMessage='';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,6 +29,7 @@ class _LoginPageState extends State<LoginPage> {
               _gsignInButton(),
               SizedBox(height: 25),
               _esignInButton(),
+              Padding(padding: EdgeInsets.fromLTRB(0, 50, 0, 0), child: showErrorMessage())
             ],
           ),
         ),
@@ -39,14 +42,13 @@ class _LoginPageState extends State<LoginPage> {
       splashColor: Colors.grey,
       onPressed: () {
         print('Pressed');
-        signInWithGoogle().whenComplete(() {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-               builder: (BuildContext context) =>
-                    new Redirect(auth: new Auth())
-            ),
-          );
-          print("Done");
+        signInWithGoogle().then((e) {
+          
+          print("Done with $e");
+          setState(() {
+            _errorMessage = e;
+          });
+          
         });
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
@@ -79,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
     return OutlineButton(
       splashColor: Colors.grey,
       onPressed: () {
-        print('Pressed');
+        print('Pressed Email');
 
         // Navigator.pushNamed(context, '/');
         Navigator.push(
@@ -112,5 +114,22 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Widget showErrorMessage() {
+    if (_errorMessage.length > 0 && _errorMessage != null) {
+      return new Text(
+        _errorMessage,
+        style: TextStyle(
+            fontSize: 13.0,
+            color: Colors.red,
+            height: 1.0,
+            fontWeight: FontWeight.w300),
+      );
+    } else {
+      return new Container(
+        height: 0.0,
+      );
+    }
   }
 }

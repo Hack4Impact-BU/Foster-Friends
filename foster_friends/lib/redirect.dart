@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foster_friends/authentication.dart';
-import 'package:foster_friends/signup.dart';
 import 'package:foster_friends/search.dart';
+import 'package:foster_friends/email.dart';
 
 // Redirects user based on AuthStatus either to signup.dart or homepage
 

@@ -7,13 +7,14 @@ import 'package:foster_friends/redirect.dart';
 import './login_page.dart';
 import './landing.dart';
 import './search.dart';
-import './signup.dart';
+import './email.dart';
 
 import './authentication.dart';
 // import 'package:foster_friends/login_page.dart';
 import './uploadPet.dart';
 import './org_profile.dart';
 import './pet_profile.dart';
+import './user_profile.dart';
 
 
 void main() => runApp(MaterialApp(
@@ -47,7 +48,8 @@ void main() => runApp(MaterialApp(
     '/Search': (BuildContext context) => new Search(),
     '/UploadPet': (BuildContext context) => new UploadPet(),
     '/Org_Profile' : (BuildContext context) => new OrgProfile(),
-    '/Pet_Profile' : (BuildContext context) => new PetProfile()
+    '/Pet_Profile' : (BuildContext context) => new PetProfile(),
+    '/User_Profile' : (BuildContext context) => new UserProfile(),
   }
 ));
 
