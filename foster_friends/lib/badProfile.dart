@@ -41,13 +41,13 @@ class BadProfile extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.black54),
               ),
-              Text(
-                displayName,
-                style: TextStyle(
-                    fontSize: 25,
-                    color: Colors.deepPurple,
-                    fontWeight: FontWeight.bold),
-              ),
+              // Text(
+              //   displayName,
+              //   style: TextStyle(
+              //       fontSize: 25,
+              //       color: Colors.deepPurple,
+              //       fontWeight: FontWeight.bold),
+              // ),
               SizedBox(height: 20),
               Text(
                 'EMAIL',
@@ -56,13 +56,13 @@ class BadProfile extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.black54),
               ),
-              Text(
-                email,
-                style: TextStyle(
-                    fontSize: 25,
-                    color: Colors.deepPurple,
-                    fontWeight: FontWeight.bold),
-              ),
+              // Text(
+              //   email,
+              //   style: TextStyle(
+              //       fontSize: 25,
+              //       color: Colors.deepPurple,
+              //       fontWeight: FontWeight.bold),
+              // ),
               SizedBox(height: 40),
               RaisedButton(
                 onPressed: () {
