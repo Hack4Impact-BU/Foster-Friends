@@ -33,7 +33,6 @@ class UserState extends State<UserProfile>{
             ],
             )
           ),
-          SizedBox(height: 40,),
           // Container(child: Wrap(
           //   runSpacing: 1.0,
           //   spacing: 1.0,
@@ -47,6 +46,24 @@ class UserState extends State<UserProfile>{
           //   ],
           //   )
           // )
+          Padding(
+                padding: const EdgeInsets.all(8),
+                child: Center(
+                    child: OutlineButton(
+                      borderSide: BorderSide(color: Colors.grey),
+                      color: Theme.of(context).buttonColor,
+                        onPressed: () {
+                          print("Pressed edit profile");
+                          Navigator.pushNamed(  context, '/Edit_User_Profile');
+                          },
+                        
+                        child: Text("Edit Profile",
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black)),
+                                ))),
+          SizedBox(height: 40,),
           GridView.count(
             crossAxisCount: 3,
             physics: ScrollPhysics(),
