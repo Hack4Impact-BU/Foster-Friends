@@ -104,6 +104,22 @@ class MyApp extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                                 color: Theme.of(context).backgroundColor)),
                                 ))),
+              Padding(
+                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: Center(
+                    child: RaisedButton(
+                      color: Theme.of(context).buttonColor,
+                        onPressed: () {
+                          print("Pressed profile");
+                          Navigator.pushNamed(  context, '/User_Profile');
+                          },
+                        
+                        child: Text("Profile",
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).backgroundColor)),
+                                ))),
             ],
           ),
         ));
