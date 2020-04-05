@@ -34,16 +34,31 @@ class UserState extends State<UserProfile>{
             )
           ),
           SizedBox(height: 40,),
-          Container(child: Wrap(
+          // Container(child: Wrap(
+          //   runSpacing: 1.0,
+          //   spacing: 1.0,
+          //   children: <Widget>[
+          //     for(int i=0; i<8; i++)
+          //       Container(
+          //         height: MediaQuery.of(context).size.width/3,
+          //         width: MediaQuery.of(context).size.width/3,
+          //         decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/dog.png"), fit: BoxFit.cover)),
+          //       )
+          //   ],
+          //   )
+          // )
+          GridView.count(
+            crossAxisCount: 3,
+            physics: ScrollPhysics(),
+            shrinkWrap: true,
             children: <Widget>[
-              for(int i=0; i<5; i++)
+              for(int i=0; i<15; i++)
                 Container(
                   height: MediaQuery.of(context).size.width/3,
                   width: MediaQuery.of(context).size.width/3,
                   decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/dog.png"), fit: BoxFit.cover)),
                 )
             ],
-            )
           )
         ],
       ),
