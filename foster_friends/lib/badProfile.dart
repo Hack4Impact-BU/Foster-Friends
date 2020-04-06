@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foster_friends/google.dart';
-import 'package:foster_friends/authentication.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:foster_friends/authentication.dart';
 
 String photoUrl = '';
 String displayName = '';
@@ -68,8 +67,8 @@ class BadProfile extends StatelessWidget {
               RaisedButton(
                 onPressed: () {
                   print('Pressed signout');
-                  signOutGoogle();
-                  Navigator.of(context).pushNamed('/');
+                  signOut();
+                  Navigator.of(context).pop();
                 },
                 color: Colors.deepPurple,
                 child: Container(

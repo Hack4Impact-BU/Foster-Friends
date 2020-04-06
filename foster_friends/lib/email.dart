@@ -41,11 +41,11 @@ class _EmailState extends State<Email> {
       String userId = "";
       try {
         if (_isLoginForm) {
-          userId = await signIn(_email, _password);
+          userId = await emailSignIn(_email, _password);
           print('Signed in: $userId');
           Navigator.pop(context);
         } else {
-          userId = await signUp(_email, _password);
+          userId = await emailSignUp(_email, _password);
           //widget.auth.sendEmailVerification();
           //_showVerifyEmailSentDialog();
           print('Signed up user: $userId');
