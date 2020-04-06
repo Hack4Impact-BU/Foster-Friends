@@ -34,10 +34,10 @@ class MyApp extends StatelessWidget {
                       color: Theme.of(context).buttonColor,
                         onPressed: () {
                           print("Pressed Log In");
-                          Navigator.pushNamed(  context, '/LogIn');
+                          Navigator.pushNamed(  context, '/Email');
                           },
                         
-                        child: Text("Log In",
+                        child: Text("Email",
                             style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,

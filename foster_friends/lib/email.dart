@@ -3,19 +3,12 @@ import './authentication.dart';
 
 // Email login and sign up page
 
-class SignUp extends StatefulWidget {
-  SignUp({this.auth, this.loginCallback});
-
-  final BaseAuth auth;
-  final VoidCallback loginCallback;
-
+class Email extends StatefulWidget {
   @override
-  SignUpState createState() {
-    return SignUpState();
-  }
+  _EmailState createState() => _EmailState();
 }
 
-class SignUpState extends State<SignUp> {
+class _EmailState extends State<Email> {
   final _formKey = new GlobalKey<FormState>();
 
   String _email;
@@ -48,10 +41,11 @@ class SignUpState extends State<SignUp> {
       String userId = "";
       try {
         if (_isLoginForm) {
-          userId = await widget.auth.signIn(_email, _password);
+          userId = await signIn(_email, _password);
           print('Signed in: $userId');
+          Navigator.pop(context);
         } else {
-          userId = await widget.auth.signUp(_email, _password);
+          userId = await signUp(_email, _password);
           //widget.auth.sendEmailVerification();
           //_showVerifyEmailSentDialog();
           print('Signed up user: $userId');
@@ -59,10 +53,6 @@ class SignUpState extends State<SignUp> {
         setState(() {
           _isLoading = false;
         });
-
-        if (userId.length > 0 && userId != null && _isLoginForm) {
-          widget.loginCallback();
-        }
 
         setState(() {
           if(!_isLoginForm) {
