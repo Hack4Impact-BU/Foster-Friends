@@ -32,6 +32,7 @@ class UploadPetFormState extends State<UploadPetForm> {
   final petDescription = TextEditingController();
   final petName = TextEditingController();
   final petSex = TextEditingController();
+  final petActivityLevel = TextEditingController();
   final petType = TextEditingController();
   final petOrganization = TextEditingController();
 
@@ -43,6 +44,7 @@ class UploadPetFormState extends State<UploadPetForm> {
     petDescription.dispose();
     petName.dispose();
     petSex.dispose();
+    petActivityLevel.dispose();
     petType.dispose();
     petOrganization.dispose();
     super.dispose();
@@ -59,7 +61,9 @@ class UploadPetFormState extends State<UploadPetForm> {
   String _selectedPetTypes;
   String _selectedBreedTypes;
   String _selectedSex;
+  String _selectedActivityLevel;
   List<String> _sex = ['Female','Male'];
+  List<String> _activity = ['High','Medium','Low'];
 
   // -------------------------- variables for shelter name dropdown menu ----------------------------
   //List<String> _shelters = Firestore.instance.collection("organizations").getDocuments() as List<String>;
@@ -194,6 +198,23 @@ class UploadPetFormState extends State<UploadPetForm> {
         },
         // ??????????????????????? if () _breedType
         items: _sex.map((location) {
+          return DropdownMenuItem(
+            child: new Text(location),
+            value: location,
+          );
+        }).toList(),
+      ),
+      DropdownButton(
+        hint: Text('Select an Activity Level'), // Not necessary for Option 1
+        value: _selectedActivityLevel,
+        onChanged: (newValue) {
+          setState(() {
+            petActivityLevel.text = newValue;
+            _selectedActivityLevel = newValue;
+          });
+        },
+        // ??????????????????????? if () _breedType
+        items: _activity.map((location) {
           return DropdownMenuItem(
             child: new Text(location),
             value: location,
