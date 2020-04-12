@@ -7,6 +7,7 @@ import './login_page.dart';
 import './landing.dart';
 import './search.dart';
 import './email.dart';
+import './form.dart';
 
 
 import './uploadPet.dart';
@@ -43,6 +44,7 @@ void main() => runApp(MaterialApp(
     '/LogIn': (BuildContext context) => new LoginPage(),
     '/Email': (BuildContext context) => new Email(),
     '/Search': (BuildContext context) => new Search(),
+    '/Form': (BuildContext context) => new InputForm(),
     '/UploadPet': (BuildContext context) => new UploadPet(),
     '/Org_Profile' : (BuildContext context) => new OrgProfile(),
     '/Pet_Profile' : (BuildContext context) => new PetProfile(),
