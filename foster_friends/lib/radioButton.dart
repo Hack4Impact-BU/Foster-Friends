@@ -1,37 +1,49 @@
 import 'package:flutter/material.dart';
 
-enum Choices { lafayette, jefferson }
+enum UserType { individual, organization }
 
-// ...
+class RadioButton extends StatefulWidget {
+  // MyStatefulWidget({Key key}) : super(key: key);
 
-Choices _choice = Choices.lafayette;
-
-Widget build(BuildContext context) {
-  return Column(
-    children: <Widget>[
-      ListTile(
-        title: const Text('Lafayette'),
-        leading: Radio(
-          value: Choices.lafayette,
-          groupValue: _choice,
-          onChanged: (Choices value) {
-            setState(() { _choice = value; });
-          },
-        ),
-      ),
-      ListTile(
-        title: const Text('Thomas Jefferson'),
-        leading: Radio(
-          value: Choices.jefferson,
-          groupValue: _choice,
-          onChanged: (Choices value) {
-            setState(() { _choice = value; });
-          },
-        ),
-      ),
-    ],
-  );
+  @override
+  _RadioButtonState createState() => _RadioButtonState();
 }
 
-void setState(Null Function() param0) {
+class _RadioButtonState extends State<RadioButton> {
+  UserType type = UserType.individual;
+
+  TextStyle s = TextStyle(color: Colors.white);
+
+  Color pressed = Colors.red;
+  Color notPressed = Colors.grey;
+  bool isIndividual = true;
+
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        RaisedButton(onPressed: (){
+          setState((){
+            isIndividual = true;
+            type = UserType.individual;
+          });
+        },
+          color: isIndividual ? pressed : notPressed,
+          child: Text('Individual', style: s)
+        ),
+        RaisedButton(onPressed: (){
+          setState(() {
+            isIndividual = false;
+            type = UserType.organization;
+          });
+        },
+        color: isIndividual ? notPressed : pressed,
+        child: Text('Organization', style: s))
+      ],
+    );
+  }
+
+
+  
 }
