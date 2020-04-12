@@ -25,10 +25,11 @@ class UserState extends State<UserProfile>{
               Text("John Doe", style: TextStyle(fontWeight: FontWeight.w600, fontSize:20)),
               SizedBox(height: 10,),
               Container(margin: EdgeInsets.symmetric(horizontal: 16), child: Column(children: <Widget>[
-                Text("Psychiatrist, pet lover, dogs > cat, looking for a pet to impress my girl", style: TextStyle(fontSize:18)),
-                SizedBox(height:15,),
+                // Text("Psychiatrist, pet lover, dogs > cat, looking for a pet to impress my girl", style: TextStyle(fontSize:18)),
+                // SizedBox(height:15,),
                 Text("johndoe@gmail.com", style: TextStyle(fontSize:18)),
                 Text("626-215-2500", style: TextStyle(fontSize:18)),
+                Text("Boston, MA", style: TextStyle(fontSize:18)),
               ],))
             ],
             )
@@ -63,7 +64,7 @@ class UserState extends State<UserProfile>{
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black)),
                                 ))),
-          SizedBox(height: 40,),
+          SizedBox(height: 15,),
           GridView.count(
             crossAxisCount: 3,
             physics: ScrollPhysics(),
