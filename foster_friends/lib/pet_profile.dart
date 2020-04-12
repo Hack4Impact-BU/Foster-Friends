@@ -6,12 +6,41 @@ class PetProfile extends StatefulWidget {
   PetState createState() {
     return PetState();
   }
+
+}
+
+class PetInfo {
+  PetInfo([ this.name, this.description, this.breed, this.sex, this.organization, this.type, this.age, this.photo]);
+  final String name;
+  final String breed;
+  final String photo;
+  final String organization; 
+  final String sex; 
+  //final String location; 
+  final String type; 
+  final String description;
+  final String age;
+
 }
 
 
+
 class PetState extends State<PetProfile> {
+  
+  Map data = {};
+
   @override
   Widget build(BuildContext context) {
+
+  PetInfo p;
+  data = ModalRoute.of(context).settings.arguments;
+  if(data['Sex'] == true) {
+    p = new PetInfo(data['Name'],data['Description'],data['Breed'],"Female",data['Organization'],data['Type'],data['Age'],data['Photo']);
+  }
+  else{
+    p = new PetInfo(data['Name'],data['Description'],data['Breed'],"Male",data['Organization'],data['Type'],data['Age'],data['Photo']);
+  }
+
     return Container(
         child: Scaffold(
           appBar: AppBar(),
@@ -27,11 +56,11 @@ class PetState extends State<PetProfile> {
                         children: <Widget>[
                           CircleAvatar(
                             radius:70,
-                            backgroundImage:NetworkImage("https://hips.hearstapps.com/ghk.h-cdn.co/assets/17/30/2560x1280/landscape-1500925839-golden-retriever-puppy.jpg?resize=1200:*"),
+                            backgroundImage:NetworkImage(p.photo),
 
                           ),
                           
-                          Text("Lily", style: TextStyle(
+                          Text(p.name, style: TextStyle(
                                         color: Colors.black,
                                         fontFamily: 'roboto',
                                         fontSize: 50.0,
@@ -43,7 +72,7 @@ class PetState extends State<PetProfile> {
                       ),
                     SizedBox(height: 30),
 
-                      Text("Playful golden Lab. Loves being scratched. Goodest girl. Will drown you with love.", 
+                      Text(p.description, 
                       style: TextStyle(
                         color: Colors.black87,
                         fontFamily: 'roboto',
@@ -75,7 +104,7 @@ class PetState extends State<PetProfile> {
                         letterSpacing: 1.5
                       )),
 
-                      Text("Dog", 
+                      Text(p.type, 
                       style: TextStyle(
                         color: Colors.black,
                         fontFamily: 'roboto',
@@ -96,7 +125,7 @@ class PetState extends State<PetProfile> {
                         letterSpacing: 1.5
                       )),
 
-                      Text("Labrador Retrievers", 
+                      Text(p.breed, 
                       style: TextStyle(
                         color: Colors.black,
                         fontFamily: 'roboto',
@@ -118,7 +147,7 @@ class PetState extends State<PetProfile> {
                         letterSpacing: 1.5
                       )),
 
-                      Text("Female", 
+                      Text(p.sex, 
                       style: TextStyle(
                         color: Colors.black,
                         fontFamily: 'roboto',
@@ -139,7 +168,7 @@ class PetState extends State<PetProfile> {
                         letterSpacing: 1.5
                       )),
 
-                      Text("1 year, 2 months", 
+                      Text(p.age, 
                       style: TextStyle(
                         color: Colors.black,
                         fontFamily: 'roboto',

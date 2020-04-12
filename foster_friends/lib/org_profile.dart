@@ -1,4 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+final databaseReference = Firestore.instance; // instantiate database
+final petsDatabase = databaseReference.collection("petstest");
+
+String name = '';
+String description = '';
+String email = '';
+String ph = '';
+String photo = '';
+List pets = [];
+List<Map<String, dynamic>> petInfo = [];
+
+//Location location;
+
+// class PetRouteArguments {
+//   PetRouteArguments({ this.name, this.breed });
+//   final String name;
+//   final String breed;
+
+// }
 
 // Define a custom Form widget.
 class OrgProfile extends StatefulWidget {
@@ -8,9 +29,14 @@ class OrgProfile extends StatefulWidget {
   }
 }
 
-
 class OrgState extends State<OrgProfile> {
   @override
+  void initState() {
+    super.initState();
+    petInfo = [];
+    getData();
+  }
+
   Widget build(BuildContext context) {
     return Container(
         child: Scaffold(
@@ -19,70 +45,95 @@ class OrgState extends State<OrgProfile> {
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-
                       CircleAvatar(
-                        radius:70,
-                        backgroundImage: NetworkImage("https://www.logolynx.com/images/logolynx/s_fc/fc0e9c5a08b6da8c96386f35c4c500f2.jpeg"),
-                        
+                        radius: 70,
+                        backgroundImage: NetworkImage(photo),
                       ),
-
-                      Text("Boston Animal Shelter",
-                      style: Theme.of(context).textTheme.title
-                      ),
-                      Text("Dog animal shelter based in Boston, Massachussetts. Connecting reescue dogs to loving families.",
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontFamily: 'roboto',
-                        fontSize: 15.0,
-                        letterSpacing: 1.5
-                      ),
-                      textAlign: TextAlign.center
-                      ),
-
+                      Text(name, style: Theme.of(context).textTheme.title),
+                      Text(description,
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontFamily: 'roboto',
+                              fontSize: 15.0,
+                              letterSpacing: 1.5),
+                          textAlign: TextAlign.center),
                       Divider(color: Colors.grey),
-                      
                       Container(
-                        margin: const EdgeInsets.all(10.0),
-                        width: 400.0,
-                        height: 400.0,
-                        child: _buildGrid(context)
-                      ),
-      
+                          margin: const EdgeInsets.all(10.0),
+                          width: 400.0,
+                          height: 400.0,
+                          child: _buildGrid(context)),
                     ]))));
+  }
+
+  getData() async {
+    await databaseReference
+        .collection("organizations")
+        .document("IahwMOjwYdgEKY2cli5f")
+        .get()
+        .then((DocumentSnapshot snapshot) async {
+          
+      name = snapshot.data['name'];
+      description = snapshot.data['description'];
+      email = snapshot.data['email'];
+      ph = snapshot.data['phone number'];
+      photo = snapshot.data['photo'];
+      pets = snapshot.data['pets'];
+
+      for (var i in pets) {
+        var ind = pets.indexOf(i);
+        await getPet(i, ind);
+      }
+
+      print(petInfo);
+      if (this.mounted) {
+        setState(() {});
+      }
+    });
+    return;
+  }
+
+  getPet(String petID, int ind) async {
+    await databaseReference
+        .collection("petstest")
+        .document(petID)
+        .get()
+        .then((DocumentSnapshot snapshot) {
+      if (snapshot.data != null) {
+        petInfo.add(snapshot.data);
+      }
+    });
+
+    return;
   }
 }
 
 Widget _buildGrid(BuildContext context) => GridView.count(
-  shrinkWrap: true,
-      crossAxisCount: 3,
-      scrollDirection: Axis.vertical,
-      padding: const EdgeInsets.all(4),
-      children: _buildGridTileList(5,context));
+    shrinkWrap: true,
+    crossAxisCount: 3,
+    scrollDirection: Axis.vertical,
+    padding: const EdgeInsets.all(4),
+    children: _buildGridTileList(pets.length, context));
 
-
-  List<Widget> _buildGridTileList(int count,BuildContext context) => List.generate(
-      count, (i)
-      {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ClipOval(
-            child: Container( 
+List<Widget> _buildGridTileList(int count, BuildContext context) =>
+    List.generate(count, (i) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ClipOval(
+          child: Container(
               decoration: BoxDecoration(
-                image: DecorationImage(
-                  image:NetworkImage("https://hips.hearstapps.com/ghk.h-cdn.co/assets/17/30/2560x1280/landscape-1500925839-golden-retriever-puppy.jpg?resize=1200:*"),
-                  fit:BoxFit.cover
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(100))),
+                  image: DecorationImage(
+                      image: NetworkImage(petInfo[i]['Photo']),
+                      fit: BoxFit.cover),
+                  borderRadius: BorderRadius.all(Radius.circular(100))),
               child: FlatButton(
                 child: null,
                 padding: EdgeInsets.all(0.0),
                 onPressed: () {
-                   Navigator.pushNamed(context, '/Pet_Profile');
-                        
+                  Navigator.pushNamed(context, '/Pet_Profile',
+                      arguments: petInfo[i]);
                 },
-              )
-              
-              ),
-          ),
-        );
-      });
+              )),
+        ),
+      );
+    });
