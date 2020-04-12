@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foster_friends/authentication.dart';
 import 'package:foster_friends/google.dart';
 import 'package:foster_friends/redirect.dart';
+import 'package:foster_friends/main.dart';
 
 // Current default page, includes google, email, and gmail sign in
 

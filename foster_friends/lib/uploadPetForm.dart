@@ -1,9 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import './main.dart';
 
 class UploadPetForm extends StatefulWidget {
   @override
@@ -261,13 +260,28 @@ class UploadPetFormState extends State<UploadPetForm> {
                           "organization": petOrganization.text,
                         });
                   print("ho");
+                  Navigator.of(context).pop();
                 },
-                child: Text("Submit",
-                    style: TextStyle(
+                child: Text("SUBMIT",
+                style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).backgroundColor)),
-              )))
+              ))),
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+            child: Center(
+              child: RaisedButton(
+                color: Theme.of(context).buttonColor,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("CANCEL",
+                style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).backgroundColor)),
+              ))),
     ])
     ;
     
