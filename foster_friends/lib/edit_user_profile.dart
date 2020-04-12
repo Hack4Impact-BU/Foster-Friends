@@ -20,6 +20,17 @@ class EditUserProfileState extends State<EditUserProfile>{
       appBar: AppBar(
         title: const Text('Edit Profile'),
         centerTitle: true,
+        actions: <Widget>[
+          FlatButton(
+            onPressed: (){
+              print("Pressed done");
+                Navigator.pushNamed(  context, '/User_Profile');
+            },
+            child: Text("Done",
+              style: TextStyle(fontSize: 20.0, color: Colors.blue),
+              ),
+            )
+        ]
         ),
       
       
