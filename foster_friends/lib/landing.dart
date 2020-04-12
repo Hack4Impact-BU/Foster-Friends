@@ -44,6 +44,22 @@ class MyApp extends StatelessWidget {
                                 color: Theme.of(context).backgroundColor)),
                                 )),
               ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: Center(
+                    child: RaisedButton(
+                      color: Theme.of(context).buttonColor,
+                        onPressed: () {
+                          print("Pressed Form");
+                          Navigator.pushNamed(  context, '/Form');
+                          },
+                        
+                        child: Text("Form",
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).backgroundColor)),
+                                ))),
               // Padding(
               //     padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
               //     child: Center(
