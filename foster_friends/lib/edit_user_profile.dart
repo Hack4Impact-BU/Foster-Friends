@@ -27,12 +27,34 @@ class EditUserProfileState extends State<EditUserProfile>{
                 Navigator.pushNamed(  context, '/User_Profile');
             },
             child: Text("Done",
-              style: TextStyle(fontSize: 20.0, color: Colors.blue),
+              style: TextStyle(fontSize: 20.0, color: Colors.red[500]),
               ),
             )
         ]
         ),
-      
+      body: ListView(
+        children: <Widget>[
+          Container(child: Column(
+            children: <Widget>[
+              SizedBox(height: 20,),
+              CircleAvatar(
+                radius:70,
+                backgroundImage: NetworkImage("https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50"),
+              ),
+              // SizedBox(height: 20,),
+              Center(
+                child: FlatButton(
+                  onPressed: (){
+                    print("Pressed change profile photo");
+                      
+                  },
+                  child: Text("Change Profile Photo",
+                    style: TextStyle(fontSize: 18, color: Colors.red[500]),
+                    ),
+              ),)
+            ]
+          ))
+        ],)
       
       );
   }
