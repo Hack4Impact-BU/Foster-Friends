@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foster_friends/authentication.dart';
-import 'package:foster_friends/google.dart';
-import 'package:foster_friends/redirect.dart';
+import 'package:foster_friends/email.dart';
 
 // Current default page, includes google, email, and gmail sign in
 
@@ -82,13 +81,11 @@ class _LoginPageState extends State<LoginPage> {
       splashColor: Colors.grey,
       onPressed: () {
         print('Pressed Email');
-
-        // Navigator.pushNamed(context, '/');
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (BuildContext context) =>
-                    new Redirect(auth: new Auth())));
+                    new Email() ));
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       highlightElevation: 0,
