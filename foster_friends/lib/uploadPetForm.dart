@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
@@ -21,6 +23,7 @@ class UploadPetFormState extends State<UploadPetForm> {
       _locationMessage = "${position.latitude},${position.longitude}";
       petLocation = "${position.latitude},${position.longitude}";
       print(petLocation);
+      //print(_organizations);
     });
   }
   // -------------------------- save user inputs ----------------------------
@@ -46,7 +49,7 @@ class UploadPetFormState extends State<UploadPetForm> {
   }
 
 
-  // -------------------------- variables for dropdown menu ----------------------------
+  // -------------------------- variables for pet type, breed, sex dropdown menu ----------------------------
   //static Map<String, List<String>> map = {'Dog':['Labrador Retrievers', 'German Shepherd Dogs', 'Golden Retrievers'],'Cat':['Maine Coon','Bengal','Siamese'],'Bird':['Maine Coon','Bengal','Siamese']};
   List<String> _petTypes = ['Dog', 'Cat', 'Bird'];
   List<String> _dogBreed = ['Labrador Retrievers', 'German Shepherd Dogs', 'Golden Retrievers'];
@@ -55,8 +58,29 @@ class UploadPetFormState extends State<UploadPetForm> {
   static List<String> _breedType = [];
   String _selectedPetTypes;
   String _selectedBreedTypes;
+  String _selectedSex;
+  List<String> _sex = ['Female','Male'];
+
+  // -------------------------- variables for shelter name dropdown menu ----------------------------
+  //List<String> _shelters = Firestore.instance.collection("organizations").getDocuments() as List<String>;
+  //Future<QuerySnapshot> ref = Firestore.instance.collectionGroup("organizations").getDocuments();
+  //Firestore.instance.collection('organizations').snapshots().listen((data) => data.documents.forEach((doc) => print(doc["name"])));
+  static List<DocumentSnapshot> _organizations;
+  String _selectedOrganization;
+  //StreamSubscription<QuerySnapshot> getOrganizations = Firestore.instance.collection('organizations')
+  //  .snapshots().listen(
+  //        (data) => _organizations.add('${data.documents[0]['name']}')
+  //  );
+  void _getOrganizations() async {
+    QuerySnapshot querySnapshot = await Firestore.instance.collection("collection").getDocuments();
+    var list = querySnapshot.documents;
+    setState(() {
+      _organizations = list;
+    });
+  }
   @override
   Widget build(BuildContext context) {
+    //print(_shelters);
     return Column(children: <Widget>[
       TextFormField(
           decoration: const InputDecoration(
@@ -70,6 +94,55 @@ class UploadPetFormState extends State<UploadPetForm> {
           },
           controller: petName,
           ),
+      TextFormField(
+          decoration: const InputDecoration(
+            hintText: 'Pet Age',
+          ),
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Please enter a pet age';
+            }
+            return null;
+          },
+          controller: petAge,
+          ),
+      StreamBuilder<QuerySnapshot>(
+        stream: Firestore.instance.collection("organizations").snapshots(),
+        builder: (context,snapshot) {
+          if(!snapshot.hasData) {
+            Text("Loading");
+          }
+          else {
+            List<DropdownMenuItem> organinzationsItems = [];
+            for (int i = 0; i < snapshot.data.documents.length; i++) {
+              DocumentSnapshot snap = snapshot.data.documents[i];
+              organinzationsItems.add(
+                DropdownMenuItem (child: Text(
+                  snap.documentID,
+                  ),
+                value: "${snap.documentID}",
+                )
+              );
+            }
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                DropdownButton(
+                  hint: Text('Organization'),
+                  items: organinzationsItems,
+                  onChanged: (organizationsValue){
+                    setState(() {
+                      _selectedOrganization = organizationsValue;
+                      petOrganization.text = organizationsValue;
+                    });
+                  },
+                  value: _selectedOrganization,
+                )
+              ],
+            );
+          }
+        },
+      ),
       DropdownButton(
             hint: Text('Select a Pet Type'), // Not necessary for Option 1
             value: _selectedPetTypes,
@@ -104,6 +177,23 @@ class UploadPetFormState extends State<UploadPetForm> {
         },
         // ??????????????????????? if () _breedType
         items: _breedType.map((location) {
+          return DropdownMenuItem(
+            child: new Text(location),
+            value: location,
+          );
+        }).toList(),
+      ),
+      DropdownButton(
+        hint: Text('Select a Sex'), // Not necessary for Option 1
+        value: _selectedSex,
+        onChanged: (newValue) {
+          setState(() {
+            petSex.text = newValue;
+            _selectedSex = newValue;
+          });
+        },
+        // ??????????????????????? if () _breedType
+        items: _sex.map((location) {
           return DropdownMenuItem(
             child: new Text(location),
             value: location,
