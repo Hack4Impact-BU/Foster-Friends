@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 
 class UploadPetForm extends StatefulWidget {
   @override
@@ -9,11 +11,22 @@ class UploadPetForm extends StatefulWidget {
 }
 
 class UploadPetFormState extends State<UploadPetForm> {
+  // -------------------------- map location function -----------------------
+  String _locationMessage = "Location";
+  Geoflutterfire geo = Geoflutterfire();
+  String petLocation = "";
+  void _getCurrentLocation() async {
+    final position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    setState(() {
+      _locationMessage = "${position.latitude},${position.longitude}";
+      petLocation = "${position.latitude},${position.longitude}";
+      print(petLocation);
+    });
+  }
   // -------------------------- save user inputs ----------------------------
   final petAge = TextEditingController();
   final petBreed = TextEditingController();
   final petDescription = TextEditingController();
-  final petLocation = TextEditingController();
   final petName = TextEditingController();
   final petSex = TextEditingController();
   final petType = TextEditingController();
@@ -25,7 +38,6 @@ class UploadPetFormState extends State<UploadPetForm> {
     petName.dispose();
     petBreed.dispose();
     petDescription.dispose();
-    petLocation.dispose();
     petName.dispose();
     petSex.dispose();
     petType.dispose();
@@ -111,7 +123,12 @@ class UploadPetFormState extends State<UploadPetForm> {
           },
           controller: petDescription,
           ),
-
+      FlatButton(
+        color: Colors.green,
+        child: Text(_locationMessage),
+        onPressed: () {
+          _getCurrentLocation();
+      }),
 
           Padding(
             padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
@@ -126,14 +143,13 @@ class UploadPetFormState extends State<UploadPetForm> {
                           "age": petAge.text,
                           "breed": petBreed.text,
                           "description": petDescription.text,
-                          "location": petLocation.text,
+                          "location": new GeoPoint(double.parse(petLocation.split(",")[0]),double.parse(petLocation.split(",")[1])),
                           "name": petName.text,
                           "sex": petSex.text,
                           "type": petType.text,
                           "organization": petOrganization.text,
                         });
                   print("ho");
-                  // Validate returns true if the form is valid, otherwise false.
                 },
                 child: Text("Submit",
                     style: TextStyle(
