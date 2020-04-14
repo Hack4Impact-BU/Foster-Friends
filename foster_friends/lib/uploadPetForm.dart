@@ -45,7 +45,7 @@ class UploadPetFormState extends State<UploadPetForm> {
     setState(() {
       //var temp = Firestore.instance.collection("organizations").snapshots();
       //_locationMessageAddress = temp.data.documents[user.uid]['address'];
-      _locationMessageCoordinate = "${position.latitude},${position.longitude}";
+      _locationMessageCoordinate = "Org Address Get!";
       petLocation2 = "${position.latitude},${position.longitude}";
     });
   }
