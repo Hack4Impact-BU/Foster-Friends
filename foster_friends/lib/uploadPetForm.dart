@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import './main.dart';
 
 class UploadPetForm extends StatefulWidget {
@@ -13,16 +15,38 @@ class UploadPetForm extends StatefulWidget {
 
 class UploadPetFormState extends State<UploadPetForm> {
   // -------------------------- map location function -----------------------
-  String _locationMessage = "Location";
+  String _locationMessageCoordinate = "Get Coordinate";
+  String _locationMessageAddress = "Use Org Address";
   Geoflutterfire geo = Geoflutterfire();
-  String petLocation = "";
+  String petLocation1 = "";
+  String petLocation2 = "";
   void _getCurrentLocation() async {
     final position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     setState(() {
-      _locationMessage = "${position.latitude},${position.longitude}";
-      petLocation = "${position.latitude},${position.longitude}";
-      print(petLocation);
+      _locationMessageCoordinate = "Coordinates Get!";
+      petLocation1 = "${position.latitude},${position.longitude}";
+      print(petLocation1);
       //print(_organizations);
+    });
+  }
+  void _getCurrentLocation2() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+    final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleSignInAuthentication.accessToken,
+      idToken: googleSignInAuthentication.idToken,
+    );
+    final AuthResult authResult = await _auth.signInWithCredential(credential);
+    final FirebaseUser user = authResult.user;
+
+    final position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    setState(() {
+      //var temp = Firestore.instance.collection("organizations").snapshots();
+      //_locationMessageAddress = temp.data.documents[user.uid]['address'];
+      _locationMessageCoordinate = "${position.latitude},${position.longitude}";
+      petLocation2 = "${position.latitude},${position.longitude}";
     });
   }
   // -------------------------- save user inputs ----------------------------
@@ -81,9 +105,58 @@ class UploadPetFormState extends State<UploadPetForm> {
       _organizations = list;
     });
   }
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          content: new Text("Thank you for submitting a pet!"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Continue"),
+              onPressed: () {
+                //Navigator.popUntil(context, ModalRoute.withName("/Landing"));
+                Navigator.popAndPushNamed(context, "/Landing");
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // -------------------------- enable / disable SUBMIT button ----------------------------
+  bool _enabled = false;
+
   @override
   Widget build(BuildContext context) {
-    //print(_shelters);
+
+    var _onPressed;
+    if (petName!= "" && petAge!="" && petOrganization!="" && petType!="" && petBreed!="" && petSex!="" && petActivityLevel!="" && petDescription!="" && (petLocation1!="" || petLocation2!="")) {
+      _onPressed = () async {
+        DocumentReference ref = Firestore.instance.collection("pets").document();
+        String petId = ref.documentID;
+        await ref.setData({
+                "id": petId,
+                "age": petAge.text,
+                "breed": petBreed.text,
+                "description": petDescription.text,
+                "geolocation": new GeoPoint(double.parse(petLocation1.split(",")[0]),double.parse(petLocation1.split(",")[1])),
+                "orgAddress": petLocation2,
+                "name": petName.text,
+                "sex": petSex.text,
+                "activityLevel": petActivityLevel.text,
+                "type": petType.text,
+                "organization": petOrganization.text,
+              });
+        print("haro");
+        _showDialog();
+      };
+    }
+
     return Column(children: <Widget>[
       TextFormField(
           decoration: const InputDecoration(
@@ -150,6 +223,7 @@ class UploadPetFormState extends State<UploadPetForm> {
             hint: Text('Select a Pet Type'), // Not necessary for Option 1
             value: _selectedPetTypes,
             onChanged: (newValue) {
+              _selectedBreedTypes = null;
               setState(() {
                 petType.text = newValue;
                 _selectedPetTypes = newValue;
@@ -233,35 +307,37 @@ class UploadPetFormState extends State<UploadPetForm> {
           },
           controller: petDescription,
           ),
-      FlatButton(
-        color: Colors.green,
-        child: Text(_locationMessage),
-        onPressed: () {
-          _getCurrentLocation();
-      }),
+      Row (
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget> [
+          Padding(
+            padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+            child: FlatButton(
+              color: Colors.green,
+              child: Text(_locationMessageCoordinate),
+              onPressed: () {
+                _getCurrentLocation();
+              }),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+            child: FlatButton(
+              color: Colors.green,
+              child: Text(_locationMessageAddress),
+              onPressed: () {
+                _getCurrentLocation2();
+              }
+            ),
+          )
+        ]
+      ),
 
           Padding(
             padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: Center(
               child: RaisedButton(
                 color: Theme.of(context).buttonColor,
-                onPressed: () {
-                  DocumentReference ref = Firestore.instance.collection("pets").document();
-                  String petId = ref.documentID;
-                  ref.setData({
-                          "id": petId,
-                          "age": petAge.text,
-                          "breed": petBreed.text,
-                          "description": petDescription.text,
-                          "location": new GeoPoint(double.parse(petLocation.split(",")[0]),double.parse(petLocation.split(",")[1])),
-                          "name": petName.text,
-                          "sex": petSex.text,
-                          "type": petType.text,
-                          "organization": petOrganization.text,
-                        });
-                  print("ho");
-                  Navigator.of(context).pop();
-                },
+                onPressed: _onPressed,
                 child: Text("SUBMIT",
                 style: TextStyle(
                         fontSize: 18,
