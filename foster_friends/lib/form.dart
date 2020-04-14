@@ -45,6 +45,7 @@ class InputFormState extends State<InputForm> {
     });
     if (validateAndSave()) {
       String userId = "";
+      FirebaseUser user  = await getCurrentUser();
       try {
         if (!isIndividual) {
           // userId = await emailSignIn(_email, _password);
@@ -55,8 +56,8 @@ class InputFormState extends State<InputForm> {
           //widget.auth.sendEmailVerification();
           //_showVerifyEmailSentDialog();
           print('User to database');
-          FirebaseUser user  = await getCurrentUser();
-          pushIndividualProfile(user.uid,user.email, "301300", "Boston1", "Sheila1");
+          pushIndividualProfile(user.uid,user.email, "301300400", "Boston3", "Sheila3");
+          Navigator.pop(context);
         }
         setState(() {
           _isLoading = false;
