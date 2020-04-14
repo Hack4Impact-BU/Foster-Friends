@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foster_friends/authentication.dart';
 import 'package:foster_friends/email.dart';
+import 'package:foster_friends/form.dart';
 
 // Current default page, includes google, email, and gmail sign in
 
@@ -47,6 +48,11 @@ class _LoginPageState extends State<LoginPage> {
           setState(() {
             _errorMessage = e;
           });
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    new InputForm() ));
           
         });
       },
