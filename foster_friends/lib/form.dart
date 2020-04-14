@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import './authentication.dart';
+import 'package:foster_friends/formMethods.dart';
+import 'package:foster_friends/authentication.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // Email login and sign up page
 
@@ -53,6 +55,8 @@ class InputFormState extends State<InputForm> {
           //widget.auth.sendEmailVerification();
           //_showVerifyEmailSentDialog();
           print('User to database');
+          FirebaseUser user  = await getCurrentUser();
+          pushIndividualProfile(user.uid,user.email, "301300", "Boston1", "Sheila1");
         }
         setState(() {
           _isLoading = false;
@@ -161,7 +165,7 @@ class InputFormState extends State<InputForm> {
         decoration: new InputDecoration(
             hintText: isIndividual ? 'Enter your first name':'Enter your organization\'s name',
             icon: new Icon(
-              Icons.mail,
+              Icons.person,
               color: Colors.grey,
             )),
         validator: (value) {
@@ -226,7 +230,7 @@ class InputFormState extends State<InputForm> {
           decoration: new InputDecoration(
               hintText: 'Enter your address',
               icon: new Icon(
-                Icons.lock,
+                Icons.location_city,
                 color: Colors.grey,
               )),
           validator: (value) {
@@ -260,7 +264,7 @@ class InputFormState extends State<InputForm> {
           decoration: new InputDecoration(
               hintText: 'Enter your organization\'s phone number',
               icon: new Icon(
-                Icons.lock,
+                Icons.phone,
                 color: Colors.grey,
               )),
           validator: (value) {
