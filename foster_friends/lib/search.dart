@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:foster_friends/login_page.dart';
 import 'package:foster_friends/badProfile.dart';
+import 'package:foster_friends/authentication.dart';
 
 FirebaseUser user;
 // main application build
@@ -43,7 +44,7 @@ class _SearchState extends State<SearchState> {
 
   void _onItemTapped(int index) {
     setState(() {
-      // print('index'+index.toString());
+ 
       _selectedIndex = index;
     });
   }
@@ -77,24 +78,16 @@ class _SearchState extends State<SearchState> {
   }
 
   int _chooseBody(int i) {
-    _getUser();
-    print('Clicked on ' + i.toString());
+    getCurrentUser();
     if (i == 1) {
       if (user == null) {
-        print('Not signed in ' + 1.toString());
         return 1;
       }
-      print('Choosing body');
       return 2;
     }
-    print('user is ' + user.toString());
     return i;
   }
 
-  void _getUser() async {
-    user  = await FirebaseAuth.instance.currentUser();
-    print('user is '+ user.toString());
-  }
 }
 
 // Future<List<Post>> search(String search) async {
