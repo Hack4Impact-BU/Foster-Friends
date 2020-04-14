@@ -57,6 +57,7 @@ Future<String> signInWithGoogle() async {
       idToken: googleSignInAuthentication.idToken,
     );
     await _firebaseAuth.signInWithCredential(credential);
+    
   } catch (e) {
     print('Error $e');
     error = 'Google Sign In Error. Please Try Again.';
