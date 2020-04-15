@@ -18,9 +18,11 @@ class InputFormState extends State<InputForm> {
   Color notPressed = Colors.grey;
   
   String _name;
-  String _email;
+ 
   String _phone;
   String _address;
+  String _description;
+  String _photo;
 
   String _errorMessage;
 
@@ -50,13 +52,14 @@ class InputFormState extends State<InputForm> {
         if (!isIndividual) {
           // userId = await emailSignIn(_email, _password);
           print('Org to database');
+          pushOrganizationProfile(user.uid, _address, _description, user.email, _name, _phone, _photo);
           Navigator.pop(context);
         } else {
           // userId = await emailSignUp(_email, _password);
           //widget.auth.sendEmailVerification();
           //_showVerifyEmailSentDialog();
           print('User to database');
-          pushIndividualProfile(user.uid,user.email, "301300400", "Boston3", "Sheila3");
+          pushIndividualProfile(user.uid, _phone, user.email, _address, _name);
           Navigator.pop(context);
         }
         setState(() {
@@ -128,8 +131,9 @@ class InputFormState extends State<InputForm> {
             shrinkWrap: true,
             children: <Widget>[
               showToggleButton(),
-              showFirstNameInput(),
-              showLastNameInput(),
+              showFullNameInput(),
+              showDescriptionInput(),
+              // showLastNameInput(),
               showPhoneInput(),
               showAddressInput(),
               showPrimaryButton(),
@@ -156,7 +160,7 @@ class InputFormState extends State<InputForm> {
     }
   }
 
-  Widget showFirstNameInput() {
+  Widget showFullNameInput() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0.0, 50.0, 0.0, 0.0),
       child: new TextFormField(
@@ -164,7 +168,7 @@ class InputFormState extends State<InputForm> {
         keyboardType: TextInputType.text,
         autofocus: false,
         decoration: new InputDecoration(
-            hintText: isIndividual ? 'Enter your first name':'Enter your organization\'s name',
+            hintText: isIndividual ? 'Enter your full name':'Enter your organization\'s name',
             icon: new Icon(
               Icons.person,
               color: Colors.grey,
@@ -189,37 +193,39 @@ class InputFormState extends State<InputForm> {
     );
   }
 
-  Widget showLastNameInput() {
-    if(isIndividual) {
-      return Padding(
-        padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
-        child: new TextFormField(
-          maxLines: 1,
-          keyboardType: TextInputType.text,
-          autofocus: false,
-          decoration: new InputDecoration(
-              hintText: 'Enter your last name',
-              icon: new Icon(
-                Icons.mail,
-                color: Colors.grey,
-              )),
-          validator: (value) {
-            value = value.trim();
-            RegExp last = new RegExp("[a-z]+");
-            if(!last.hasMatch(value.toLowerCase())) {
-              _isLoading = false;
-              return 'Please enter your last name';
-            }
-            return null;
-          },
-          onSaved: (value) {
-            _name += value;
-          },
-        ),
-      );
-    }
-    return SizedBox(height: 0);
-  }  
+  // Widget showLastNameInput() {
+  //   if(isIndividual) {
+  //     return Padding(
+  //       padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+  //       child: new TextFormField(
+  //         maxLines: 1,
+  //         keyboardType: TextInputType.text,
+  //         autofocus: false,
+  //         decoration: new InputDecoration(
+  //             hintText: 'Enter your last name',
+  //             icon: new Icon(
+  //               Icons.mail,
+  //               color: Colors.grey,
+  //             )),
+  //         validator: (value) {
+  //           value = value.trim();
+  //           RegExp last = new RegExp("[a-z]+");
+  //           if(!last.hasMatch(value.toLowerCase())) {
+  //             _isLoading = false;
+  //             return 'Please enter your last name';
+  //           }
+  //           return null;
+  //         },
+  //         onSaved: (value) {
+  //           _name += value;
+  //         },
+  //       ),
+  //     );
+  //   }
+  //   return SizedBox(height: 0);
+  // }  
+
+  
 
   Widget showAddressInput() {
     if(!isIndividual) {
@@ -254,8 +260,36 @@ class InputFormState extends State<InputForm> {
     return SizedBox(height: 0);
   }
 
-  Widget showPhoneInput() {
+  Widget showDescriptionInput() {
     if(!isIndividual) {
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+        child: new TextFormField(
+          // maxLines: 1,
+          autofocus: false,
+          decoration: new InputDecoration(
+              hintText: 'Enter a description of your organization',
+              icon: new Icon(
+                Icons.description,
+                color: Colors.grey,
+              )),
+          validator: (value) {
+            value = value.trim();
+            if (value.isEmpty) {
+              _isLoading = false;
+              return 'Please enter the description';
+            }
+            return null;
+          },
+          onSaved: (value) => _description = value,
+        ),
+      );
+    }
+    return SizedBox(height: 0);
+  }
+
+  Widget showPhoneInput() {
+    // if(!isIndividual) {
       return Padding(
         padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
         child: new TextFormField(
@@ -284,8 +318,8 @@ class InputFormState extends State<InputForm> {
           onSaved: (value) => _phone = value,
         ),
       );
-    }
-    return SizedBox(height: 0);
+    // }
+    // return SizedBox(height: 0);
   }
 
   Widget showPrimaryButton() {
