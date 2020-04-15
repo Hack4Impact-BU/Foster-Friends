@@ -22,7 +22,7 @@ void pushIndividualProfile(String userID, String phoneNumber, String email,
 void pushOrganizationProfile(String userID, String address, String description,
     String email, String name, String phoneNumber, String photoLink) async {
   DocumentReference ref =
-      Firestore.instance.collection("individuals").document(userID);
+      Firestore.instance.collection("organizations").document(userID);
 
   await ref.setData({
     "address": address,
@@ -48,10 +48,10 @@ Future<bool> existsInDatabase() async {
         Firestore.instance.collection('organizations').document(uid);
   DocumentSnapshot docOrg = await refOrg.get();
 
-  bool i = docInd.exists;
-  bool o = docOrg.exists;
 
-  print('$uid is found in individual: $i or organization: $o');
+  bool both = docOrg.exists && docInd.exists;
+
+  print('$uid is found: $both');
 
   return docOrg.exists && docInd.exists;
 }
