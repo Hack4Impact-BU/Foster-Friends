@@ -4,6 +4,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:foster_friends/authentication.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import './main.dart';
 
 class UploadPetForm extends StatefulWidget {
@@ -30,23 +32,19 @@ class UploadPetFormState extends State<UploadPetForm> {
     });
   }
   void _getCurrentLocation2() async {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-    final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
-    final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleSignInAuthentication.accessToken,
-      idToken: googleSignInAuthentication.idToken,
-    );
-    final AuthResult authResult = await _auth.signInWithCredential(credential);
-    final FirebaseUser user = authResult.user;
-
-    final position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    String userID = "";
+    FirebaseUser user  = await getCurrentUser();
+    userID = user.uid;
+    String temp;
+    Firestore.instance.collection("organizations").document(userID).get().then((onValue) {
+      temp = onValue.data["name"];
+      //print(onValue.data['description']);
+    });
     setState(() {
       //var temp = Firestore.instance.collection("organizations").snapshots();
       //_locationMessageAddress = temp.data.documents[user.uid]['address'];
       _locationMessageCoordinate = "Org Address Get!";
-      petLocation2 = "${position.latitude},${position.longitude}";
+      petLocation2 = temp;
     });
   }
   // -------------------------- save user inputs ----------------------------
@@ -92,17 +90,24 @@ class UploadPetFormState extends State<UploadPetForm> {
   //List<String> _shelters = Firestore.instance.collection("organizations").getDocuments() as List<String>;
   //Future<QuerySnapshot> ref = Firestore.instance.collectionGroup("organizations").getDocuments();
   //Firestore.instance.collection('organizations').snapshots().listen((data) => data.documents.forEach((doc) => print(doc["name"])));
-  static List<DocumentSnapshot> _organizations;
+  static List<String> _organizations;
   String _selectedOrganization;
   //StreamSubscription<QuerySnapshot> getOrganizations = Firestore.instance.collection('organizations')
   //  .snapshots().listen(
   //        (data) => _organizations.add('${data.documents[0]['name']}')
   //  );
   void _getOrganizations() async {
-    QuerySnapshot querySnapshot = await Firestore.instance.collection("collection").getDocuments();
-    var list = querySnapshot.documents;
+    
+    QuerySnapshot querySnapshot = await Firestore.instance.collection("collection").getDocuments().then((onValue){
+      return onValue;
+    });
+    print(querySnapshot);
+    //var list = querySnapshot.documents;
+   // Firestore.instance.collection("collection").getDocuments().then((onValue) {
+    //  _organizations.add(onValue.data["name"]);
+    //});
     setState(() {
-      _organizations = list;
+      _organizations = ["list"];
     });
   }
   void _showDialog() {
@@ -156,8 +161,24 @@ class UploadPetFormState extends State<UploadPetForm> {
         _showDialog();
       };
     }
-
+    const List<Color> orangeGradients = [
+      Color(0xFFFF9844),
+      Color(0xFFFE8853),
+      Color(0xFFFD7267),
+    ];
     return Column(children: <Widget>[
+      ClipPath(
+        clipper: TopWaveClipper(),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+                colors: orangeGradients,
+                begin: Alignment.topLeft,
+                end: Alignment.center),
+          ),
+          height: MediaQuery.of(context).size.height / 5,
+        ),
+      ),
       TextFormField(
           decoration: const InputDecoration(
             hintText: 'Pet Name',
@@ -192,13 +213,19 @@ class UploadPetFormState extends State<UploadPetForm> {
             List<DropdownMenuItem> organinzationsItems = [];
             for (int i = 0; i < snapshot.data.documents.length; i++) {
               DocumentSnapshot snap = snapshot.data.documents[i];
-              organinzationsItems.add(
-                DropdownMenuItem (child: Text(
-                  snap.documentID,
-                  ),
-                value: "${snap.documentID}",
+              String temp = "";
+              Firestore.instance.collection("organizations").document(snap.documentID).get().then((onValue) {
+                temp = onValue.data["name"];
+                print(onValue.data['name']);
+                organinzationsItems.add(
+                  DropdownMenuItem (child: Text(
+                    onValue.data['name'],
+                    ),
+                  value: onValue.data['name'],
                 )
               );
+              });
+              
             }
             return Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -361,5 +388,50 @@ class UploadPetFormState extends State<UploadPetForm> {
     ])
     ;
     
+  }
+}
+
+class TopWaveClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    // This is where we decide what part of our image is going to be visible.
+    var path = Path();
+    path.lineTo(0.0, size.height);
+
+    //creating first curver near bottom left corner
+    var firstControlPoint = new Offset(size.width / 7, size.height - 30);
+    var firstEndPoint = new Offset(size.width / 6, size.height / 1.5);
+
+    path.quadraticBezierTo(firstControlPoint.dx, firstControlPoint.dy,
+        firstEndPoint.dx, firstEndPoint.dy);
+
+    //creating second curver near center
+    var secondControlPoint = Offset(size.width / 5, size.height / 4);
+    var secondEndPoint = Offset(size.width / 1.5, size.height / 5);
+    
+    path.quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy,
+        secondEndPoint.dx, secondEndPoint.dy);
+
+    //creating third curver near top right corner
+    var thirdControlPoint = Offset(size.width - (size.width / 9), size.height / 6);
+    var thirdEndPoint = Offset(size.width, 0.0);
+    
+    path.quadraticBezierTo(thirdControlPoint.dx, thirdControlPoint.dy,
+        thirdEndPoint.dx, thirdEndPoint.dy);
+
+    ///move to top right corner
+    path.lineTo(size.width, 0.0);
+
+    ///finally close the path by reaching start point from top right corner
+    path.close();
+    return path;
+  }
+  
+  
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) {
+    // TODO: implement shouldReclip
+    return true;
   }
 }
