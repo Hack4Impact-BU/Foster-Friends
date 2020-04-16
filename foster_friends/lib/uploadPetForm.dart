@@ -136,6 +136,7 @@ class UploadPetFormState extends State<UploadPetForm> {
   // -------------------------- enable / disable SUBMIT button ----------------------------
   bool _enabled = false;
 
+  Color color = const Color(0xFFFFCC80);
   @override
   Widget build(BuildContext context) {
 
@@ -162,9 +163,9 @@ class UploadPetFormState extends State<UploadPetForm> {
       };
     }
     const List<Color> orangeGradients = [
-      Color(0xFFFF9844),
+      Color(0xFFFFCC80),
       Color(0xFFFE8853),
-      Color(0xFFFD7267),
+      Color(0xFFFEF5350),
     ];
     return Column(children: <Widget>[
       ClipPath(
@@ -176,7 +177,7 @@ class UploadPetFormState extends State<UploadPetForm> {
                 begin: Alignment.topLeft,
                 end: Alignment.center),
           ),
-          height: MediaQuery.of(context).size.height / 5,
+          height: MediaQuery.of(context).size.height / 7.5,
         ),
       ),
       TextFormField(
@@ -340,7 +341,7 @@ class UploadPetFormState extends State<UploadPetForm> {
           Padding(
             padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
             child: FlatButton(
-              color: Colors.green,
+              color: color,
               child: Text(_locationMessageCoordinate),
               onPressed: () {
                 _getCurrentLocation();
@@ -349,7 +350,7 @@ class UploadPetFormState extends State<UploadPetForm> {
           Padding(
             padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
             child: FlatButton(
-              color: Colors.green,
+              color: color,
               child: Text(_locationMessageAddress),
               onPressed: () {
                 _getCurrentLocation2();
@@ -360,7 +361,7 @@ class UploadPetFormState extends State<UploadPetForm> {
       ),
 
           Padding(
-            padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+            padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
             child: Center(
               child: RaisedButton(
                 color: Theme.of(context).buttonColor,
@@ -375,16 +376,19 @@ class UploadPetFormState extends State<UploadPetForm> {
             padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: Center(
               child: RaisedButton(
-                color: Theme.of(context).buttonColor,
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
+                textColor: Colors.white,
+                
                 child: Text("CANCEL",
-                style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).backgroundColor)),
+                  style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          )),
+                
               ))),
+              
     ])
     ;
     
@@ -399,21 +403,21 @@ class TopWaveClipper extends CustomClipper<Path> {
     path.lineTo(0.0, size.height);
 
     //creating first curver near bottom left corner
-    var firstControlPoint = new Offset(size.width / 7, size.height - 30);
-    var firstEndPoint = new Offset(size.width / 6, size.height / 1.5);
+    var firstControlPoint = new Offset(size.width / 7, size.height - 80);
+    var firstEndPoint = new Offset(size.width / 2, size.height / 2);
 
     path.quadraticBezierTo(firstControlPoint.dx, firstControlPoint.dy,
         firstEndPoint.dx, firstEndPoint.dy);
 
     //creating second curver near center
-    var secondControlPoint = Offset(size.width / 5, size.height / 4);
+    var secondControlPoint = Offset(size.width / 2, size.height / 5);
     var secondEndPoint = Offset(size.width / 1.5, size.height / 5);
     
     path.quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy,
         secondEndPoint.dx, secondEndPoint.dy);
 
     //creating third curver near top right corner
-    var thirdControlPoint = Offset(size.width - (size.width / 9), size.height / 6);
+    var thirdControlPoint = Offset(size.width - (size.width / 11), size.height / 5);
     var thirdEndPoint = Offset(size.width, 0.0);
     
     path.quadraticBezierTo(thirdControlPoint.dx, thirdControlPoint.dy,

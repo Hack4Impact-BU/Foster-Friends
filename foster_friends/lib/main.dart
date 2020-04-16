@@ -23,7 +23,8 @@ void main() => runApp(MaterialApp(
     primaryColor: Colors.white,
     accentColor: Colors.red,
     backgroundColor: Colors.white,
-    buttonColor: Colors.black,
+    buttonColor: Color(0xFFFEF5350),
+                        
 
     // Define the default font family.
     fontFamily: 'Roboto',
