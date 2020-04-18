@@ -3,10 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:foster_friends/authentication.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import './main.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:io';
+import 'package:path/path.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 
 class UploadPetForm extends StatefulWidget {
   @override
@@ -56,6 +59,7 @@ class UploadPetFormState extends State<UploadPetForm> {
   final petActivityLevel = TextEditingController();
   final petType = TextEditingController();
   final petOrganization = TextEditingController();
+  String petImage;
 
   @override
   void dispose() {
@@ -110,7 +114,39 @@ class UploadPetFormState extends State<UploadPetForm> {
       _organizations = ["list"];
     });
   }
-  void _showDialog() {
+  
+
+  // -------------------------- upload photo -------------------------------
+  File _image;
+  Future getImage() async {
+      var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+      setState(() {
+        _image = image;
+          print('Image Path $_image');
+      });
+    }
+
+    Future uploadPic(BuildContext context) async{
+       String fileName = basename(_image.path);
+       petImage = fileName;
+       StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);
+       StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
+       StorageTaskSnapshot taskSnapshot=await uploadTask.onComplete;
+       setState(() {
+          print("Profile Picture uploaded");
+          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
+       });
+    }
+
+  // -------------------------- enable / disable SUBMIT button ----------------------------
+  bool _enabled = false;
+
+  Color color = const Color(0xFFFFCC80);
+
+  @override
+  Widget build(BuildContext context) {
+    void _showDialog() {
     // flutter defined function
     showDialog(
       context: context,
@@ -132,19 +168,12 @@ class UploadPetFormState extends State<UploadPetForm> {
       },
     );
   }
-
-  // -------------------------- enable / disable SUBMIT button ----------------------------
-  bool _enabled = false;
-
-  Color color = const Color(0xFFFFCC80);
-  @override
-  Widget build(BuildContext context) {
-
     var _onPressed;
-    if (petName!= "" && petAge!="" && petOrganization!="" && petType!="" && petBreed!="" && petSex!="" && petActivityLevel!="" && petDescription!="" && (petLocation1!="" || petLocation2!="")) {
+    if (petName!= "" && petAge!="" && petOrganization!="" && petType!="" && petBreed!="" && petSex!="" && petActivityLevel!="" && petDescription!="" && (petLocation1!="" || petLocation2!="") && petImage!="") {
       _onPressed = () async {
         DocumentReference ref = Firestore.instance.collection("pets").document();
         String petId = ref.documentID;
+        uploadPic(context);
         await ref.setData({
                 "id": petId,
                 "age": petAge.text,
@@ -157,6 +186,7 @@ class UploadPetFormState extends State<UploadPetForm> {
                 "activityLevel": petActivityLevel.text,
                 "type": petType.text,
                 "organization": petOrganization.text,
+                "image": petImage,
               });
         print("haro");
         _showDialog();
@@ -359,9 +389,55 @@ class UploadPetFormState extends State<UploadPetForm> {
           )
         ]
       ),
-
+      SizedBox(height: 10,),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+              SizedBox(
+                height: 20.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.center,
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundColor: Color(0xff476cfb),
+                      child: ClipOval(
+                        child: new SizedBox(
+                          width: 100.0,
+                          height: 100.0,
+                          child: (_image!=null)?Image.file(
+                            _image,
+                            fit: BoxFit.fill,
+                          ):Image.network(
+                            "https://images.unsplash.com/photo-1502164980785-f8aa41d53611?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 40.0),
+                    child: IconButton(
+                      icon: Icon(
+                        FontAwesomeIcons.camera,
+                        size: 30.0,
+                      ),
+                      onPressed: () {
+                        getImage();
+                      },
+                    ),
+                  ),
+                ],
+      )]),
+        Row (
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
           Padding(
-            padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
+            padding: EdgeInsets.fromLTRB(0, 30, 30, 0),
             child: Center(
               child: RaisedButton(
                 color: Theme.of(context).buttonColor,
@@ -373,7 +449,7 @@ class UploadPetFormState extends State<UploadPetForm> {
                         color: Theme.of(context).backgroundColor)),
               ))),
           Padding(
-            padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+            padding: EdgeInsets.fromLTRB(30, 30, 0, 0),
             child: Center(
               child: RaisedButton(
                 onPressed: () {
@@ -387,10 +463,9 @@ class UploadPetFormState extends State<UploadPetForm> {
                           fontWeight: FontWeight.bold,
                           )),
                 
-              ))),
+              )))]),
               
-    ])
-    ;
+    ]);
     
   }
 }
