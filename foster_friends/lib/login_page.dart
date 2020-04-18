@@ -43,7 +43,6 @@ class _LoginPageState extends State<LoginPage> {
     return OutlineButton(
       splashColor: Colors.grey,
       onPressed: () {
-       
         signInWithGoogle().then((e) {
           print("Done with $e");
 
@@ -57,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
               }
             });
           }
-     
+
           setState(() {
             _errorMessage = e;
           });
