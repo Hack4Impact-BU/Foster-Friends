@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foster_friends/formMethods.dart';
+import 'package:foster_friends/database.dart';
 import 'package:foster_friends/authentication.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -46,7 +46,6 @@ class InputFormState extends State<InputForm> {
       _isLoading = true;
     });
     if (validateAndSave()) {
-      String userId = "";
       FirebaseUser user = await getCurrentUser();
       try {
         if (!isIndividual) {

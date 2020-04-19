@@ -45,6 +45,21 @@ class MyApp extends StatelessWidget {
                                 )),
               ),
               Padding(
+                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: Center(
+                      child: RaisedButton(
+                        color: Theme.of(context).accentColor,
+                          onPressed: () {
+                            print("Pressed Sign up");
+                            Navigator.pushNamed(context, '/SignUp');
+                            },
+                          child: Text("Sign Up",
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).backgroundColor)),
+                          ))),
+              Padding(
                 padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: Center(
                     child: RaisedButton(
@@ -60,18 +75,6 @@ class MyApp extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                                 color: Theme.of(context).backgroundColor)),
                                 ))),
-              // Padding(
-              //     padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              //     child: Center(
-              //         child: RaisedButton(
-              //           color: Theme.of(context).accentColor,
-              //             onPressed: () {print("Pressed Sign up");},
-              //             child: Text("Sign Up",
-              //                 style: TextStyle(
-              //                     fontSize: 18,
-              //                     fontWeight: FontWeight.bold,
-              //                     color: Theme.of(context).backgroundColor)),
-              //             ))),
               Padding(
                 padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: Center(

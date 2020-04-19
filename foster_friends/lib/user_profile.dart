@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:foster_friends/authentication.dart';
 
 // Define a custom Form widget.
 class UserProfile extends StatefulWidget {
+
   @override
   UserState createState() {
     return UserState();
@@ -14,6 +16,23 @@ class UserState extends State<UserProfile>{
     return Scaffold(
       body: ListView(
         children: <Widget>[
+          RaisedButton(
+                onPressed: () {
+                  print('Pressed signout');
+                  signOut();
+                },
+                color: Colors.deepPurple,
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Sign Out',
+                    style: TextStyle(fontSize: 25, color: Colors.white),
+                  ),
+                ),
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40)),
+              ),
           Container(child: Column(
             children: <Widget>[
               SizedBox(height: 20,),

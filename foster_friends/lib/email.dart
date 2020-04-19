@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import './authentication.dart';
-import 'package:foster_friends/formMethods.dart';
+import 'package:foster_friends/database.dart';
 import 'package:foster_friends/form.dart';
 
 // Email login and sign up page

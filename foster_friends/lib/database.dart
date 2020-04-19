@@ -1,74 +1,91 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:foster_friends/authentication.dart';
 
-final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+final Firestore firestore = Firestore.instance;
 
-// Only used for google users
-final GoogleSignIn googleSignIn = GoogleSignIn();
-String error='';
+  CollectionReference get indivs => firestore.collection('individuals');
+  CollectionReference get orgs => firestore.collection('organizations');
 
-// Email sign in methods
-Future<String> emailSignIn(String email, String password) async {
-  AuthResult result = await _firebaseAuth.signInWithEmailAndPassword(
-      email: email, password: password);
-  FirebaseUser user = result.user;
-  return user.uid;
+
+// Based on template, not actually functional
+Future<void> writeUser(String email, String name, String location) async {
+  firestore.runTransaction((Transaction transaction) async {
+      final allDocs = await indivs.getDocuments();
+      final toBeRetrieved =
+          allDocs.documents.sublist(allDocs.documents.length ~/ 2);
+      final toBeDeleted =
+          allDocs.documents.sublist(0, allDocs.documents.length ~/ 2);
+      await Future.forEach(toBeDeleted, (DocumentSnapshot snapshot) async {
+        await transaction.delete(snapshot.reference);
+      });
+
+      await Future.forEach(toBeRetrieved, (DocumentSnapshot snapshot) async {
+        await transaction.update(snapshot.reference, {
+          "message": "Updated from Transaction",
+          "created_at": FieldValue.serverTimestamp()
+        });
+      });
+    });
+
+    await Future.forEach(List.generate(2, (index) => index), (item) async {
+      await firestore.runTransaction((Transaction transaction) async {
+        await Future.forEach(List.generate(10, (index) => index), (item) async {
+          await transaction.set(indivs.document(), {
+            "message": "Created from Transaction $item",
+            "created_at": FieldValue.serverTimestamp()
+          });
+        });
+      });
+    });
 }
 
-Future<String> emailSignUp(String email, String password) async {
-  AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(
-      email: email, password: password);
-  FirebaseUser user = result.user;
-  return user.uid;
+void pushIndividualProfile(String userID, String phoneNumber, String email,
+    String location, String name) async {
+  DocumentReference ref =
+      Firestore.instance.collection("individuals").document(userID);
+
+  await ref.setData({
+    "email": email,
+    "phone number": phoneNumber,
+    "location": location,
+    "name": name
+  });
+  print("User profile submitted");
 }
 
-Future<FirebaseUser> getCurrentUser() async {
-  FirebaseUser user = await _firebaseAuth.currentUser();
-  return user;
+void pushOrganizationProfile(String userID, String address, String description,
+    String email, String name, String phoneNumber, String photoLink) async {
+  DocumentReference ref =
+      Firestore.instance.collection("organizations").document(userID);
+
+  await ref.setData({
+    "address": address,
+    "description": description,
+    "email": email,
+    "name": name,
+    "phone number": phoneNumber,
+    "photo": photoLink
+  });
+  print("Organization profile submitted");
 }
 
-Future<void> emailSignOut() async {
-  return _firebaseAuth.signOut();
-}
+Future<bool> existsInDatabase() async {
+  FirebaseUser user = await getCurrentUser();
+  final String uid = user.uid;
 
-Future<void> sendEmailVerification() async {
-  FirebaseUser user = await _firebaseAuth.currentUser();
-  user.sendEmailVerification();
-}
+  DocumentReference refInd =
+      Firestore.instance.collection('individuals').document(uid);
+  DocumentSnapshot docInd = await refInd.get();
 
-Future<bool> isEmailVerified() async {
-  FirebaseUser user = await _firebaseAuth.currentUser();
-  return user.isEmailVerified;
-}
+  DocumentReference refOrg =
+      Firestore.instance.collection('organizations').document(uid);
+  DocumentSnapshot docOrg = await refOrg.get();
 
+  bool both = docOrg.exists && docInd.exists;
 
-// Sign in method google
-Future<String> signInWithGoogle() async {
-  print('In signInWithGoogle');
-  GoogleSignInAccount _googleSignInAccount;
-  try {
-    _googleSignInAccount = await googleSignIn.signIn();
-    final GoogleSignInAuthentication googleSignInAuthentication =
-        await _googleSignInAccount.authentication;
+  print('$uid is found: $both');
 
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleSignInAuthentication.accessToken,
-      idToken: googleSignInAuthentication.idToken,
-    );
-    await _firebaseAuth.signInWithCredential(credential);
-  } catch (e) {
-    print('Error $e');
-    error = 'Google Sign In Error. Please Try Again.';
-}
-
-  return error;
-}
-
-
-// Handles both sign outs
-void signOut() async {
-  await googleSignIn.signOut();
-  await FirebaseAuth.instance.signOut();
-  print("User Sign Out");
+  return docOrg.exists && docInd.exists;
 }

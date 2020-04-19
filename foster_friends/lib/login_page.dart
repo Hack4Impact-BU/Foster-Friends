@@ -5,7 +5,7 @@ import 'package:foster_friends/authentication.dart';
 import 'package:foster_friends/main.dart';
 import 'package:foster_friends/email.dart';
 import 'package:foster_friends/form.dart';
-import 'package:foster_friends/formMethods.dart';
+import 'package:foster_friends/database.dart';
 
 // Current default page, includes google, email, and gmail sign in
 
@@ -34,7 +34,8 @@ class _LoginPageState extends State<LoginPage> {
               _esignInButton(),
               Padding(
                   padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
-                  child: showErrorMessage())
+                  child: showErrorMessage()),
+              
             ],
           ),
         ),
@@ -46,6 +47,7 @@ class _LoginPageState extends State<LoginPage> {
     return OutlineButton(
       splashColor: Colors.grey,
       onPressed: () {
+       
         signInWithGoogle().then((e) {
           print("Done with $e");
 
@@ -59,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
               }
             });
           }
-
+     
           setState(() {
             _errorMessage = e;
           });

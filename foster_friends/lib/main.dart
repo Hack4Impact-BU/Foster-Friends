@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import './login_page.dart';
 import './landing.dart';
 import './search.dart';
-import './email.dart';
 import './form.dart';
 
 
@@ -40,18 +39,18 @@ void main() => runApp(MaterialApp(
   ),
 
 
-  initialRoute: '/',
+  initialRoute: '/Search',
   routes: {
     '/': (context) => MyApp(),
     '/LogIn': (BuildContext context) => new LoginPage(),
-    '/Email': (BuildContext context) => new Email(),
+    // '/Redirect': (BuildContext context) => new Redirect(auth: new Auth()),
+    '/SignUp': (BuildContext context) => new InputForm(),
     '/Search': (BuildContext context) => new Search(),
     '/Form': (BuildContext context) => new InputForm(),
     '/UploadPet': (BuildContext context) => new UploadPet(),
     '/Org_Profile' : (BuildContext context) => new OrgProfile(),
     '/Pet_Profile' : (BuildContext context) => new PetProfile(),
-    '/User_Profile' : (BuildContext context) => new UserProfile(),
-    '/Landing' : (BuildContext context) => new MyApp(),
+    // '/User_Profile' : (BuildContext context) => new UserProfile(),
   }
 ));
 
