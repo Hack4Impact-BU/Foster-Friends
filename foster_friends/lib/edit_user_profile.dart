@@ -51,7 +51,9 @@ class EditUserProfileState extends State<EditUserProfile>{
                   child: Text("Change Profile Photo",
                     style: TextStyle(fontSize: 18, color: Colors.red[500]),
                     ),
-              ),)
+              ),),
+              SizedBox(height: 10,),
+              EditUserProfileForm(),
             ]
           ))
         ],)
