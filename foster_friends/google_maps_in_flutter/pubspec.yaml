@@ -1,4 +1,4 @@
-name: foster_friends
+name: google_maps_in_flutter
 description: A new Flutter project.
 
 # The following defines the version and build number for your application.
@@ -14,29 +14,15 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.2.0 <3.0.0"
+  sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  flappy_search_bar: 1.4.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
-  firebase_core: ^0.4.0+9
-
-  # Add the dependencies for the Firebase products you want to use in your app
-  # For example, to use Firebase Authentication and Cloud Firestore
-  firebase_auth: ^0.14.0+5
-  firebase_storage: ^3.0.10
-  cloud_firestore: ^0.13.0+1
-  google_sign_in: ^4.1.1
-  geolocator: ^5.3.1
-  geoflutterfire: ^2.1.0
-  location: ^2.0.0
-  image_picker: ^0.5.3+1
-  font_awesome_flutter: ^8.6.0
 
 dev_dependencies:
   flutter_test:
@@ -55,11 +41,9 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  assets:
-    - dog.png
-    - google_logo.png
-    - logo.png
-
+  # assets:
+  #  - images/a_dot_burr.jpeg
+  #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

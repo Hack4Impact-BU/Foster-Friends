@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './uploadPetForm.dart';
 
+
 // Define a custom Form widget.
 class UploadPet extends StatefulWidget {
   @override
@@ -24,20 +25,7 @@ class UploadPetState extends State<UploadPet> {
                     children: <Widget>[
                       UploadPetForm(),
                       
-                      Padding(
-                          padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                          child: Center(
-                              child: RaisedButton(
-                            color: Theme.of(context).buttonColor,
-                            onPressed: () {
-                              // Validate returns true if the form is valid, otherwise false.
-                            },
-                            child: Text("Submit",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).backgroundColor)),
-                          )))
+                      
                     ]))));
   }
 }

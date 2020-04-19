@@ -14,6 +14,7 @@ import './uploadPet.dart';
 import './org_profile.dart';
 import './pet_profile.dart';
 import './user_profile.dart';
+import './landing.dart';
 
 
 void main() => runApp(MaterialApp(
@@ -23,7 +24,8 @@ void main() => runApp(MaterialApp(
     primaryColor: Colors.white,
     accentColor: Colors.red,
     backgroundColor: Colors.white,
-    buttonColor: Colors.black,
+    buttonColor: Color(0xFFFEF5350),
+                        
 
     // Define the default font family.
     fontFamily: 'Roboto',
@@ -49,6 +51,7 @@ void main() => runApp(MaterialApp(
     '/Org_Profile' : (BuildContext context) => new OrgProfile(),
     '/Pet_Profile' : (BuildContext context) => new PetProfile(),
     '/User_Profile' : (BuildContext context) => new UserProfile(),
+    '/Landing' : (BuildContext context) => new MyApp(),
   }
 ));
 
