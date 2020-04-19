@@ -1,10 +1,14 @@
 //import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:foster_friends/authentication.dart';
 import 'package:foster_friends/login_page.dart';
-import 'package:foster_friends/badProfile.dart';
+import 'package:foster_friends/no_signin.dart';
+import 'package:foster_friends/user_profile.dart';
+import 'package:foster_friends/org_profile.dart';
 
 FirebaseUser user;
+
 // main application build
 class Search extends StatelessWidget {
   static const String _title = 'Flutter Code Sample';
@@ -21,31 +25,37 @@ class Search extends StatelessWidget {
 // building state
 class SearchState extends StatefulWidget {
   SearchState({Key key}) : super(key: key); // have no idea what this is
-
   @override
   _SearchState createState() => _SearchState();
 }
 
 // This is the bottom bar body options
 class _SearchState extends State<SearchState> {
+  String _user;
+
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+
   static List<Widget> _widgetOptions = <Widget>[
     Text(
       'Search Page',
       style: optionStyle,
     ),
-    LoginPage(),
-    BadProfile()
-    // BadProfile()
-  ];
+    NoSignIn(),
+    UserProfile()];
 
   void _onItemTapped(int index) {
     setState(() {
-      // print('index'+index.toString());
-      _selectedIndex = index;
+      _selectedIndex =  _chooseWidget( index);
     });
+  }
+
+  int _chooseWidget(index){
+    if(_user != null){
+        return index+1;
+    }
+    return index;
   }
 
   @override
@@ -55,7 +65,7 @@ class _SearchState extends State<SearchState> {
         title: const Text('Foster Friends'), // top bar
       ),
       body: Center(
-        child: _widgetOptions.elementAt(_chooseBody(_selectedIndex)),
+        child: _widgetOptions.elementAt(_selectedIndex),
       ),
       // Contruction of navigation
       bottomNavigationBar: BottomNavigationBar(
@@ -75,27 +85,9 @@ class _SearchState extends State<SearchState> {
       ),
     );
   }
-
-  int _chooseBody(int i) {
-    _getUser();
-    print('Clicked on ' + i.toString());
-    if (i == 1) {
-      if (user == null) {
-        print('Not signed in ' + 1.toString());
-        return 1;
-      }
-      print('Choosing body');
-      return 2;
-    }
-    print('user is ' + user.toString());
-    return i;
-  }
-
-  void _getUser() async {
-    user  = await FirebaseAuth.instance.currentUser();
-    print('user is '+ user.toString());
-  }
 }
+
+
 
 // Future<List<Post>> search(String search) async {
 // await Future.delayed(Duration(seconds: 2));

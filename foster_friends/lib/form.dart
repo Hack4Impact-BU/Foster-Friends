@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import './authentication.dart';
+import 'package:foster_friends/database.dart';
+import 'package:foster_friends/authentication.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-// Login form, not integrated
+// Email login and sign up page
 
 class InputForm extends StatefulWidget {
   @override
@@ -14,11 +16,13 @@ class InputFormState extends State<InputForm> {
   TextStyle s = TextStyle(color: Colors.white);
   Color pressed = Colors.red;
   Color notPressed = Colors.grey;
-  
+
   String _name;
-  String _email;
+
   String _phone;
   String _address;
+  String _description;
+  String _photo;
 
   String _errorMessage;
 
@@ -35,29 +39,32 @@ class InputFormState extends State<InputForm> {
     return false;
   }
 
-  // Must use database implementation
+  // Perform login or signup
   void validateAndSubmit() async {
     setState(() {
       _errorMessage = "";
       _isLoading = true;
     });
     if (validateAndSave()) {
-      String userId = "";
+      FirebaseUser user = await getCurrentUser();
       try {
         if (!isIndividual) {
           // userId = await emailSignIn(_email, _password);
           print('Org to database');
+          pushOrganizationProfile(user.uid, _address, _description, user.email,
+              _name, _phone, _photo);
           Navigator.pop(context);
         } else {
           // userId = await emailSignUp(_email, _password);
           //widget.auth.sendEmailVerification();
           //_showVerifyEmailSentDialog();
           print('User to database');
+          pushIndividualProfile(user.uid, _phone, user.email, _address, _name);
+          Navigator.pop(context);
         }
         setState(() {
           _isLoading = false;
         });
-
       } catch (e) {
         print('Error: $e');
         setState(() {
@@ -123,8 +130,9 @@ class InputFormState extends State<InputForm> {
             shrinkWrap: true,
             children: <Widget>[
               showToggleButton(),
-              showFirstNameInput(),
-              showLastNameInput(),
+              showFullNameInput(),
+              showDescriptionInput(),
+              // showLastNameInput(),
               showPhoneInput(),
               showAddressInput(),
               showPrimaryButton(),
@@ -151,7 +159,7 @@ class InputFormState extends State<InputForm> {
     }
   }
 
-  Widget showFirstNameInput() {
+  Widget showFullNameInput() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0.0, 50.0, 0.0, 0.0),
       child: new TextFormField(
@@ -159,19 +167,24 @@ class InputFormState extends State<InputForm> {
         keyboardType: TextInputType.text,
         autofocus: false,
         decoration: new InputDecoration(
-            hintText: isIndividual ? 'Enter your first name':'Enter your organization\'s name',
+            hintText: isIndividual
+                ? 'Enter your full name'
+                : 'Enter your organization\'s name',
             icon: new Icon(
-              Icons.mail,
+              Icons.person,
               color: Colors.grey,
             )),
         validator: (value) {
           value = value.trim();
           if (value.isEmpty) {
             _isLoading = false;
-              return isIndividual ? 'Please enter your first name':'Please enter your organization\'s name';
+            return isIndividual
+                ? 'Please enter your first name'
+                : 'Please enter your organization\'s name';
           }
-          RegExp first = new RegExp("[a-z]+"); // Must be a valid email address, including a prefix, @, and domain with one period.  
-          if(isIndividual && !first.hasMatch(value.toLowerCase())) {
+          RegExp first = new RegExp(
+              "[a-z]+"); // Must be a valid email address, including a prefix, @, and domain with one period.
+          if (isIndividual && !first.hasMatch(value.toLowerCase())) {
             _isLoading = false;
             return "Please enter your first name";
           }
@@ -184,40 +197,40 @@ class InputFormState extends State<InputForm> {
     );
   }
 
-  Widget showLastNameInput() {
-    if(isIndividual) {
-      return Padding(
-        padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
-        child: new TextFormField(
-          maxLines: 1,
-          keyboardType: TextInputType.text,
-          autofocus: false,
-          decoration: new InputDecoration(
-              hintText: 'Enter your last name',
-              icon: new Icon(
-                Icons.mail,
-                color: Colors.grey,
-              )),
-          validator: (value) {
-            value = value.trim();
-            RegExp last = new RegExp("[a-z]+");
-            if(!last.hasMatch(value.toLowerCase())) {
-              _isLoading = false;
-              return 'Please enter your last name';
-            }
-            return null;
-          },
-          onSaved: (value) {
-            _name += value;
-          },
-        ),
-      );
-    }
-    return SizedBox(height: 0);
-  }  
+  // Widget showLastNameInput() {
+  //   if(isIndividual) {
+  //     return Padding(
+  //       padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+  //       child: new TextFormField(
+  //         maxLines: 1,
+  //         keyboardType: TextInputType.text,
+  //         autofocus: false,
+  //         decoration: new InputDecoration(
+  //             hintText: 'Enter your last name',
+  //             icon: new Icon(
+  //               Icons.mail,
+  //               color: Colors.grey,
+  //             )),
+  //         validator: (value) {
+  //           value = value.trim();
+  //           RegExp last = new RegExp("[a-z]+");
+  //           if(!last.hasMatch(value.toLowerCase())) {
+  //             _isLoading = false;
+  //             return 'Please enter your last name';
+  //           }
+  //           return null;
+  //         },
+  //         onSaved: (value) {
+  //           _name += value;
+  //         },
+  //       ),
+  //     );
+  //   }
+  //   return SizedBox(height: 0);
+  // }
 
   Widget showAddressInput() {
-    if(!isIndividual) {
+    if (!isIndividual) {
       return Padding(
         padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
         child: new TextFormField(
@@ -226,7 +239,7 @@ class InputFormState extends State<InputForm> {
           decoration: new InputDecoration(
               hintText: 'Enter your address',
               icon: new Icon(
-                Icons.lock,
+                Icons.location_city,
                 color: Colors.grey,
               )),
           validator: (value) {
@@ -236,7 +249,7 @@ class InputFormState extends State<InputForm> {
               return 'Please enter your address';
             }
             RegExp address = new RegExp("[0-9]+\x20[a-z]+.*");
-            if(address.hasMatch(value.toLowerCase())) {
+            if (address.hasMatch(value.toLowerCase())) {
               _isLoading = false;
               return 'Must be a valid address with a number and street';
             }
@@ -249,38 +262,66 @@ class InputFormState extends State<InputForm> {
     return SizedBox(height: 0);
   }
 
-  Widget showPhoneInput() {
-    if(!isIndividual) {
+  Widget showDescriptionInput() {
+    if (!isIndividual) {
       return Padding(
         padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
         child: new TextFormField(
-          maxLines: 1,
-          keyboardType: TextInputType.phone,
+          // maxLines: 1,
           autofocus: false,
           decoration: new InputDecoration(
-              hintText: 'Enter your organization\'s phone number',
+              hintText: 'Enter a description of your organization',
               icon: new Icon(
-                Icons.lock,
+                Icons.description,
                 color: Colors.grey,
               )),
           validator: (value) {
             value = value.trim();
             if (value.isEmpty) {
               _isLoading = false;
-              return 'Please enter your phone number';
-            }
-            RegExp phone = new RegExp("[0-9]{3,}-[0-9]{3,}-[0-9]{4,}");
-            if(phone.hasMatch(value)) {
-              _isLoading = false;
-              return 'Must be a valid phone number with area code and hyphens';
+              return 'Please enter the description';
             }
             return null;
           },
-          onSaved: (value) => _phone = value,
+          onSaved: (value) => _description = value,
         ),
       );
     }
     return SizedBox(height: 0);
+  }
+
+  Widget showPhoneInput() {
+    // if(!isIndividual) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+      child: new TextFormField(
+        maxLines: 1,
+        keyboardType: TextInputType.phone,
+        autofocus: false,
+        decoration: new InputDecoration(
+            hintText: 'Enter your organization\'s phone number',
+            icon: new Icon(
+              Icons.phone,
+              color: Colors.grey,
+            )),
+        validator: (value) {
+          value = value.trim();
+          if (value.isEmpty) {
+            _isLoading = false;
+            return 'Please enter your phone number';
+          }
+          RegExp phone = new RegExp("[0-9]{3,}-[0-9]{3,}-[0-9]{4,}");
+          if (phone.hasMatch(value)) {
+            _isLoading = false;
+            return 'Must be a valid phone number with area code and hyphens';
+          }
+          return null;
+        },
+        onSaved: (value) => _phone = value,
+      ),
+    );
+    // }
+    // return SizedBox(height: 0);
   }
 
   Widget showPrimaryButton() {
@@ -293,34 +334,36 @@ class InputFormState extends State<InputForm> {
             shape: new RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(30.0)),
             color: Colors.red,
-            child: new Text('Create account',
+            child: new Text('Finish Creating Profile',
                 style: new TextStyle(fontSize: 20.0, color: Colors.white)),
             onPressed: validateAndSubmit,
           ),
         ));
   }
+
   Widget showToggleButton() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        RaisedButton(onPressed: (){
-          setState((){
-            _errorMessage = "";
-            isIndividual = true;
-          });
-        },
-          color: isIndividual ? pressed : notPressed,
-          child: Text('Individual', style: s)
-        ),
-        RaisedButton(onPressed: (){
-          setState(() {
-            _errorMessage = "";
-            isIndividual = false;
-          });
-        },
-        color: isIndividual ? notPressed : pressed,
-        child: Text('Organization', style: s))
+        RaisedButton(
+            onPressed: () {
+              setState(() {
+                _errorMessage = "";
+                isIndividual = true;
+              });
+            },
+            color: isIndividual ? pressed : notPressed,
+            child: Text('Individual', style: s)),
+        RaisedButton(
+            onPressed: () {
+              setState(() {
+                _errorMessage = "";
+                isIndividual = false;
+              });
+            },
+            color: isIndividual ? notPressed : pressed,
+            child: Text('Organization', style: s))
       ],
     );
   }

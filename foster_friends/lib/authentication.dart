@@ -24,8 +24,7 @@ Future<String> emailSignUp(String email, String password) async {
 }
 
 Future<FirebaseUser> getCurrentUser() async {
-  FirebaseUser user = await _firebaseAuth.currentUser();
-  return user;
+  return await _firebaseAuth.currentUser();
 }
 
 Future<void> emailSignOut() async {
