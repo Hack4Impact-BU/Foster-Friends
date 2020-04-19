@@ -13,6 +13,7 @@ import './uploadPet.dart';
 import './org_profile.dart';
 import './pet_profile.dart';
 import './user_profile.dart';
+import './landing.dart';
 
 
 void main() => runApp(MaterialApp(
@@ -22,7 +23,8 @@ void main() => runApp(MaterialApp(
     primaryColor: Colors.white,
     accentColor: Colors.red,
     backgroundColor: Colors.white,
-    buttonColor: Colors.black,
+    buttonColor: Color(0xFFFEF5350),
+                        
 
     // Define the default font family.
     fontFamily: 'Roboto',
@@ -44,6 +46,7 @@ void main() => runApp(MaterialApp(
     // '/Redirect': (BuildContext context) => new Redirect(auth: new Auth()),
     '/SignUp': (BuildContext context) => new InputForm(),
     '/Search': (BuildContext context) => new Search(),
+    '/Form': (BuildContext context) => new InputForm(),
     '/UploadPet': (BuildContext context) => new UploadPet(),
     '/Org_Profile' : (BuildContext context) => new OrgProfile(),
     '/Pet_Profile' : (BuildContext context) => new PetProfile(),

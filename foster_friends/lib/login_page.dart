@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:foster_friends/authentication.dart';
+//import 'package:foster_friends/google.dart';
+//import 'package:foster_friends/redirect.dart';
+import 'package:foster_friends/main.dart';
 import 'package:foster_friends/email.dart';
 import 'package:foster_friends/form.dart';
 import 'package:foster_friends/database.dart';
