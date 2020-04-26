@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
 import './authentication.dart';
+import 'package:foster_friends/database.dart';
+import 'package:foster_friends/form.dart';
 
 // Email login and sign up page
 
-class SignUp extends StatefulWidget {
-  SignUp({this.auth, this.loginCallback});
-
-  final BaseAuth auth;
-  final VoidCallback loginCallback;
-
+class Email extends StatefulWidget {
   @override
-  SignUpState createState() {
-    return SignUpState();
-  }
+  _EmailState createState() => _EmailState();
 }
 
-class SignUpState extends State<SignUp> {
+class _EmailState extends State<Email> {
   final _formKey = new GlobalKey<FormState>();
 
   String _email;
@@ -26,6 +21,7 @@ class SignUpState extends State<SignUp> {
 
   bool _isLoginForm;
   bool _isLoading;
+  bool _hidePass;
 
   // Check if form is valid before perform login or signup
   bool validateAndSave() {
@@ -47,10 +43,21 @@ class SignUpState extends State<SignUp> {
       String userId = "";
       try {
         if (_isLoginForm) {
-          userId = await widget.auth.signIn(_email, _password);
+          userId = await emailSignIn(_email, _password);
           print('Signed in: $userId');
+          Navigator.pop(context);
+
+          existsInDatabase().then((isFound) {
+              if (!isFound) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => new InputForm()));
+              }
+            });
+        
         } else {
-          userId = await widget.auth.signUp(_email, _password);
+          userId = await emailSignUp(_email, _password);
           //widget.auth.sendEmailVerification();
           //_showVerifyEmailSentDialog();
           print('Signed up user: $userId');
@@ -59,9 +66,12 @@ class SignUpState extends State<SignUp> {
           _isLoading = false;
         });
 
-        if (userId.length > 0 && userId != null && _isLoginForm) {
-          widget.loginCallback();
-        }
+        setState(() {
+          if(!_isLoginForm) {
+            _isLoginForm = true;
+          }
+        });
+
       } catch (e) {
         print('Error: $e');
         setState(() {
@@ -78,6 +88,7 @@ class SignUpState extends State<SignUp> {
     _errorMessage = "";
     _isLoading = false;
     _isLoginForm = true;
+    _hidePass = true;
     super.initState();
   }
 
@@ -90,6 +101,11 @@ class SignUpState extends State<SignUp> {
     resetForm();
     setState(() {
       _isLoginForm = !_isLoginForm;
+    });
+  }
+  void togglePass(bool hide) {
+    setState(() {
+      _hidePass= !_hidePass;
     });
   }
 
@@ -130,6 +146,7 @@ class SignUpState extends State<SignUp> {
               showConfirmEmailInput(),
               showPasswordInput(),
               showConfirmPasswordInput(),
+              showTertiaryButton(),
               showPrimaryButton(),
               showSecondaryButton(),
               showErrorMessage(),
@@ -208,6 +225,7 @@ class SignUpState extends State<SignUp> {
               return 'Please confirm your email';
             }
             if(_emailMatch.length > 0 && value != _emailMatch) {
+                _isLoading = false;
                 return 'Emails must match';
             }
               return null;
@@ -226,7 +244,7 @@ class SignUpState extends State<SignUp> {
       padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
       child: new TextFormField(
         maxLines: 1,
-        obscureText: true,
+        obscureText: _hidePass,
         autofocus: false,
         decoration: new InputDecoration(
             hintText: 'Enter your password',
@@ -278,7 +296,7 @@ class SignUpState extends State<SignUp> {
         padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
         child: new TextFormField(
           maxLines: 1,
-          obscureText: true,
+          obscureText: _hidePass,
           autofocus: false,
           decoration: new InputDecoration(
               hintText: 'Confirm your password',
@@ -288,11 +306,14 @@ class SignUpState extends State<SignUp> {
               )),
           validator: (value) {
             if (_passMatch.length > 0 && value.isEmpty) {
+              _isLoading = false;
               return 'Please confirm your password';
             }
             if(_passMatch.length > 0 && value != _passMatch) {
+              _isLoading = false;
               return 'Passwords must match';
             }
+            _isLoading = false;
             return null;
           },
           onSaved: (value) => _password = value.trim(),
@@ -300,6 +321,15 @@ class SignUpState extends State<SignUp> {
       );
     }
     return SizedBox(height: 0);
+  }
+
+  Widget showTertiaryButton() {
+    return new CheckboxListTile(
+        title: new Text(
+            'Show password',
+            style: new TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300)),
+        value: !_hidePass,
+        onChanged: togglePass);
   }
 
   Widget showSecondaryButton() {
@@ -312,7 +342,7 @@ class SignUpState extends State<SignUp> {
 
   Widget showPrimaryButton() {
     return new Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
+        padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
         child: SizedBox(
           height: 40.0,
           child: new RaisedButton(
