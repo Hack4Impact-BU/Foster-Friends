@@ -53,7 +53,7 @@ class EditUserProfileState extends State<EditUserProfile>{
                     ),
               ),),
               SizedBox(height: 10,),
-              EditUserProfileForm(),
+              // EditUserProfileForm(),
             ]
           ))
         ],)
