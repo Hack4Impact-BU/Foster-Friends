@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 FirebaseUser user;
-String uid = "";
+String uid;
 // Define a custom Form widget.
 class UserProfile extends StatefulWidget {
   @override
@@ -30,10 +30,9 @@ class UserState extends State<UserProfile>{
     getUser();
     uid = "UbHepIQJN5XiRaxKD3xALVgRvEJ3";
   }
-  // String uid = "UbHepIQJN5XiRaxKD3xALVgRvEJ3";
   @override
   Widget build(BuildContext context) {
-    print("User ID is: " + uid);
+    print("User ID is: " + uid); // delete later
       return StreamBuilder(
         stream: Firestore.instance.collection("individuals").document(uid).snapshots(),
         builder: (context, snapshot){
@@ -41,6 +40,7 @@ class UserState extends State<UserProfile>{
             String name = snapshot.data['name'];
             String email = snapshot.data['email'];
             String phoneNum = snapshot.data['phone number'];
+            String location = snapshot.data['location'];
             return Scaffold(
               body: ListView(
                 children: <Widget>[
@@ -60,7 +60,7 @@ class UserState extends State<UserProfile>{
                         // SizedBox(height:15,),
                         Text(email, style: TextStyle(fontSize:18)),
                         Text(phoneNum, style: TextStyle(fontSize:18)),
-                        Text("Boston, MA", style: TextStyle(fontSize:18)),
+                        Text(location, style: TextStyle(fontSize:18)),
                       ],))
                     ],
                     )
@@ -116,7 +116,36 @@ class UserState extends State<UserProfile>{
             );
           }
           else{
-            return new Text("Loading");
+            // return Center(
+            //   child: CircularProgressIndicator()
+            // );
+            return Scaffold(
+              body: ListView(
+                children: <Widget>[
+                  Container(child: Column(
+                    children: <Widget>[
+                      SizedBox(height: 20,),
+                      CircleAvatar(
+                        radius:70,
+                        backgroundImage: NetworkImage("https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50"),
+                      ),
+                      SizedBox(height: 20,),
+                      // getUserInfo(),
+                      Text("", style: TextStyle(fontWeight: FontWeight.w600, fontSize:20)),
+                      SizedBox(height: 10,),
+                      Container(margin: EdgeInsets.symmetric(horizontal: 16), child: Column(children: <Widget>[
+                        // Text("Psychiatrist, pet lover, dogs > cat, looking for a pet to impress my girl", style: TextStyle(fontSize:18)),
+                        // SizedBox(height:15,),
+                        Text("", style: TextStyle(fontSize:18)),
+                        Text("", style: TextStyle(fontSize:18)),
+                        Text("Boston, MA", style: TextStyle(fontSize:18)),
+                      ],))
+                    ],
+                    )
+                  ),
+                  ],
+              ),
+            );
           }
         }
       );

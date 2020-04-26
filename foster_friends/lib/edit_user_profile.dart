@@ -24,7 +24,7 @@ class EditUserProfileState extends State<EditUserProfile>{
           FlatButton(
             onPressed: (){
               print("Pressed done");
-                Navigator.pushNamed(  context, '/User_Profile');
+              Navigator.pushNamed(  context, '/User_Profile');
             },
             child: Text("Done",
               style: TextStyle(fontSize: 20.0, color: Colors.red[500]),
@@ -53,7 +53,7 @@ class EditUserProfileState extends State<EditUserProfile>{
                     ),
               ),),
               SizedBox(height: 10,),
-              // EditUserProfileForm(),
+              EditUserProfileForm(),
             ]
           ))
         ],)
