@@ -12,14 +12,6 @@ String photo = '';
 List pets = [];
 List<Map<String, dynamic>> petInfo = [];
 
-//Location location;
-
-// class PetRouteArguments {
-//   PetRouteArguments({ this.name, this.breed });
-//   final String name;
-//   final String breed;
-
-// }
 
 // Define a custom Form widget.
 class OrgProfile extends StatefulWidget {
@@ -85,7 +77,7 @@ class OrgState extends State<OrgProfile> {
         await getPet(i, ind);
       }
 
-      print(petInfo);
+      print(pets.length);
       if (this.mounted) {
         setState(() {});
       }
@@ -101,6 +93,8 @@ class OrgState extends State<OrgProfile> {
         .then((DocumentSnapshot snapshot) {
       if (snapshot.data != null) {
         petInfo.add(snapshot.data);
+       
+        petInfo[ind]['ID'] = petID;
       }
     });
 
