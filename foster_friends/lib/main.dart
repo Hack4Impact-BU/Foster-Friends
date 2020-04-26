@@ -7,6 +7,7 @@ import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:foster_friends/search.dart';
 
 
 // AppState
@@ -66,7 +67,7 @@ class MyApp extends StatelessWidget {
         theme: new ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: new MyHomePage(title: 'Flutter Demo Home Page'),
+        home: new Search(),
       ),
     );
   }

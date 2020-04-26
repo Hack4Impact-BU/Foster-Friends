@@ -6,6 +6,10 @@ import 'package:foster_friends/login_page.dart';
 import 'package:foster_friends/no_signin.dart';
 import 'package:foster_friends/user_profile.dart';
 import 'package:foster_friends/org_profile.dart';
+import 'package:redux/redux.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux_thunk/redux_thunk.dart';
+import 'package:foster_friends/main.dart';
 
 FirebaseUser user;
 
@@ -43,17 +47,18 @@ class _SearchState extends State<SearchState> {
       style: optionStyle,
     ),
     NoSignIn(),
-    UserProfile()];
+    UserProfile()
+  ];
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex =  _chooseWidget( index);
+      _selectedIndex = _chooseWidget(index);
     });
   }
 
-  int _chooseWidget(index){
-    if(_user != null){
-        return index+1;
+  int _chooseWidget(index) {
+    if (_user != null) {
+      return index + 1;
     }
     return index;
   }
@@ -64,9 +69,23 @@ class _SearchState extends State<SearchState> {
       appBar: AppBar(
         title: const Text('Foster Friends'), // top bar
       ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+      body: Column(
+        children: <Widget>[Text("hell"),
+        StoreConnector<AppState, AppState>(
+              converter: (store) => store.state,
+              builder: (_, state) {
+                return new Text(
+                  '${state.user}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 20.0),
+                );
+              },
+            ),
+        ],
       ),
+      // body: Center(
+      //   child: _widgetOptions.elementAt(_selectedIndex),
+      // ),
       // Contruction of navigation
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
@@ -86,7 +105,6 @@ class _SearchState extends State<SearchState> {
     );
   }
 }
-
 
 // Future<List<Post>> search(String search) async {
 // await Future.delayed(Duration(seconds: 2));
