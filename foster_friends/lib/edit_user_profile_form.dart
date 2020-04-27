@@ -46,9 +46,11 @@ class EditUserProfileFormState extends State<EditUserProfileForm>{
                   children: <Widget>[
                     TextFormField(
                       initialValue: _name,
+                      style: TextStyle(fontSize:18),
                       decoration:
                         InputDecoration(
                           labelText: "Name",
+                          labelStyle: TextStyle(fontSize:20),
                           icon: Icon(Icons.person),
                           ),
                           
@@ -61,10 +63,12 @@ class EditUserProfileFormState extends State<EditUserProfileForm>{
                     ),
                     TextFormField(
                       initialValue: _email,
+                      style: TextStyle(fontSize:18),
                       keyboardType: TextInputType.emailAddress,
                       decoration: 
                         InputDecoration(
                           labelText: "Email",
+                          labelStyle: TextStyle(fontSize:20),
                           icon: Icon(Icons.email)
                           ),
                       validator: (value) {
@@ -79,10 +83,12 @@ class EditUserProfileFormState extends State<EditUserProfileForm>{
                     ),
                     TextFormField(
                       initialValue: _phoneNum,
+                      style: TextStyle(fontSize:18),
                       keyboardType: TextInputType.number,
                       decoration: 
                         InputDecoration(
                           labelText: "Phone Number",
+                          labelStyle: TextStyle(fontSize:20),
                           icon: Icon(Icons.phone)
                           ),
                       validator: (value) {
@@ -94,9 +100,11 @@ class EditUserProfileFormState extends State<EditUserProfileForm>{
                     ),
                     TextFormField(
                       initialValue: _location,
+                      style: TextStyle(fontSize:18),
                       decoration: 
                         InputDecoration(
                           labelText: "Location",
+                          labelStyle: TextStyle(fontSize:20),
                           icon: Icon(Icons.location_city)
                           ),
                       validator: (value) {
