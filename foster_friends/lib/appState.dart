@@ -3,12 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:redux/redux.dart';
 
 // AppState
-class UserState {
+class AppState {
   FirebaseUser _user;
 
   FirebaseUser get user => _user;
 
-  UserState(this._user);
+  AppState(this._user);
 }
 
 
@@ -21,7 +21,7 @@ class UpdateUserAction{
 
 
 
-ThunkAction<UserState> getFirebaseUser = (Store<UserState> store) async{
+ThunkAction<AppState> getFirebaseUser = (Store<AppState> store) async{
   FirebaseAuth.instance.currentUser().then((u){
     print("getting user");
     print("User is $u");
@@ -30,11 +30,11 @@ ThunkAction<UserState> getFirebaseUser = (Store<UserState> store) async{
 };
 
 // Reducer
-UserState reducer(UserState prev, dynamic action) {
+AppState reducer(AppState prev, dynamic action) {
   if (action is UpdateUserAction){
     print("User");
-    UserState newAppState = 
-      new UserState(action.user);
+    AppState newAppState = 
+      new AppState(action.user);
     return newAppState;
   }
   else{
@@ -43,9 +43,5 @@ UserState reducer(UserState prev, dynamic action) {
 }
 
 // store that hold our current appstate
-final store = new Store<UserState>(reducer,
-    initialState: new UserState(null), middleware: [thunkMiddleware]);
-
-
-
-typedef void GenerateUser(); 
+final store = new Store<AppState>(reducer,
+    initialState: new AppState(null), middleware: [thunkMiddleware]);
