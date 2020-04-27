@@ -71,6 +71,9 @@ class EditUserProfileFormState extends State<EditUserProfileForm>{
                         if (value.isEmpty) {
                           return 'Please enter your email';
                         }
+                        else if (!value.contains("@")){
+                          return "Please enter a valid email";
+                        }
                         return null;
                       },
                     ),
