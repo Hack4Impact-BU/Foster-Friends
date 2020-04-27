@@ -1,14 +1,10 @@
 //import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:foster_friends/authentication.dart';
-import 'package:foster_friends/login_page.dart';
 import 'package:foster_friends/no_signin.dart';
 import 'package:foster_friends/user_profile.dart';
 import 'package:foster_friends/org_profile.dart';
-import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:redux_thunk/redux_thunk.dart';
 import 'package:foster_friends/main.dart';
 
 FirebaseUser user;
@@ -42,9 +38,15 @@ class _SearchState extends State<SearchState> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   static List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Search Page',
-      style: optionStyle,
+    StoreConnector<AppState, AppState>(
+      converter: (store) => store.state,
+      builder: (_, state) {
+        return new Text(
+          '${state.user}',
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 20.0),
+        );
+      },
     ),
     NoSignIn(),
     UserProfile()
@@ -69,23 +71,15 @@ class _SearchState extends State<SearchState> {
       appBar: AppBar(
         title: const Text('Foster Friends'), // top bar
       ),
-      body: Column(
-        children: <Widget>[Text("hell"),
-        StoreConnector<AppState, AppState>(
-              converter: (store) => store.state,
-              builder: (_, state) {
-                return new Text(
-                  '${state.user}',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 20.0),
-                );
-              },
-            ),
-        ],
-      ),
-      // body: Center(
-      //   child: _widgetOptions.elementAt(_selectedIndex),
+      // body: Column(
+      //   children: <Widget>[
+      //     Text("hell"),
+
+      //   ],
       // ),
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
       // Contruction of navigation
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
