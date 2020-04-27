@@ -5,18 +5,15 @@ import 'package:foster_friends/no_signin.dart';
 import 'package:foster_friends/user_profile.dart';
 import 'package:foster_friends/org_profile.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:foster_friends/main.dart';
-
-FirebaseUser user;
+import 'package:foster_friends/appState.dart';
+import 'package:foster_friends/userState.dart';
 
 // main application build
 class Search extends StatelessWidget {
-  static const String _title = 'Flutter Code Sample';
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: _title,
+      title: "Foster Friends",
       home: SearchState(),
     );
   }
@@ -38,15 +35,39 @@ class _SearchState extends State<SearchState> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   static List<Widget> _widgetOptions = <Widget>[
-    StoreConnector<AppState, AppState>(
-      converter: (store) => store.state,
-      builder: (_, state) {
-        return new Text(
-          '${state.user}',
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 20.0),
-        );
-      },
+    // StoreConnector<AppState, AppState>(
+    //   converter: (store) => store.state,
+    //   builder: (_, state) {
+    //     return new Text(
+    //       '${state.user}',
+    //       textAlign: TextAlign.center,
+    //       style: const TextStyle(fontSize: 20.0),
+    //     );
+    //   },
+    // ),
+    new Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        StoreConnector<AppState, AppState>(
+          converter: (store) => store.state,
+          builder: (_, state) {
+            return new Text(
+              '${state.user}',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 20.0),
+            );
+          },
+        ),
+        // StoreConnector<AppState, GenerateUser>(
+        //   converter: (store) => () => store.dispatch(getFirebaseUser),
+        //   builder: (_, generateUserCallback) {
+        //     return new FlatButton(
+        //         color: Colors.lightBlue,
+        //         onPressed: generateUserCallback,
+        //         child: new Text("Get user"));
+        //   },
+        // ),
+      ],
     ),
     NoSignIn(),
     UserProfile()
@@ -71,12 +92,6 @@ class _SearchState extends State<SearchState> {
       appBar: AppBar(
         title: const Text('Foster Friends'), // top bar
       ),
-      // body: Column(
-      //   children: <Widget>[
-      //     Text("hell"),
-
-      //   ],
-      // ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
@@ -99,33 +114,3 @@ class _SearchState extends State<SearchState> {
     );
   }
 }
-
-// Future<List<Post>> search(String search) async {
-// await Future.delayed(Duration(seconds: 2));
-// return List.generate(search.length, (int index) {
-//   print("Searching");
-//   return Post(
-//     "Title : $search $index",
-//     "Description :$search $index",
-//   );
-// });
-// }
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: SafeArea(
-//         child: Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 20),
-//           child: SearchBar<Post>(
-//             onSearch: search),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// class Post {
-//   final String title;
-//   final String description;
-
-//   Post(this.title, this.description);
-// }

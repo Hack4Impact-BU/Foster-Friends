@@ -78,15 +78,15 @@ class MyApp extends StatelessWidget {
 //                 );
 //               },
 //             ),
-//             StoreConnector<AppState, GenerateUser>(
-//               converter: (store) => () => store.dispatch(getFirebaseUser),
-//               builder: (_, generateUserCallback) {
-//                 return new FlatButton(
-//                     color: Colors.lightBlue,
-//                     onPressed: generateUserCallback,
-//                     child: new Text("Get user"));
-//               },
-//             ),
+            // StoreConnector<AppState, GenerateUser>(
+            //   converter: (store) => () => store.dispatch(getFirebaseUser),
+            //   builder: (_, generateUserCallback) {
+            //     return new FlatButton(
+            //         color: Colors.lightBlue,
+            //         onPressed: generateUserCallback,
+            //         child: new Text("Get user"));
+            //   },
+            // ),
 //           ],
 //         ),
 //       ),

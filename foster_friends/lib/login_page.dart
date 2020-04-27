@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:foster_friends/authentication.dart';
-//import 'package:foster_friends/google.dart';
-//import 'package:foster_friends/redirect.dart';
-import 'package:foster_friends/main.dart';
 import 'package:foster_friends/email.dart';
 import 'package:foster_friends/form.dart';
 import 'package:foster_friends/database.dart';
+import 'package:foster_friends/userState.dart';
+import 'package:foster_friends/appState.dart';
 
 // Current default page, includes google, email, and gmail sign in
 
@@ -35,7 +34,6 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                   padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
                   child: showErrorMessage()),
-              
             ],
           ),
         ),
@@ -47,7 +45,6 @@ class _LoginPageState extends State<LoginPage> {
     return OutlineButton(
       splashColor: Colors.grey,
       onPressed: () {
-       
         signInWithGoogle().then((e) {
           print("Done with $e");
 
@@ -59,9 +56,13 @@ class _LoginPageState extends State<LoginPage> {
                     MaterialPageRoute(
                         builder: (BuildContext context) => new InputForm()));
               }
+            }).then((result) {
+              store.dispatch(getFirebaseUser);
+            }).then((r) {
+              Navigator.pop(context);
             });
           }
-     
+
           setState(() {
             _errorMessage = e;
           });

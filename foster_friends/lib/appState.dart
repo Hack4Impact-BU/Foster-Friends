@@ -11,15 +11,12 @@ class AppState {
   AppState(this._user);
 }
 
-
 class UpdateUserAction{
   FirebaseUser _user;
   FirebaseUser get user => this._user;
 
   UpdateUserAction(this._user);
 }
-
-
 
 ThunkAction<AppState> getFirebaseUser = (Store<AppState> store) async{
   FirebaseAuth.instance.currentUser().then((u){
@@ -32,7 +29,7 @@ ThunkAction<AppState> getFirebaseUser = (Store<AppState> store) async{
 // Reducer
 AppState reducer(AppState prev, dynamic action) {
   if (action is UpdateUserAction){
-    print("User");
+    print("User is $action.user");
     AppState newAppState = 
       new AppState(action.user);
     return newAppState;

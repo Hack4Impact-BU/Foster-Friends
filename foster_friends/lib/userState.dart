@@ -20,15 +20,6 @@ class UpdateUserAction{
 }
 
 
-
-ThunkAction<UserState> getFirebaseUser = (Store<UserState> store) async{
-  FirebaseAuth.instance.currentUser().then((u){
-    print("getting user");
-    print("User is $u");
-    store.dispatch(new UpdateUserAction(u));
-  });
-};
-
 // Reducer
 UserState reducer(UserState prev, dynamic action) {
   if (action is UpdateUserAction){
@@ -41,11 +32,5 @@ UserState reducer(UserState prev, dynamic action) {
     return prev;
   }
 }
-
-// store that hold our current appstate
-final store = new Store<UserState>(reducer,
-    initialState: new UserState(null), middleware: [thunkMiddleware]);
-
-
 
 typedef void GenerateUser(); 
