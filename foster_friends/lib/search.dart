@@ -23,31 +23,24 @@ class Search extends StatelessWidget {
 class SearchState extends StatefulWidget {
   SearchState({Key key}) : super(key: key); // have no idea what this is
   @override
-  _SearchState createState() => _SearchState();
+  SearchStateUser createState() => SearchStateUser(null);
 }
 
 // This is the bottom bar body options
-class _SearchState extends State<SearchState> {
-  String _user;
+class SearchStateUser extends State<SearchState> {
+  // FirebaseUser _user = store.state.user;
+  FirebaseUser _user;
+
+  FirebaseUser get user => _user;
+
+  SearchStateUser(this._user);
 
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   static List<Widget> _widgetOptions = <Widget>[
-    // StoreConnector<AppState, AppState>(
-    //   converter: (store) => store.state,
-    //   builder: (_, state) {
-    //     return new Text(
-    //       '${state.user}',
-    //       textAlign: TextAlign.center,
-    //       style: const TextStyle(fontSize: 20.0),
-    //     );
-    //   },
-    // ),
-    new Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
+
         StoreConnector<AppState, AppState>(
           converter: (store) => store.state,
           builder: (_, state) {
@@ -57,33 +50,30 @@ class _SearchState extends State<SearchState> {
               style: const TextStyle(fontSize: 20.0),
             );
           },
-        ),
-        // StoreConnector<AppState, GenerateUser>(
-        //   converter: (store) => () => store.dispatch(getFirebaseUser),
-        //   builder: (_, generateUserCallback) {
-        //     return new FlatButton(
-        //         color: Colors.lightBlue,
-        //         onPressed: generateUserCallback,
-        //         child: new Text("Get user"));
-        //   },
-        // ),
-      ],
     ),
     NoSignIn(),
-    UserProfile()
+    Text("User Profile"),
+    Text("organization Profile")
+    
   ];
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = _chooseWidget(index);
+      _selectedIndex = index;
     });
   }
 
   int _chooseWidget(index) {
-    if (_user != null) {
-      return index + 1;
+    if(index == 0){
+      return 0;
     }
-    return index;
+    FirebaseUser u = store.state.user;
+    if (u != null) {
+      
+      return 0;
+    }
+    print("returning 1");
+    return 2;
   }
 
   @override
@@ -93,7 +83,7 @@ class _SearchState extends State<SearchState> {
         title: const Text('Foster Friends'), // top bar
       ),
       body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: _widgetOptions.elementAt(_chooseWidget(_selectedIndex)),
       ),
       // Contruction of navigation
       bottomNavigationBar: BottomNavigationBar(

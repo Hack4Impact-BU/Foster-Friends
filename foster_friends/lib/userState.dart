@@ -1,6 +1,7 @@
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:redux/redux.dart';
+import 'package:foster_friends/search.dart';
 
 // AppState
 class UserState {
@@ -21,11 +22,11 @@ class UpdateUserAction{
 
 
 // Reducer
-UserState reducer(UserState prev, dynamic action) {
+SearchStateUser reducer(SearchStateUser prev, dynamic action) {
   if (action is UpdateUserAction){
     print("User");
-    UserState newAppState = 
-      new UserState(action.user);
+    SearchStateUser newAppState = 
+      new SearchStateUser(action.user);
     return newAppState;
   }
   else{
