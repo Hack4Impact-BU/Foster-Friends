@@ -1,7 +1,7 @@
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:redux/redux.dart';
-import 'package:foster_friends/search.dart';
+import 'package:foster_friends/containers/search.dart';
 
 // AppState
 class UserState {

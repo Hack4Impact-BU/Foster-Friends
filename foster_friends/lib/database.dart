@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:foster_friends/authentication.dart';
+import 'package:foster_friends/containers/authentication/authentication.dart';
 
 final Firestore firestore = Firestore.instance;
 

@@ -4,8 +4,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:foster_friends/appState.dart';
-import 'package:foster_friends/search.dart';
+import 'package:foster_friends/state/appState.dart';
+import 'package:foster_friends/containers/search.dart';
 
 void main() => runApp(new MyApp());
 
