@@ -11,13 +11,7 @@ import 'package:foster_friends/containers/authentication/login_page.dart';
 class Search extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new StoreConnector<AppState, _ViewModel>(
-      converter: _ViewModel.fromStore,
-      builder: (BuildContext context, _ViewModel vm){
-        print("In Building");
-        return new SearchState(0);
-      }
-    );
+    return SearchState(0);
   }
 }
 
@@ -76,10 +70,6 @@ class SearchStateUser extends State<SearchState> {
   ];
 
   void _onItemTapped(int index) {
-    if(store.state.user == null && index > 0){
-      Navigator.push(context, MaterialPageRoute(
-                        builder: (BuildContext context) => new LoginPage()));
-    }
     setState(() {
       _selectedIndex = index;
     });
