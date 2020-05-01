@@ -75,17 +75,28 @@ Future<bool> existsInDatabase() async {
   FirebaseUser user = await getCurrentUser();
   final String uid = user.uid;
 
-  DocumentReference refInd =
-      Firestore.instance.collection('individuals').document(uid);
-  DocumentSnapshot docInd = await refInd.get();
 
+  return (await checkIndividuals(uid)) && ( await checkOrganization(uid));
+}
+
+Future<bool> checkIndividuals(String uid) async {
+  DocumentReference ref =  Firestore.instance.collection('individuals').document(uid);
+  DocumentSnapshot docInd = await ref.get();
+  return docInd.exists;
+}
+
+Future<bool> checkOrganization(String uid) async{
   DocumentReference refOrg =
       Firestore.instance.collection('organizations').document(uid);
   DocumentSnapshot docOrg = await refOrg.get();
+  return docOrg.exists;
+}
 
-  bool both = docOrg.exists && docInd.exists;
 
-  print('$uid is found: $both');
 
-  return docOrg.exists && docInd.exists;
+Future<String> getUserType(String uid) async {
+    if(await checkOrganization(uid)){
+      return "Organization";
+    }
+    return "Individual";
 }

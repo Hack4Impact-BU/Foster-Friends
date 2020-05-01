@@ -23,17 +23,19 @@ class Search extends StatelessWidget {
 class SearchState extends StatefulWidget {
   SearchState({Key key}) : super(key: key); // have no idea what this is
   @override
-  SearchStateUser createState() => SearchStateUser(null);
+  SearchStateUser createState() => SearchStateUser(null, "");
 }
 
 // This is the bottom bar body options
 class SearchStateUser extends State<SearchState> {
   // FirebaseUser _user = store.state.user;
   FirebaseUser _user;
+  String _userType;
 
   FirebaseUser get user => _user;
+  String get userType => _userType;
 
-  SearchStateUser(this._user);
+  SearchStateUser(this._user, this._userType);
 
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
@@ -45,7 +47,7 @@ class SearchStateUser extends State<SearchState> {
           converter: (store) => store.state,
           builder: (_, state) {
             return new Text(
-              '${state.user}',
+              '${state.user} and ${state.userType}',
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 20.0),
             );
@@ -53,7 +55,7 @@ class SearchStateUser extends State<SearchState> {
     ),
     NoSignIn(),
     Text("User Profile"),
-    Text("organization Profile")
+    OrgProfile()
     
   ];
 
@@ -69,11 +71,14 @@ class SearchStateUser extends State<SearchState> {
     }
     FirebaseUser u = store.state.user;
     if (u != null) {
-      
-      return 0;
+      String type = store.state.userType;
+      if(type == 'Individual'){
+        return 2;
+      }
+      return 3;
     }
     print("returning 1");
-    return 2;
+    return index;
   }
 
   @override
