@@ -9,21 +9,7 @@ import 'package:foster_friends/search.dart';
 
 void main() => runApp(new MyApp());
 
-<<<<<<< HEAD
 ThemeData t = ThemeData(
-=======
-import './uploadPet.dart';
-import './org_profile.dart';
-import './pet_profile.dart';
-import './user_profile.dart';
-import './edit_pet_profile.dart';
-import './landing.dart';
-
-
-void main() => runApp(MaterialApp(
-  title: 'Navigation',
-  theme: ThemeData(
->>>>>>> master
     // Define the default brightness and colors.
     primaryColor: Colors.white,
     accentColor: Colors.red,
@@ -35,7 +21,6 @@ void main() => runApp(MaterialApp(
           fontSize: 60.0, color: Colors.red, fontWeight: FontWeight.bold),
       title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
       body1: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
-<<<<<<< HEAD
     ));
 
 class MyApp extends StatelessWidget {
@@ -60,25 +45,6 @@ class MyApp extends StatelessWidget {
             // '/User_Profile' : (BuildContext context) => new UserProfile(),
           }),
     );
-=======
-    ),
-  ),
-
-
-  initialRoute: '/Search',
-  routes: {
-    '/': (context) => MyApp(),
-    '/LogIn': (BuildContext context) => new LoginPage(),
-    // '/Redirect': (BuildContext context) => new Redirect(auth: new Auth()),
-    '/SignUp': (BuildContext context) => new InputForm(),
-    '/Search': (BuildContext context) => new Search(),
-    '/Form': (BuildContext context) => new InputForm(),
-    '/UploadPet': (BuildContext context) => new UploadPet(),
-    '/Org_Profile' : (BuildContext context) => new OrgProfile(),
-    '/Pet_Profile' : (BuildContext context) => new PetProfile(),
-    '/Edit_Pet_Profile' : (BuildContext context) => new EditPetProfile(),
-    // '/User_Profile' : (BuildContext context) => new UserProfile(),
->>>>>>> master
   }
 }
 
