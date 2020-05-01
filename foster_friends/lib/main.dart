@@ -13,6 +13,7 @@ import './uploadPet.dart';
 import './org_profile.dart';
 import './pet_profile.dart';
 import './user_profile.dart';
+import './edit_pet_profile.dart';
 import './landing.dart';
 
 
@@ -50,6 +51,7 @@ void main() => runApp(MaterialApp(
     '/UploadPet': (BuildContext context) => new UploadPet(),
     '/Org_Profile' : (BuildContext context) => new OrgProfile(),
     '/Pet_Profile' : (BuildContext context) => new PetProfile(),
+    '/Edit_Pet_Profile' : (BuildContext context) => new EditPetProfile(),
     // '/User_Profile' : (BuildContext context) => new UserProfile(),
   }
 ));

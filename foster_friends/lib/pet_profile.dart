@@ -8,10 +8,39 @@ class PetProfile extends StatefulWidget {
   }
 }
 
+class PetInfo {
+  PetInfo([ this.name, this.description, this.breed, this.sex, this.organization, this.type, this.age, this.photo]);
+  final String name;
+  final String breed;
+  final String photo;
+  final String organization; 
+  final String sex; 
+  //final String location; 
+  final String type; 
+  final String description;
+  final String age;
+
+}
+
+
 
 class PetState extends State<PetProfile> {
+   
+  Map data = {};
+
   @override
   Widget build(BuildContext context) {
+
+  PetInfo p;
+  data = ModalRoute.of(context).settings.arguments;
+  print(data);
+  if(data['Sex'] == true) {
+    p = new PetInfo(data['Name'],data['Description'],data['Breed'],"Female",data['Organization'],data['Type'],data['Age'],data['Photo']);
+  }
+  else{
+    p = new PetInfo(data['Name'],data['Description'],data['Breed'],"Male",data['Organization'],data['Type'],data['Age'],data['Photo']);
+  }
+
     return Container(
         child: Scaffold(
           appBar: AppBar(),
@@ -22,28 +51,25 @@ class PetState extends State<PetProfile> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   
                   children: <Widget> [ 
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          CircleAvatar(
-                            radius:70,
-                            backgroundImage:NetworkImage("https://hips.hearstapps.com/ghk.h-cdn.co/assets/17/30/2560x1280/landscape-1500925839-golden-retriever-puppy.jpg?resize=1200:*"),
+                      
+                          Image.network(
+                            p.photo, 
+                            height: 200,
+                            width: 400,
 
-                          ),
-                          
-                          Text("Lily", style: TextStyle(
+                            fit: BoxFit.cover),
+
+                    SizedBox(height: 30),
+                        Text(p.name, 
+                      style: TextStyle(
                                         color: Colors.black,
                                         fontFamily: 'roboto',
                                         fontSize: 50.0,
-                                        letterSpacing: 1.5
-                                      ),
-                          ),
-                          
-                        ],
-                      ),
-                    SizedBox(height: 30),
+                                        letterSpacing: 1.5)
+                      ),        
+                      SizedBox(height: 20),
 
-                      Text("Playful golden Lab. Loves being scratched. Goodest girl. Will drown you with love.", 
+                      Text(p.description, 
                       style: TextStyle(
                         color: Colors.black87,
                         fontFamily: 'roboto',
@@ -53,102 +79,158 @@ class PetState extends State<PetProfile> {
                           ),
                           
                           SizedBox(height: 30),
+
+                      FlatButton(
+                        child: Text('Edit Pet Profile'),
+                        color: Colors.black12,
+                        onPressed: () {Navigator.pushNamed(context, '/Edit_Pet_Profile',arguments: data);}
+                      ),
                       Divider(color: Colors.grey),
                       SizedBox(height: 30),
 
                       Container(
                       margin: EdgeInsets.all(20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                  
-                        children: <Widget> [ 
-
-
-                          Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text("Pet Type:", 
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontFamily: 'roboto',
-                        fontSize: 20.0,
-                        letterSpacing: 1.5
-                      )),
-
-                      Text("Dog", 
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'roboto',
-                        fontSize: 20.0,
-                        letterSpacing: 1.5
-                      ))]),
-
-                          SizedBox(height: 30),
-
-                        Row(
+                          Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Text("Breed:", 
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontFamily: 'roboto',
-                        fontSize: 20.0,
-                        letterSpacing: 1.5
-                      )),
+                          children: <Widget>[
+                            Text("Pet Type", 
+                            style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'roboto',
+                            fontSize: 15.0,
+                            letterSpacing: 1.5
+                            )),
 
-                      Text("Labrador Retrievers", 
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'roboto',
-                        fontSize: 20.0,
-                        letterSpacing: 1.5
-                      ))]),
+                            Text(p.type, 
+                            style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'roboto',
+                            fontSize: 15.0,
+                            letterSpacing: 1.5
+                            ))
+                        
+                          ]),
+                          SizedBox(width: 20),
 
-                                                SizedBox(height: 30),
-
-
-                      Row(
+                          Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Text("Gender:", 
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontFamily: 'roboto',
-                        fontSize: 20.0,
-                        letterSpacing: 1.5
-                      )),
+                          children: <Widget>[
+                            Text("Breed", 
+                            style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'roboto',
+                            fontSize: 15.0,
+                            letterSpacing: 1.5
+                            )),
 
-                      Text("Female", 
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'roboto',
-                        fontSize: 20.0,
-                        letterSpacing: 1.5
-                      ))]),
+                            Text(p.breed, 
+                            style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'roboto',
+                            fontSize: 15.0,
+                            letterSpacing: 1.5
+                            ))
+                        
+                          ]),
 
-                          SizedBox(height: 30),
+                         SizedBox(width: 20),
 
-                      Row(
+                          Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Text("Age:", 
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontFamily: 'roboto',
-                        fontSize: 20.0,
-                        letterSpacing: 1.5
-                      )),
+                          children: <Widget>[
+                            Text("Gender", 
+                            style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'roboto',
+                            fontSize: 15.0,
+                            letterSpacing: 1.5
+                            )),
 
-                      Text("1 year, 2 months", 
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'roboto',
-                        fontSize: 20.0,
-                        letterSpacing: 1.5
-                      ))]),
+                            Text(p.sex, 
+                            style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'roboto',
+                            fontSize: 15.0,
+                            letterSpacing: 1.5
+                            ))
+                        
+                          ]),
+
+SizedBox(width: 20),
+                          Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Text("Age", 
+                            style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'roboto',
+                            fontSize: 15.0,
+                            letterSpacing: 1.5
+                            )),
+
+                            Text(p.age, 
+                            style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'roboto',
+                            fontSize: 15.0,
+                            letterSpacing: 1.5
+                            ))
+                        
+                          ]),
+                        ],
+                      )
+
                       
-                      ]))
 
+                      // Row(
+                      //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //   children: <Widget>[
+                      //     Text("Gender:", 
+                      // style: TextStyle(
+                      //   color: Colors.red,
+                      //   fontFamily: 'roboto',
+                      //   fontSize: 20.0,
+                      //   letterSpacing: 1.5
+                      // )),
+
+                      // Text(p.sex, 
+                      // style: TextStyle(
+                      //   color: Colors.black,
+                      //   fontFamily: 'roboto',
+                      //   fontSize: 20.0,
+                      //   letterSpacing: 1.5
+                      // ))]),
+
+                      //     SizedBox(height: 30),
+
+                      // Row(
+                      //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //   children: <Widget>[
+                      //     Text("Age:", 
+                      // style: TextStyle(
+                      //   color: Colors.red,
+                      //   fontFamily: 'roboto',
+                      //   fontSize: 20.0,
+                      //   letterSpacing: 1.5
+                      // )),
+
+                      // Text(p.age, 
+                      // style: TextStyle(
+                      //   color: Colors.black,
+                      //   fontFamily: 'roboto',
+                      //   fontSize: 20.0,
+                      //   letterSpacing: 1.5
+                      // ))]),
+                      
+                      // ]))
+                      )
                   ]))));
   }
 }
