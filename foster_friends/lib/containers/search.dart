@@ -1,7 +1,6 @@
 //import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:foster_friends/containers/authentication/no_signin.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:foster_friends/state/appState.dart';
 import 'package:foster_friends/containers/profiles/profile.dart';
@@ -61,21 +60,7 @@ class SearchStateUser extends State<SearchState> {
     });
   }
 
-  int _chooseWidget(index) {
-    if(index == 0){
-      return 0;
-    }
-    FirebaseUser u = store.state.user;
-    if (u != null) {
-      String type = store.state.userType;
-      if(type == 'Individual'){
-        return 2;
-      }
-      return 3;
-    }
-    print("returning 1");
-    return index;
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +69,7 @@ class SearchStateUser extends State<SearchState> {
         title: const Text('Foster Friends'), // top bar
       ),
       body: Center(
-        child: _widgetOptions.elementAt(_chooseWidget(_selectedIndex)),
+        child: _widgetOptions.elementAt(_selectedIndex),
       ),
       // Contruction of navigation
       bottomNavigationBar: BottomNavigationBar(
