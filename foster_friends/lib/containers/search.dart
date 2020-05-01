@@ -4,23 +4,53 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:foster_friends/state/appState.dart';
 import 'package:foster_friends/containers/profiles/profile.dart';
+import 'package:redux/redux.dart';
+import 'package:foster_friends/containers/authentication/login_page.dart';
 
 // main application build
 class Search extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Foster Friends",
-      home: SearchState(),
+    return new StoreConnector<AppState, _ViewModel>(
+      converter: _ViewModel.fromStore,
+      builder: (BuildContext context, _ViewModel vm){
+        print("In Building");
+        return new SearchState(0);
+      }
     );
   }
 }
 
+class _ViewModel {
+  final FirebaseUser user;
+  final Function onLogIn;
+  final int selectedIndex;
+
+  _ViewModel({
+    this.user,
+    this.onLogIn,
+    this.selectedIndex
+  });
+
+  static _ViewModel fromStore(Store<AppState> store){
+    return new _ViewModel(
+      user: store.state.user,
+      selectedIndex: store.state.index,
+      onLogIn: (){
+        print("Hello!");
+      }
+    );
+  }
+
+}
+
 // building state
 class SearchState extends StatefulWidget {
-  SearchState({Key key}) : super(key: key); // have no idea what this is
+  // SearchState({Key key}) : super(key: key); // have no idea what this is
+  final int index;
+  SearchState(this.index);
   @override
-  SearchStateUser createState() => SearchStateUser(null, "");
+  SearchStateUser createState() => SearchStateUser(null, "", index);
 }
 
 // This is the bottom bar body options
@@ -28,33 +58,28 @@ class SearchStateUser extends State<SearchState> {
   // FirebaseUser _user = store.state.user;
   FirebaseUser _user;
   String _userType;
+  int _selectedIndex;
 
   FirebaseUser get user => _user;
   String get userType => _userType;
 
-  SearchStateUser(this._user, this._userType);
+  SearchStateUser(this._user, this._userType, this._selectedIndex);
 
-  int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   static List<Widget> _widgetOptions = <Widget>[
 
-        StoreConnector<AppState, AppState>(
-          converter: (store) => store.state,
-          builder: (_, state) {
-            return new Text(
-              '${state.user} and ${state.userType}',
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 20.0),
-            );
-          },
-    ),
+    Text("Search"),
     Profile()
     
   ];
 
   void _onItemTapped(int index) {
+    if(store.state.user == null && index > 0){
+      Navigator.push(context, MaterialPageRoute(
+                        builder: (BuildContext context) => new LoginPage()));
+    }
     setState(() {
       _selectedIndex = index;
     });
