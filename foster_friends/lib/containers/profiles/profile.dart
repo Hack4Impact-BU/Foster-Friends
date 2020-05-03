@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:foster_friends/containers/authentication/no_signin.dart';
 import 'package:foster_friends/containers/authentication/login_page.dart';
 import 'package:foster_friends/containers/profiles/individuals/user_profile.dart';
 import 'package:foster_friends/containers/profiles/organizations/org_profile.dart';
 import 'package:foster_friends/state/appState.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:foster_friends/state/appState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 

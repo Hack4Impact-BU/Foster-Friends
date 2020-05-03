@@ -73,4 +73,5 @@ void signOut() async {
   await FirebaseAuth.instance.signOut();
   //store.state.userType = '';
   print("User Sign Out");
+  store.dispatch(getFirebaseUser);
 }
