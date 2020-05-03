@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foster_friends/containers/authentication/no_signin.dart';
+import 'package:foster_friends/containers/authentication/login_page.dart';
 import 'package:foster_friends/containers/profiles/individuals/user_profile.dart';
 import 'package:foster_friends/containers/profiles/organizations/org_profile.dart';
 import 'package:foster_friends/state/appState.dart';
@@ -8,6 +9,7 @@ import 'package:foster_friends/state/appState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
+
 class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -15,12 +17,26 @@ class Profile extends StatelessWidget {
       converter: _ViewModel.fromStore,
       builder: (BuildContext context, _ViewModel vm){
         print("In Building");
+        print("BLAAA "+store.state.userType);
         switch(store.state.userType){
           case '':
-            return Text("Hi");
-            break;
+            return Container(
+                  child: Scaffold(
+                      body: Container(
+                          child: LoginPage(),
+            )));
+          case 'Individual':
+            return Container(
+                    child: Scaffold(
+                        body: Container(
+                            child: UserProfile(),
+              )));
           case 'Organization':
-            return Text("Organization");
+            return Container(
+                    child: Scaffold(
+                        body: Container(
+                            child: OrgProfile(),
+              )));
         }
         
       }

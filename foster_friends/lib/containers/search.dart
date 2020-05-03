@@ -27,12 +27,14 @@ class _ViewModel {
   });
 
   static _ViewModel fromStore(Store<AppState> store){
+    print(store.state.user);
     return new _ViewModel(
       user: store.state.user,
-      selectedIndex: store.state.index,
-      onLogIn: (){
-        print("Hello!");
-      }
+
+      //selectedIndex: store.state.index,
+      //onLogIn: (){
+      //  print("Hello!");
+      //}
     );
   }
 

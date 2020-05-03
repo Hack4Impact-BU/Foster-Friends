@@ -7,28 +7,35 @@ import 'package:foster_friends/database.dart';
 class AppState {
   FirebaseUser _user;
   String _userType;
+  int _userIndex;
 
   FirebaseUser get user => _user;
   String get userType => this._userType;
+  int get userIndex => this._userIndex;
 
-  AppState(this._user, this._userType);
+  AppState(this._user, this._userType, this._userIndex);
+
+  get index => null;
 }
 
 class UpdateUserAction{
   FirebaseUser _user;
   String _userType;
+  int _userIndex;
   FirebaseUser get user => this._user;
   String get userType => this._userType;
+  int get userIndex => this._userIndex;
 
-  UpdateUserAction(this._user, this._userType);
+  UpdateUserAction(this._user, this._userType, this._userIndex);
 }
 
 ThunkAction<AppState> getFirebaseUser = (Store<AppState> store) async{
   FirebaseAuth.instance.currentUser().then((u) async {
     
     String type = await getUserType(u.uid);
+    int index = 0;
     print("User is $u with type $type");
-    store.dispatch(new UpdateUserAction(u, type));    
+    store.dispatch(new UpdateUserAction(u, type, index));    
   });
 };
 
@@ -36,7 +43,7 @@ ThunkAction<AppState> getFirebaseUser = (Store<AppState> store) async{
 AppState reducer(AppState prev, dynamic action) {
   if (action is UpdateUserAction){
     AppState newAppState = 
-      new AppState(action.user, action.userType);
+      new AppState(action.user, action.userType, action.userIndex);
     return newAppState;
   }
   else{
@@ -46,4 +53,4 @@ AppState reducer(AppState prev, dynamic action) {
 
 // store that hold our current appstate
 final store = new Store<AppState>(reducer,
-    initialState: new AppState(null, ""), middleware: [thunkMiddleware]);
+    initialState: new AppState(null, "",0), middleware: [thunkMiddleware]);

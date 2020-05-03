@@ -95,8 +95,13 @@ Future<bool> checkOrganization(String uid) async{
 
 
 Future<String> getUserType(String uid) async {
-    if(await checkOrganization(uid)){
+    if (uid == '') {
+      return "";
+    }
+    else if(await checkOrganization(uid)){
       return "Organization";
     }
-    return "Individual";
+    else if(await checkIndividuals(uid)){
+      return "Individual";
+    }
 }

@@ -7,9 +7,11 @@ import 'package:foster_friends/containers/search.dart';
 class UserState {
   FirebaseUser _user;
   String _userType;
+  int _userIndex;
 
   FirebaseUser get user => _user;
   String get userType => _userType;
+  int get userIndex => _userIndex;
 
   UserState(this._user, this._userType);
 }
@@ -18,10 +20,12 @@ class UserState {
 class UpdateUserAction{
   FirebaseUser _user;
   String _userType;
+  int _userIndex;
   FirebaseUser get user => this._user;
   String get userType => this._userType;
+  int get userIndex => this._userIndex;
 
-  UpdateUserAction(this._user, this._userType);
+  UpdateUserAction(this._user, this._userType, this._userIndex);
 }
 
 
@@ -30,7 +34,7 @@ SearchStateUser reducer(SearchStateUser prev, dynamic action) {
   if (action is UpdateUserAction){
     print("User");
     SearchStateUser newAppState = 
-      new SearchStateUser(action.user, action.userType);
+      new SearchStateUser(action.user, action.userType, action.userIndex);
     return newAppState;
   }
   else{
