@@ -15,31 +15,6 @@ class Search extends StatelessWidget {
   }
 }
 
-class _ViewModel {
-  final FirebaseUser user;
-  final Function onLogIn;
-  final int selectedIndex;
-
-  _ViewModel({
-    this.user,
-    this.onLogIn,
-    this.selectedIndex
-  });
-
-  static _ViewModel fromStore(Store<AppState> store){
-    print(store.state.user);
-    return new _ViewModel(
-      user: store.state.user,
-
-      //selectedIndex: store.state.index,
-      //onLogIn: (){
-      //  print("Hello!");
-      //}
-    );
-  }
-
-}
-
 // building state
 class SearchState extends StatefulWidget {
   // SearchState({Key key}) : super(key: key); // have no idea what this is
@@ -51,7 +26,12 @@ class SearchState extends StatefulWidget {
 
 // This is the bottom bar body options
 class SearchStateUser extends State<SearchState> {
-  // FirebaseUser _user = store.state.user;
+  
+  @override
+  void initState(){
+    store.dispatch(getFirebaseUser);
+  }
+
   FirebaseUser _user;
   String _userType;
   int _selectedIndex;
