@@ -23,13 +23,13 @@ class Profile extends StatelessWidget {
                       body: Container(
                           child: LoginPage(),
             )));
-          case 'Individual':
+          case 'individual':
             return Container(
                     child: Scaffold(
                         body: Container(
                             child: UserProfile(),
               )));
-          case 'Organization':
+          case 'organization':
             return Container(
                     child: Scaffold(
                         body: Container(

@@ -49,19 +49,9 @@ class InputFormState extends State<InputForm> {
     if (validateAndSave()) {
       FirebaseUser user = await getCurrentUser();
       try {
-        if (!isIndividual) {
-          // userId = await emailSignIn(_email, _password);
-          print('Org to database');
-          pushOrganizationProfile(user.uid, _address, _description, user.email,
-              _name, _phone, _photo);
-        } else {
-          // userId = await emailSignUp(_email, _password);
-          //widget.auth.sendEmailVerification();
-          //_showVerifyEmailSentDialog();
-          print('User to database');
-          pushIndividualProfile(user.uid, _phone, user.email, _address, _name);
-        }
-
+        pushProfile(user.uid, _phone, user.email, _address, _name, _address, 
+        _description, _photo, isIndividual);
+        
         store.dispatch(getFirebaseUser);
         Navigator.pop(context);
 

@@ -2,11 +2,13 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:foster_friends/containers/authentication/authentication.dart';
+import 'package:foster_friends/state/appState.dart';
 
 final Firestore firestore = Firestore.instance;
 
   CollectionReference get indivs => firestore.collection('individuals');
   CollectionReference get orgs => firestore.collection('organizations');
+  
 
 
 // Based on template, not actually functional
@@ -41,24 +43,37 @@ Future<void> writeUser(String email, String name, String location) async {
     });
 }
 
-void pushIndividualProfile(String userID, String phoneNumber, String email,
-    String location, String name) async {
-  DocumentReference ref =
-      Firestore.instance.collection("individuals").document(userID);
+void pushProfile(String userID, String phoneNumber, String email,
+    String location, String name, String address, String description,
+    String photoLink, bool isIndividual){
+  if(isIndividual){
+    pushIndividualProfile(userID, phoneNumber, email, location, name, photoLink);
+  } else{
+    pushOrganizationProfile(userID, address, description, email, name, phoneNumber, 
+    photoLink);
+  }
 
+}
+
+
+void pushIndividualProfile(String userID, String phoneNumber, String email,
+    String location, String name, String photoLink) async {
+  DocumentReference ref = firestore.collection("users").document(userID);
+  
   await ref.setData({
     "email": email,
     "phone number": phoneNumber,
     "location": location,
-    "name": name
+    "name": name,
+    "type": "individual"
   });
   print("User profile submitted");
 }
 
 void pushOrganizationProfile(String userID, String address, String description,
     String email, String name, String phoneNumber, String photoLink) async {
-  DocumentReference ref =
-      Firestore.instance.collection("organizations").document(userID);
+
+  DocumentReference ref = firestore.collection("users").document(userID);
 
   await ref.setData({
     "address": address,
@@ -66,42 +81,49 @@ void pushOrganizationProfile(String userID, String address, String description,
     "email": email,
     "name": name,
     "phone number": phoneNumber,
-    "photo": photoLink
+    "photo": photoLink,
+    "type": "organization"
   });
   print("Organization profile submitted");
 }
 
 Future<bool> existsInDatabase() async {
   FirebaseUser user = await getCurrentUser();
-  final String uid = user.uid;
-
-
-  return (await checkIndividuals(uid)) || ( await checkOrganization(uid));
+  final String uid = user.uid; 
+  DocumentReference ref =  firestore.collection('users').document(uid);
+  DocumentSnapshot doc= await ref.get();
+  return doc.exists;
 }
-
-Future<bool> checkIndividuals(String uid) async {
-  DocumentReference ref =  Firestore.instance.collection('individuals').document(uid);
-  DocumentSnapshot docInd = await ref.get();
-  return docInd.exists;
-}
-
-Future<bool> checkOrganization(String uid) async{
-  DocumentReference refOrg =
-      Firestore.instance.collection('organizations').document(uid);
-  DocumentSnapshot docOrg = await refOrg.get();
-  return docOrg.exists;
-}
-
-
 
 Future<String> getUserType(String uid) async {
-    if (uid == '') {
-      return "";
-    }
-    else if(await checkOrganization(uid)){
-      return "Organization";
-    }
-    else if(await checkIndividuals(uid)){
-      return "Individual";
-    }
+  DocumentSnapshot s =  await Firestore.instance.collection('users').document(uid).get();
+  return s.data['type'];
 }
+
+//  getIndividualData() async {
+//    final ref = Firestore.instance; // instantiate database
+//     await ref
+//         .collection("Individuals")
+//         .document(store.state.user.uid)
+//         .get()
+//         .then((DocumentSnapshot snapshot) async {
+          
+//       name = snapshot.data['name'];
+//       description = snapshot.data['description'];
+//       email = snapshot.data['email'];
+//       ph = snapshot.data['phone number'];
+//       photo = snapshot.data['photo'];
+//       pets = snapshot.data['pets'];
+
+//       for (var i in pets) {
+//         var ind = pets.indexOf(i);
+//         await getPet(i, ind);
+//       }
+
+//       print(pets.length);
+//       if (this.mounted) {
+//         setState(() {});
+//       }
+//     });
+//     return;
+//   }
