@@ -76,7 +76,7 @@ Future<bool> existsInDatabase() async {
   final String uid = user.uid;
 
 
-  return (await checkIndividuals(uid)) && ( await checkOrganization(uid));
+  return (await checkIndividuals(uid)) || ( await checkOrganization(uid));
 }
 
 Future<bool> checkIndividuals(String uid) async {

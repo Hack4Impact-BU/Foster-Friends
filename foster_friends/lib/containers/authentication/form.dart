@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foster_friends/database.dart';
 import 'package:foster_friends/containers/authentication/authentication.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:foster_friends/state/appState.dart';
 
 // Email login and sign up page
 
@@ -53,15 +54,17 @@ class InputFormState extends State<InputForm> {
           print('Org to database');
           pushOrganizationProfile(user.uid, _address, _description, user.email,
               _name, _phone, _photo);
-          Navigator.pop(context);
         } else {
           // userId = await emailSignUp(_email, _password);
           //widget.auth.sendEmailVerification();
           //_showVerifyEmailSentDialog();
           print('User to database');
           pushIndividualProfile(user.uid, _phone, user.email, _address, _name);
-          Navigator.pop(context);
         }
+
+        store.dispatch(getFirebaseUser);
+        Navigator.pop(context);
+
         setState(() {
           _isLoading = false;
         });
