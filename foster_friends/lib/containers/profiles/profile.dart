@@ -14,9 +14,7 @@ class Profile extends StatelessWidget {
     return new StoreConnector<AppState, _ViewModel>(
       converter: _ViewModel.fromStore,
       builder: (BuildContext context, _ViewModel vm){
-        print("In Building");
-        print("BLAAA "+store.state.userType);
-        switch(store.state.userType){
+        switch(store.state.userData["type"]){
           case '':
             return Container(
                   child: Scaffold(
