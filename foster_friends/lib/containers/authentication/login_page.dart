@@ -3,7 +3,6 @@ import 'package:foster_friends/containers/authentication/authentication.dart';
 import 'package:foster_friends/containers/authentication/email.dart';
 import 'package:foster_friends/containers/authentication/form.dart';
 import 'package:foster_friends/database.dart';
-import 'package:foster_friends/state/userState.dart';
 import 'package:foster_friends/state/appState.dart';
 
 // Current default page, includes google, email, and gmail sign in
