@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import './authentication.dart';
 import 'package:foster_friends/database.dart';
 import 'package:foster_friends/containers/authentication/form.dart';
+import 'package:foster_friends/state/appState.dart';
 
 // Email login and sign up page
 
@@ -53,6 +54,8 @@ class _EmailState extends State<Email> {
                     context,
                     MaterialPageRoute(
                         builder: (BuildContext context) => new InputForm()));
+              } else{
+                store.dispatch(getFirebaseUser);
               }
             });
         
