@@ -376,8 +376,6 @@ SPEC REPOS:
     - leveldb-library
     - nanopb
     - PromisesObjC
-  trunk:
-    - FirebaseStorage
 
 EXTERNAL SOURCES:
   cloud_firestore:
@@ -455,4 +453,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 1b66dae606f75376c5f2135a8290850eeb09ae83
 
-COCOAPODS: 1.7.5
+COCOAPODS: 1.7.1

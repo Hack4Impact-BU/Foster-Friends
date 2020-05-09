@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:foster_friends/authentication.dart';
-//import 'package:foster_friends/google.dart';
-//import 'package:foster_friends/redirect.dart';
-import 'package:foster_friends/main.dart';
-import 'package:foster_friends/email.dart';
-import 'package:foster_friends/form.dart';
+import 'package:foster_friends/containers/authentication/authentication.dart';
+import 'package:foster_friends/containers/authentication/email.dart';
+import 'package:foster_friends/containers/authentication/form.dart';
 import 'package:foster_friends/database.dart';
+import 'package:foster_friends/state/appState.dart';
 
 // Current default page, includes google, email, and gmail sign in
 
@@ -35,7 +33,23 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                   padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
                   child: showErrorMessage()),
-              
+              RaisedButton(
+                onPressed: () {
+                  print('Pressed signout');
+                  signOut();
+                },
+                color: Colors.deepPurple,
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Sign Out',
+                    style: TextStyle(fontSize: 25, color: Colors.white),
+                  ),
+                ),
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40)),
+              ),
             ],
           ),
         ),
@@ -47,21 +61,23 @@ class _LoginPageState extends State<LoginPage> {
     return OutlineButton(
       splashColor: Colors.grey,
       onPressed: () {
-       
         signInWithGoogle().then((e) {
           print("Done with $e");
 
           if (e == '') {
             existsInDatabase().then((isFound) {
+              print("Is found $isFound");
               if (!isFound) {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (BuildContext context) => new InputForm()));
+              } else{
+                store.dispatch(getFirebaseUser);
               }
             });
           }
-     
+
           setState(() {
             _errorMessage = e;
           });

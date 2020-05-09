@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:foster_friends/state/appState.dart';
 
 final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
@@ -70,5 +71,7 @@ Future<String> signInWithGoogle() async {
 void signOut() async {
   await googleSignIn.signOut();
   await FirebaseAuth.instance.signOut();
+  //store.state.userType = '';
   print("User Sign Out");
+  store.dispatch(getFirebaseUser);
 }

@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:foster_friends/authentication.dart';
+import 'package:foster_friends/containers/authentication/authentication.dart';
+import 'package:foster_friends/state/appState.dart';
+
+final name = store.state.userData['name'];
+final email = store.state.userData['email'];
+final phoneNumber = store.state.userData['phone number'];
+
 
 // Define a custom Form widget.
 class UserProfile extends StatefulWidget {
@@ -41,13 +47,12 @@ class UserState extends State<UserProfile>{
                 backgroundImage: NetworkImage("https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50"),
               ),
               SizedBox(height: 20,),
-              Text("John Doe", style: TextStyle(fontWeight: FontWeight.w600, fontSize:20)),
+              Text(name, style: TextStyle(fontWeight: FontWeight.w600, fontSize:20)),
               SizedBox(height: 10,),
               Container(margin: EdgeInsets.symmetric(horizontal: 16), child: Column(children: <Widget>[
-                Text("Psychiatrist, pet lover, dogs > cat, looking for a pet to impress my girl", style: TextStyle(fontSize:18)),
                 SizedBox(height:15,),
-                Text("johndoe@gmail.com", style: TextStyle(fontSize:18)),
-                Text("626-215-2500", style: TextStyle(fontSize:18)),
+                Text(email, style: TextStyle(fontSize:18)),
+                Text(phoneNumber, style: TextStyle(fontSize:18)),
               ],))
             ],
             )

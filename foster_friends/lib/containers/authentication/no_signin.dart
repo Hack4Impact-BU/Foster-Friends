@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foster_friends/login_page.dart';
+import 'package:foster_friends/containers/authentication/login_page.dart';
 
 class NoSignIn extends StatelessWidget {
   Widget build(BuildContext context) {
