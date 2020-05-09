@@ -1,11 +1,9 @@
 //import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:foster_friends/state/appState.dart';
 import 'package:foster_friends/containers/profiles/profile.dart';
-import 'package:redux/redux.dart';
-import 'package:foster_friends/containers/authentication/login_page.dart';
+
 
 // main application build
 class Search extends StatelessWidget {
