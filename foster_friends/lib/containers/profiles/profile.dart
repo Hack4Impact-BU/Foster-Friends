@@ -14,13 +14,14 @@ class Profile extends StatelessWidget {
     return new StoreConnector<AppState, _ViewModel>(
       converter: _ViewModel.fromStore,
       builder: (BuildContext context, _ViewModel vm){
-        switch(store.state.userData["type"]){
-          case '':
-            return Container(
+        if (store.state.user == null){
+          return Container(
                   child: Scaffold(
                       body: Container(
                           child: LoginPage(),
             )));
+        }
+        switch(store.state.userData["type"]){
           case 'individual':
             return Container(
                     child: Scaffold(
