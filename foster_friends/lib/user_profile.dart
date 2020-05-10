@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 FirebaseUser user;
 String uid;
+
 // Define a custom Form widget.
 class UserProfile extends StatefulWidget {
   @override
@@ -41,6 +42,8 @@ class UserState extends State<UserProfile>{
             String email = snapshot.data['email'];
             String phoneNum = snapshot.data['phone number'];
             String location = snapshot.data['location'];
+            // String photo = snapshot.data['photo'];
+
             return Scaffold(
               body: ListView(
                 children: <Widget>[
