@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "366301121640-ej7j8nho2gvpq5d7sn0d44enecc0uomt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.foster_friends",
+            "certificate_hash": "f1a7a40f24decb1ada39e21b1855eb07859341f8"
+          }
+        },
+        {
           "client_id": "366301121640-uh3ag6sfo2an3oqstqi2oa0r24r7ci94.apps.googleusercontent.com",
           "client_type": 3
         }
