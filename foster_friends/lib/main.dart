@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:foster_friends/state/appState.dart';
 import 'package:foster_friends/containers/home.dart';
+import 'package:foster_friends/containers/profiles/organizations/pet_profile.dart';
 
 void main() => runApp(new MyApp());
 
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
             // '/Form': (BuildContext context) => new InputForm(),
             // '/UploadPet': (BuildContext context) => new UploadPet(),
             // '/Org_Profile': (BuildContext context) => new OrgProfile(),
-            // '/Pet_Profile': (BuildContext context) => new PetProfile(),
+            '/Pet_Profile': (BuildContext context) => new PetProfile(),
             // '/User_Profile' : (BuildContext context) => new UserProfile(),
           }),
     );

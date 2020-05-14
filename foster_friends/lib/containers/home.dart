@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:foster_friends/state/appState.dart';
 import 'package:foster_friends/containers/profiles/profile.dart';
 import 'package:foster_friends/containers/search/search.dart';
+import 'package:foster_friends/containers/search/results.dart';
 
 
 // main application build
@@ -45,7 +46,7 @@ class _HomeState extends State<HomeState> {
 
   static List<Widget> _widgetOptions = <Widget>[
 
-    Text("This is the default browse"),
+    Results(),
     Profile()
     
   ];
