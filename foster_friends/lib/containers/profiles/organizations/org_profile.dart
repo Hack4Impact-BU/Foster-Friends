@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import './uploadPet.dart';
 
 final databaseReference = Firestore.instance; // instantiate database
 final petsDatabase = databaseReference.collection("petstest");
@@ -49,11 +50,24 @@ class OrgState extends State<OrgProfile> {
                               fontSize: 15.0,
                               letterSpacing: 1.5),
                           textAlign: TextAlign.center),
+                      RaisedButton(
+                        color: Theme.of(context).buttonColor,
+                          onPressed: () {
+                            Navigator.push(context,
+                              MaterialPageRoute(builder: (BuildContext context) => new UploadPet()));
+                            },
+                          
+                          child: Text("Upload Pet",
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).backgroundColor)),
+                                  ),
                       Divider(color: Colors.grey),
                       Container(
                           margin: const EdgeInsets.all(10.0),
                           width: 400.0,
-                          height: 400.0,
+                          height: 393.0,
                           child: _buildGrid(context)),
                     ]))));
   }
