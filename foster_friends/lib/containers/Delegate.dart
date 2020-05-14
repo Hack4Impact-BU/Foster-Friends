@@ -1,13 +1,8 @@
 // //import 'package:flappy_search_bar/flappy_search_bar.dart';
 
 // import 'package:flutter/material.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:foster_friends/login_page.dart';
-// import 'package:foster_friends/badProfile.dart';
+// // import 'package:bloc/bloc.dart';
 
-// import 'package:bloc/bloc.dart';
-
-// FirebaseUser user;
 // // main application build
 // class SearchCopy extends StatelessWidget {
 //   static const String _title = 'Flutter Code Sample';
@@ -68,44 +63,9 @@
 //           },
 //         ),
 //       ),
-//       // Contruction of navigation
-//       bottomNavigationBar: BottomNavigationBar(
-//         items: <BottomNavigationBarItem>[
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.search),
-//             title: Text('Search'),
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.people),
-//             title: Text('Profile'),
-//           ),
-//         ],
-//         currentIndex: _selectedIndex,
-//         selectedItemColor: Colors.red,
-//         onTap: _onItemTapped,
-//       ),
-//     );
 //   }
 
-//   int _chooseBody(int i) {
-//     _getUser();
-//     print('Clicked on ' + i.toString());
-//     if (i == 1) {
-//       if (user == null) {
-//         print('Not signed in ' + 1.toString());
-//         return 1;
-//       }
-//       print('Choosing body');
-//       return 2;
-//     }
-//     print('user is ' + user.toString());
-//     return i;
-//   }
 
-//   void _getUser() async {
-//     user  = await FirebaseAuth.instance.currentUser();
-//     print('user is '+ user.toString());
-//   }
 
 //   Widget search(BuildContext context) {
 //     Delegate delegate = new Delegate("");
@@ -145,7 +105,7 @@
 //     //The Bloc will then handle the searching and add the results to the searchResults stream.
 //     //This is the equivalent of submitting the search term to whatever search service you are using
 //     InheritedBlocs.of(context)
-//         .searchBloc
+//         .searchBlocs
 //         .searchTerm
 //         .add(query);
 //     return Column(
@@ -274,32 +234,32 @@
 //   }
 
 
-// // Future<List<Post>> search(String search) async {
-// // await Future.delayed(Duration(seconds: 2));
-// // return List.generate(search.length, (int index) {
-// //   print("Searching");
-// //   return Post(
-// //     "Title : $search $index",
-// //     "Description :$search $index",
-// //   );
-// // });
-// // }
-// //   Widget build(BuildContext context) {
-// //     return Scaffold(
-// //       body: SafeArea(
-// //         child: Padding(
-// //           padding: const EdgeInsets.symmetric(horizontal: 20),
-// //           child: SearchBar<Post>(
-// //             onSearch: search),
-// //         ),
-// //       ),
-// //     );
-// //   }
-// // }
+// Future<List<Post>> search(String search) async {
+// await Future.delayed(Duration(seconds: 2));
+// return List.generate(search.length, (int index) {
+//   print("Searching");
+//   return Post(
+//     "Title : $search $index",
+//     "Description :$search $index",
+//   );
+// });
+// }
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: SafeArea(
+//         child: Padding(
+//           padding: const EdgeInsets.symmetric(horizontal: 20),
+//           child: SearchBar<Post>(
+//             onSearch: search),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-// // class Post {
-// //   final String title;
-// //   final String description;
+// class Post {
+//   final String title;
+//   final String description;
 
-// //   Post(this.title, this.description);
-// // }
+//   Post(this.title, this.description);
+// }
