@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foster_friends/containers/profiles/organizations/uploadPetForm.dart';
+import 'package:foster_friends/containers/search/searchForm.dart';
 
 class Search extends StatelessWidget {
   @override
@@ -11,7 +11,7 @@ class Search extends StatelessWidget {
     // );
     return Dialog(
       insetPadding: EdgeInsets.all(10),
-      child: SingleChildScrollView(child: UploadPetForm()),
+      child: SingleChildScrollView(child: SearchForm()),
     );
   }
 }
@@ -45,7 +45,7 @@ class _SearchState extends State<SearchState> {
         RaisedButton(
             child: Text("Cancel"),
             onPressed: () {
-              Navigator.of(context).pop();
+              print("hello");
             }),
       ],
     );

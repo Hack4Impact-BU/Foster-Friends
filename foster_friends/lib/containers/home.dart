@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:foster_friends/state/appState.dart';
 import 'package:foster_friends/containers/profiles/profile.dart';
-import 'package:foster_friends/containers/search.dart';
+import 'package:foster_friends/containers/search/search.dart';
 
 
 // main application build

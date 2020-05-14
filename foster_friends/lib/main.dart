@@ -5,7 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:foster_friends/state/appState.dart';
-import 'package:foster_friends/containers/search.dart';
+import 'package:foster_friends/containers/home.dart';
 
 void main() => runApp(new MyApp());
 
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
           theme: t,
           initialRoute: '/',
           routes: {
-            '/': (context) => Search(),
+            '/': (context) => Home(),
             // '/LogIn': (BuildContext context) => new LoginPage(),
             // '/Redirect': (BuildContext context) => new Redirect(auth: new Auth()),
             // '/SignUp': (BuildContext context) => new InputForm(),
