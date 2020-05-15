@@ -1,18 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:foster_friends/containers/profiles/organizations/pet_profile.dart';
-
-final databaseReference = Firestore.instance; // instantiate database
-final petsDatabase = databaseReference.collection("petstest");
-
-
-String name = '';
-String description = '';
-String email = '';
-String ph = '';
-String photo = '';
-List pets = [];
-List<Map<String, dynamic>> petInfo = [];
+import 'package:foster_friends/state/appState.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 
 class Results extends StatefulWidget {
   @override
@@ -20,88 +10,99 @@ class Results extends StatefulWidget {
 }
 
 class _Results extends State<Results> {
-  List pets;
-  bool _isLoading;
+  List<Map<String, dynamic>> pets;
 
   @override
-  void initState(){
-    pets = [];
-    _isLoading = true;
-    getData();
+  void initState() {
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _buildGrid(context);
+    return new StoreConnector<AppState, _QueryViewModel>(
+      converter: _QueryViewModel.fromStore,
+      builder: (BuildContext context, _QueryViewModel vm){
+        if(store.state.query.isEmpty){
+          return _loading();
+        } else{
+          return _buildGrid(context);
+        }
+      }   
+    );
   }
 
-  Widget _buildGrid(BuildContext context) => GridView.count(
-      // shrinkWrap: true,
-      crossAxisCount: 3,
-      scrollDirection: Axis.vertical,
-      padding: const EdgeInsets.all(4),
-      children: _buildGridTileList(pets.length, context));
+  Widget _loading() {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget _buildGrid(BuildContext context) {
+    if (store.state.query.isEmpty) {
+      return _loading();
+    } else {
+      return GridView.count(
+          // shrinkWrap: true,
+          crossAxisCount: 3,
+          scrollDirection: Axis.vertical,
+          padding: const EdgeInsets.all(4),
+          children: _buildGridTileList(store.state.query.length, context));
+    }
+  }
 
   List<Widget> _buildGridTileList(int count, BuildContext context) =>
       List.generate(count, (i) {
         return Padding(
           padding: const EdgeInsets.all(1.0),
-            child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: NetworkImage(petInfo[i]['Photo']), fit: BoxFit.cover),
-                ),
-                child: FlatButton(
-                  child: null,
-                  // padding: EdgeInsets.all(0.0),
-                  onPressed: () {
-                    print("Hello");
-                    // showDialog(context: context, builder:(BuildContext context) => PetProfile() );
-                    Navigator.pushNamed(context, '/Pet_Profile',
-                        arguments: petInfo[i]);
-                  },
-                )),
-        
+          child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: NetworkImage(
+                        _chooseImage(store.state.query[i]['image'])),
+                    fit: BoxFit.cover),
+              ),
+              child: FlatButton(
+                child: null,
+                // padding: EdgeInsets.all(0.0),
+                onPressed: () {
+                  // showDialog(context: context, builder:(BuildContext context) => PetProfile() );
+                  Navigator.pushNamed(context, '/Pet_Profile',
+                      arguments: store.state.query[i]);
+                },
+              )),
         );
       });
 
-  getData() async {
-    await databaseReference
-        .collection("organizations")
-        .document("IahwMOjwYdgEKY2cli5f")
-        .get()
-        .then((DocumentSnapshot snapshot) async {
-      name = snapshot.data['name'];
-      description = snapshot.data['description'];
-      email = snapshot.data['email'];
-      ph = snapshot.data['phone number'];
-      photo = snapshot.data['photo'];
-      pets = snapshot.data['pets'];
+  String _chooseImage(String pet) {
+    // print("url is $pet");
 
-      for (var i in pets) {
-        var ind = pets.indexOf(i);
-        await getPet(i, ind);
-      }
+    if (pet == null) {
+      return 'http://www.hostingreviewbox.com/wp-content/uploads/2016/02/image-error.png';
+    } else if (pet.substring(0, 8) != 'https://' && pet.substring(0, 7) != 'http://'  ) {
+      var a = pet.substring(0, 8);
+      // print(a + " " + a.length.toString());
+      return 'http://www.hostingreviewbox.com/wp-content/uploads/2016/02/image-error.png';
+    }
 
-      print(pets.length);
-      if (this.mounted) {
-        setState(() {});
-      }
-    });
+    return pet;
   }
 
-  getPet(String petID, int ind) async {
-    await databaseReference
-        .collection("petstest")
-        .document(petID)
-        .get()
-        .then((DocumentSnapshot snapshot) {
-      if (snapshot.data != null) {
-        petInfo.add(snapshot.data);
 
-        petInfo[ind]['ID'] = petID;
-      }
-    });
+
+
+}
+
+class _QueryViewModel {
+  final List<Map<String,dynamic>> pets;
+
+  _QueryViewModel({
+    this.pets
+  });
+
+  static _QueryViewModel fromStore(Store<AppState> store){
+    return new _QueryViewModel(
+      pets: store.state.query 
+    );
   }
+
 }
