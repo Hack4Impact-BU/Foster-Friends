@@ -292,7 +292,7 @@ class InputFormState extends State<InputForm> {
         keyboardType: TextInputType.phone,
         autofocus: false,
         decoration: new InputDecoration(
-            hintText: 'Enter your organization\'s phone number',
+            hintText: isIndividual ? 'Enter your phone number' : 'Enter your organization\'s phone number',
             icon: new Icon(
               Icons.phone,
               color: Colors.grey,

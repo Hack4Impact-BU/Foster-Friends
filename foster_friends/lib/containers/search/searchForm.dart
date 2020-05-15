@@ -72,7 +72,7 @@ class SearchFormState extends State<SearchForm> {
         ),
       ),
       
-      TextFormField(
+      Container(width: 100.0, child: TextFormField(
           decoration: const InputDecoration(
             hintText: 'Pet Age',
           ),
@@ -83,7 +83,7 @@ class SearchFormState extends State<SearchForm> {
             return null;
           },
           controller: petAge,
-          ),
+      )),
       DropdownButton(
             hint: Text('Select a Pet Type'), // Not necessary for Option 1
             value: _selectedPetTypes,
@@ -193,8 +193,7 @@ class SearchFormState extends State<SearchForm> {
                 
               )))]),
               
-    ]);
-    
+    ]); 
   }
 }
 
