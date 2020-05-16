@@ -90,7 +90,7 @@ class OrgState extends State<OrgProfile> {
 }
 
 String _chooseImage(String pet) {
-  // print("url is $pet");
+  print("url is $pet");
 
   if (pet == null) {
     return 'http://www.hostingreviewbox.com/wp-content/uploads/2016/02/image-error.png';
@@ -125,7 +125,7 @@ List<Widget> _buildGridTileList(int count, BuildContext context) {
           child: Container(
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: NetworkImage(_chooseImage(pets[i]['Photo'])),
+                      image: NetworkImage(_chooseImage(pets[i]['image'])),
                       fit: BoxFit.cover),
                   borderRadius: BorderRadius.all(Radius.circular(100))),
               child: FlatButton(
