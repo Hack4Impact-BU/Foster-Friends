@@ -49,10 +49,11 @@ class InputFormState extends State<InputForm> {
     if (validateAndSave()) {
       FirebaseUser user = await getCurrentUser();
       try {
-        pushProfile(user.uid, _phone, user.email, _address, _name, _address, 
+        await pushProfile(user.uid, _phone, user.email, _address, _name, _address, 
         _description, _photo, isIndividual);
         
         store.dispatch(getFirebaseUser);
+        
         Navigator.pop(context);
 
         setState(() {

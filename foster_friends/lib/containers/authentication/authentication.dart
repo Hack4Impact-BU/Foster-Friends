@@ -68,7 +68,7 @@ Future<String> signInWithGoogle() async {
 
 
 // Handles both sign outs
-void signOut() async {
+Future<void> signOut() async {
   await googleSignIn.signOut();
   await FirebaseAuth.instance.signOut();
   //store.state.userType = '';

@@ -1,0 +1,46 @@
+import 'package:flutter/material.dart';
+
+Widget buildGrid(List<Map<String, dynamic>> posts) => GridView.count(
+    crossAxisCount: 3,
+    scrollDirection: Axis.vertical,
+    padding: const EdgeInsets.all(4),
+    children: buildGridTileList(posts));
+
+List<Widget> buildGridTileList(List<Map<String, dynamic>> posts) {
+  if (posts.length < 1) {
+    return new List(0);
+  }
+  return List.generate(posts.length, (i) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ClipOval(
+        child: Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: NetworkImage(chooseImage(posts[i]['image'])),
+                    fit: BoxFit.cover),
+                borderRadius: BorderRadius.all(Radius.circular(100))),
+            child: FlatButton(
+              child: null,
+              padding: EdgeInsets.all(0.0),
+              onPressed: () {
+                print("Show profile");
+              },
+            )),
+      ),
+    );
+  });
+}
+
+String chooseImage(String url) {
+  if (url == null) {
+    return 'http://www.hostingreviewbox.com/wp-content/uploads/2016/02/image-error.png';
+  } else if (url.length < 7) {
+    return 'http://www.hostingreviewbox.com/wp-content/uploads/2016/02/image-error.png';
+  } else if (url.substring(0, 8) != 'https://') {
+    if (url.substring(0, 7) != 'http://') {
+      return 'http://www.hostingreviewbox.com/wp-content/uploads/2016/02/image-error.png';
+    }
+  }
+  return url;
+}
