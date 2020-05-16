@@ -3,6 +3,7 @@ import 'package:foster_friends/state/appState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:foster_friends/containers/grid/grid.dart';
+import 'package:foster_friends/containers/authentication/authentication.dart';
 
 String name;
 String description;
@@ -49,47 +50,55 @@ class OrgState extends State<OrgProfile> {
     return new StoreConnector<AppState, _ProfileViewModel>(
         converter: _ProfileViewModel.fromStore,
         builder: (BuildContext context, _ProfileViewModel vm) {
-          final a = store.state.userData;
-          print(a);
           if (_anyAreNull()) {
             return Center(
               child: CircularProgressIndicator(),
             );
           } else {
-            return Container(
-                child: Scaffold(
-                    body: Container(
-                        margin: EdgeInsets.all(20),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              CircleAvatar(
-                                radius: 70,
-                                backgroundImage:
-                                    NetworkImage(chooseImage(photo)),
-                              ),
-                              Text(name,
-                                  style: Theme.of(context).textTheme.headline6),
-                              Text(description,
-                                  style: TextStyle(
-                                      color: Colors.red,
-                                      fontFamily: 'roboto',
-                                      fontSize: 15.0,
-                                      letterSpacing: 1.5),
-                                  textAlign: TextAlign.center),
-                              Divider(color: Colors.grey),
-                              Container(
-                                  margin: const EdgeInsets.all(10.0),
-                                  width: 400.0,
-                                  height: 400.0,
-                                  child: buildGrid(pets)),
-                            ]))));
-            ;
+            return SingleChildScrollView(
+                child: Container(
+                    margin: EdgeInsets.all(20),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          CircleAvatar(
+                            radius: 70,
+                            backgroundImage: NetworkImage(chooseImage(photo)),
+                          ),
+                          Text(name,
+                              style: Theme.of(context).textTheme.headline6),
+                          Text(description,
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontFamily: 'roboto',
+                                  fontSize: 15.0,
+                                  letterSpacing: 1.5),
+                              textAlign: TextAlign.center),
+                          Padding(
+                              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                              child: RaisedButton(
+                                color: Theme.of(context).buttonColor,
+                                onPressed: () {
+                                  signOut();
+                                },
+                                child: Text("Sign Out",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color:
+                                            Theme.of(context).backgroundColor)),
+                              )),
+                          Divider(color: Colors.grey),
+                          Container(
+                              margin: const EdgeInsets.all(10.0),
+                              width: 400.0,
+                              height: 400.0,
+                              child: buildGrid(pets)),
+                        ])));
           }
         });
   }
 }
-
 
 class _ProfileViewModel {
   final List<Map<String, dynamic>> pets;
