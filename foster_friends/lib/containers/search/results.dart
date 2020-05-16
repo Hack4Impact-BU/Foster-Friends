@@ -23,7 +23,7 @@ class _Results extends State<Results> {
       converter: _QueryViewModel.fromStore,
       builder: (BuildContext context, _QueryViewModel vm){
         if(store.state.query.isEmpty){
-          return _loading();
+          return loading();
         } else{
           return _buildGrid(context);
         }
@@ -31,15 +31,9 @@ class _Results extends State<Results> {
     );
   }
 
-  Widget _loading() {
-    return Center(
-      child: CircularProgressIndicator(),
-    );
-  }
-
   Widget _buildGrid(BuildContext context) {
     if (store.state.query.isEmpty) {
-      return _loading();
+      return loading();
     } else {
       return GridView.count(
           // shrinkWrap: true,
@@ -106,3 +100,9 @@ class _QueryViewModel {
   }
 
 }
+
+Widget loading() {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
