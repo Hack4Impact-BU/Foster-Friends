@@ -5,7 +5,7 @@ import 'package:foster_friends/state/appState.dart';
 import 'package:foster_friends/containers/profiles/profile.dart';
 import 'package:foster_friends/containers/search/search.dart';
 import 'package:foster_friends/containers/search/results.dart';
-
+import 'package:foster_friends/main.dart';
 
 // main application build
 class Home extends StatelessWidget {
@@ -26,9 +26,8 @@ class HomeState extends StatefulWidget {
 
 // This is the bottom bar body options
 class _HomeState extends State<HomeState> {
-  
   @override
-  void initState(){
+  void initState() {
     store.dispatch(getFirebaseUser);
     store.dispatch(query);
   }
@@ -45,12 +44,7 @@ class _HomeState extends State<HomeState> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  static List<Widget> _widgetOptions = <Widget>[
-
-    Results(),
-    Profile()
-    
-  ];
+  static List<Widget> _widgetOptions = <Widget>[Results(), Profile()];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -58,17 +52,36 @@ class _HomeState extends State<HomeState> {
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
+    const List<Color> orangeGradients = [
+      Color(0xFFFFCC80),
+      Color(0xFFFE8853),
+      Color(0xFFFEF5350),
+    ];
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Foster Friends'), // top bar
-      ),
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(70.0),
+          child: AppBar(
+            title: const Text('Foster Friends'), // top bar
+            //backgroundColor: Color(0xFFFFCC80),
+            flexibleSpace: ClipPath(
+              clipper: TopWaveClipper(),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: orangeGradients,
+                      begin: Alignment.topLeft,
+                      end: Alignment.center),
+                ),
+                height: MediaQuery.of(context).size.height / 7.5,
+              ),
+            ),
+          )),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
-        showDialog(context: context, builder: (BuildContext context) => Search());
+        onPressed: () {
+          showDialog(
+              context: context, builder: (BuildContext context) => Search());
         },
         child: Icon(Icons.search),
         backgroundColor: Color(0xFFFEF53500),
@@ -78,6 +91,7 @@ class _HomeState extends State<HomeState> {
       ),
       // Contruction of navigation
       bottomNavigationBar: BottomNavigationBar(
+        //backgroundColor: Color(0xFFFFCC80),
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.search),

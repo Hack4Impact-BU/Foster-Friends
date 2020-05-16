@@ -9,6 +9,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:foster_friends/state/appState.dart';
 
 
 class UploadPetForm extends StatefulWidget {
@@ -19,6 +20,22 @@ class UploadPetForm extends StatefulWidget {
 }
 
 class UploadPetFormState extends State<UploadPetForm> {
+  List<String> _organizations = [];
+  
+  @override
+  void initState() {
+    
+    super.initState();
+    Firestore.instance.collection('organizations').snapshots().listen((snapshot) {
+      snapshot.documents.forEach((doc){
+        this._organizations.add(doc.data['name']);
+        setState(() {
+          
+        });
+      });
+    });
+  }
+
   // -------------------------- map location function -----------------------
   String _locationMessageCoordinate = "Get Coordinate";
   String _locationMessageAddress = "Use Org Address";
@@ -35,24 +52,17 @@ class UploadPetFormState extends State<UploadPetForm> {
     });
   }
   void _getCurrentLocation2() async {
-    String userID = "";
-    FirebaseUser user  = await getCurrentUser();
-    userID = user.uid;
-    String temp;
-    Firestore.instance.collection("organizations").document(userID).get().then((onValue) {
-      temp = onValue.data["name"];
-      //print(onValue.data['description']);
-    });
+    String temp = store.state.userData["address"];
     setState(() {
       //var temp = Firestore.instance.collection("organizations").snapshots();
       //_locationMessageAddress = temp.data.documents[user.uid]['address'];
-      _locationMessageCoordinate = "Org Address Get!";
+      _locationMessageAddress = "Org Address Get!";
       petLocation2 = temp;
     });
   }
   // -------------------------- save user inputs ----------------------------
   final petAge = TextEditingController();
-  final petBreed = TextEditingController();
+  List<String> petBreed = <String>[];
   final petDescription = TextEditingController();
   final petName = TextEditingController();
   final petSex = TextEditingController();
@@ -64,37 +74,40 @@ class UploadPetFormState extends State<UploadPetForm> {
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    petName.dispose();
-    petBreed.dispose();
+    petAge.dispose();
+    petBreed.removeRange(0,petBreed.length);
     petDescription.dispose();
     petName.dispose();
     petSex.dispose();
     petActivityLevel.dispose();
     petType.dispose();
     petOrganization.dispose();
+    petImage = "";
     super.dispose();
   }
 
 
   // -------------------------- variables for pet type, breed, sex dropdown menu ----------------------------
   //static Map<String, List<String>> map = {'Dog':['Labrador Retrievers', 'German Shepherd Dogs', 'Golden Retrievers'],'Cat':['Maine Coon','Bengal','Siamese'],'Bird':['Maine Coon','Bengal','Siamese']};
-  List<String> _petTypes = ['Dog', 'Cat', 'Bird'];
-  List<String> _dogBreed = ['Labrador Retrievers', 'German Shepherd Dogs', 'Golden Retrievers'];
-  List<String> _catBreed = ['Maine Coon','Bengal','Siamese'];
+  List<String> _petTypes = ['Dog', 'Cat', 'Others'];
+  List<String> _dogBreed = ['Labrador Retrievers', 'German Shepherd Dogs', 'Golden Retrievers','Others'];
+  List<String> _catBreed = ['Maine Coon','Bengal','Siamese','Others'];
   List<String> _birdBreed = [''];
   static List<String> _breedType = [];
+  final List<String> selectedBreedType = <String>[];
   String _selectedPetTypes;
   String _selectedBreedTypes;
   String _selectedSex;
   String _selectedActivityLevel;
   List<String> _sex = ['Female','Male'];
   List<String> _activity = ['High','Medium','Low'];
+  
 
   // -------------------------- variables for shelter name dropdown menu ----------------------------
   //List<String> _shelters = Firestore.instance.collection("organizations").getDocuments() as List<String>;
   //Future<QuerySnapshot> ref = Firestore.instance.collectionGroup("organizations").getDocuments();
   //Firestore.instance.collection('organizations').snapshots().listen((data) => data.documents.forEach((doc) => print(doc["name"])));
-  static List<String> _organizations;
+  //static List<String> _organizations;
   String _selectedOrganization;
   //StreamSubscription<QuerySnapshot> getOrganizations = Firestore.instance.collection('organizations')
   //  .snapshots().listen(
@@ -146,6 +159,35 @@ class UploadPetFormState extends State<UploadPetForm> {
 
   @override
   Widget build(BuildContext context) {
+    void showSelectedBreed () {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Breed:'),
+            content: Container(
+              color: Colors.grey[200],
+              child: Wrap(
+                spacing: 10.0,
+                children: selectedBreedType.map((item) {
+                  return Chip(
+                    backgroundColor: Colors.yellow,
+                    label: Text(item),
+                  );
+                }).toList(),
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     void _showDialog() {
     // flutter defined function
     showDialog(
@@ -177,7 +219,7 @@ class UploadPetFormState extends State<UploadPetForm> {
         await ref.setData({
                 "id": petId,
                 "age": petAge.text,
-                "breed": petBreed.text,
+                "breed": petBreed,
                 "description": petDescription.text,
                 "geolocation": new GeoPoint(double.parse(petLocation1.split(",")[0]),double.parse(petLocation1.split(",")[1])),
                 "orgAddress": petLocation2,
@@ -192,24 +234,9 @@ class UploadPetFormState extends State<UploadPetForm> {
         _showDialog();
       };
     }
-    const List<Color> orangeGradients = [
-      Color(0xFFFFCC80),
-      Color(0xFFFE8853),
-      Color(0xFFFEF5350),
-    ];
+    
     return Column(children: <Widget>[
-      ClipPath(
-        clipper: TopWaveClipper(),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-                colors: orangeGradients,
-                begin: Alignment.topLeft,
-                end: Alignment.center),
-          ),
-          height: MediaQuery.of(context).size.height / 7.5,
-        ),
-      ),
+      
       TextFormField(
           decoration: const InputDecoration(
             hintText: 'Pet Name',
@@ -234,124 +261,158 @@ class UploadPetFormState extends State<UploadPetForm> {
           },
           controller: petAge,
           ),
-      StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection("organizations").snapshots(),
-        builder: (context,snapshot) {
-          if(!snapshot.hasData) {
-            Text("Loading");
-          }
-          else {
-            List<DropdownMenuItem> organinzationsItems = [];
-            for (int i = 0; i < snapshot.data.documents.length; i++) {
-              DocumentSnapshot snap = snapshot.data.documents[i];
-              String temp = "";
-              Firestore.instance.collection("organizations").document(snap.documentID).get().then((onValue) {
-                temp = onValue.data["name"];
-                print(onValue.data['name']);
-                organinzationsItems.add(
-                  DropdownMenuItem (child: Text(
-                    onValue.data['name'],
-                    ),
-                  value: onValue.data['name'],
-                )
-              );
-              });
-              
-            }
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                DropdownButton(
-                  hint: Text('Organization'),
-                  items: organinzationsItems,
-                  onChanged: (organizationsValue){
-                    setState(() {
-                      _selectedOrganization = organizationsValue;
-                      petOrganization.text = organizationsValue;
-                    });
-                  },
-                  value: _selectedOrganization,
-                )
-              ],
-            );
-          }
-        },
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+        
+            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+            child: Text('Organization: ' + store.state.userData["name"],
+                          style: TextStyle(
+                              fontSize: 16.0,
+                              letterSpacing: 1.5),
+                          textAlign: TextAlign.left)
+          )]
       ),
-      DropdownButton(
-            hint: Text('Select a Pet Type'), // Not necessary for Option 1
-            value: _selectedPetTypes,
-            onChanged: (newValue) {
-              _selectedBreedTypes = null;
-              setState(() {
-                petType.text = newValue;
-                _selectedPetTypes = newValue;
-                if (newValue == "Dog") {
-                  _breedType = _dogBreed;
-                } else if (newValue == "Cat") {
-                  _breedType = _catBreed;
-                } else if (newValue == "Bird") {
-                  _breedType = _birdBreed;
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: DropdownButton(
+              hint: Text('Select a Pet Type'), // Not necessary for Option 1
+              value: _selectedPetTypes,
+              onChanged: (newValue) {
+                _selectedBreedTypes = null;
+                selectedBreedType.removeRange(0, selectedBreedType.length);
+                setState(() {
+                  petType.text = newValue;
+                  _selectedPetTypes = newValue;
+                  if (newValue == "Dog") {
+                    _breedType = _dogBreed;
+                  } else if (newValue == "Cat") {
+                    _breedType = _catBreed;
+                  }
+                  else {
+                    _breedType = [];
+                  }
+                });
+              },
+              items: _petTypes.map((location) {
+                return DropdownMenuItem(
+                  child: new Text(location),
+                  value: location,
+                );
+              }).toList(),
+            )),
+          Expanded(
+            child: Padding(
+            padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
+            child: TextFormField(
+              decoration: const InputDecoration(
+                hintText: 'If "Others", please specify',
+              ),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return '';
                 }
-              });
-            },
-            items: _petTypes.map((location) {
-              return DropdownMenuItem(
-                child: new Text(location),
-                value: location,
-              );
-            }).toList(),
+                else {
+                  petType.text = value;
+                  controller: petType;
+                }
+                return null;
+              },
+              
+            ))),
+        ]
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget> [
+          Padding (
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: DropdownButton(
+              hint: Text('Select a Breed Type'), // Not necessary for Option 1
+              value: selectedBreedType.isEmpty ? null:selectedBreedType.last,
+              onChanged: (String newValue) {
+                setState(() {
+                  if (selectedBreedType.contains(newValue)) {
+                    selectedBreedType.remove(newValue);
+                  } else {
+                    selectedBreedType.add(newValue);
+                  }
+                  petBreed = selectedBreedType;
+                  //_selectedBreedTypes = newValue;
+                });
+              },
+              items: _breedType.map((location) {
+                return DropdownMenuItem <String>(
+                  value: location,
+                  child: Row(          
+                    children: <Widget> [
+                      Icon (
+                        Icons.check,
+                        color: selectedBreedType.contains(location) ? Colors.black:Colors.transparent,
+                      ),
+                      Text(location)
+                      ]
+                  ),
+                );
+              }).toList(),
+            ),
           ),
-      DropdownButton(
-        hint: Text('Select a Breed Type'), // Not necessary for Option 1
-        value: _selectedBreedTypes,
-        onChanged: (newValue) {
-          setState(() {
-            petBreed.text = newValue;
-            _selectedBreedTypes = newValue;
-          });
-        },
-        // ??????????????????????? if () _breedType
-        items: _breedType.map((location) {
-          return DropdownMenuItem(
-            child: new Text(location),
-            value: location,
-          );
-        }).toList(),
+          Padding (
+            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+            child: FlatButton(
+              color: color,
+              child: Text("View Entered Breed"),
+              onPressed: () {
+                showSelectedBreed();
+              }
+            )
+          )
+        ]
       ),
-      DropdownButton(
-        hint: Text('Select a Sex'), // Not necessary for Option 1
-        value: _selectedSex,
-        onChanged: (newValue) {
-          setState(() {
-            petSex.text = newValue;
-            _selectedSex = newValue;
-          });
-        },
-        // ??????????????????????? if () _breedType
-        items: _sex.map((location) {
-          return DropdownMenuItem(
-            child: new Text(location),
-            value: location,
-          );
-        }).toList(),
-      ),
-      DropdownButton(
-        hint: Text('Select an Activity Level'), // Not necessary for Option 1
-        value: _selectedActivityLevel,
-        onChanged: (newValue) {
-          setState(() {
-            petActivityLevel.text = newValue;
-            _selectedActivityLevel = newValue;
-          });
-        },
-        // ??????????????????????? if () _breedType
-        items: _activity.map((location) {
-          return DropdownMenuItem(
-            child: new Text(location),
-            value: location,
-          );
-        }).toList(),
-      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget> [
+          DropdownButton(
+          hint: Text('Select a Sex'), // Not necessary for Option 1
+          value: _selectedSex,
+          onChanged: (newValue) {
+            setState(() {
+              petSex.text = newValue;
+              _selectedSex = newValue;
+            });
+          },
+          // ??????????????????????? if () _breedType
+          items: _sex.map((location) {
+            return DropdownMenuItem(
+              child: new Text(location),
+              value: location,
+            );
+          }).toList(),
+      )]),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget> [
+          DropdownButton(
+          hint: Text('Select an Activity Level'), // Not necessary for Option 1
+          value: _selectedActivityLevel,
+          onChanged: (newValue) {
+            setState(() {
+              petActivityLevel.text = newValue;
+              _selectedActivityLevel = newValue;
+            });
+          },
+          // ??????????????????????? if () _breedType
+          items: _activity.map((location) {
+            return DropdownMenuItem(
+              child: new Text(location),
+              value: location,
+            );
+          }).toList(),
+        )]),
       TextFormField(
         keyboardType: TextInputType.multiline,
         decoration: const InputDecoration(
@@ -467,50 +528,5 @@ class UploadPetFormState extends State<UploadPetForm> {
               
     ]);
     
-  }
-}
-
-class TopWaveClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    // This is where we decide what part of our image is going to be visible.
-    var path = Path();
-    path.lineTo(0.0, size.height);
-
-    //creating first curver near bottom left corner
-    var firstControlPoint = new Offset(size.width / 7, size.height - 80);
-    var firstEndPoint = new Offset(size.width / 2, size.height / 2);
-
-    path.quadraticBezierTo(firstControlPoint.dx, firstControlPoint.dy,
-        firstEndPoint.dx, firstEndPoint.dy);
-
-    //creating second curver near center
-    var secondControlPoint = Offset(size.width / 2, size.height / 5);
-    var secondEndPoint = Offset(size.width / 1.5, size.height / 5);
-    
-    path.quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy,
-        secondEndPoint.dx, secondEndPoint.dy);
-
-    //creating third curver near top right corner
-    var thirdControlPoint = Offset(size.width - (size.width / 11), size.height / 5);
-    var thirdEndPoint = Offset(size.width, 0.0);
-    
-    path.quadraticBezierTo(thirdControlPoint.dx, thirdControlPoint.dy,
-        thirdEndPoint.dx, thirdEndPoint.dy);
-
-    ///move to top right corner
-    path.lineTo(size.width, 0.0);
-
-    ///finally close the path by reaching start point from top right corner
-    path.close();
-    return path;
-  }
-  
-  
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) {
-    // TODO: implement shouldReclip
-    return true;
   }
 }
