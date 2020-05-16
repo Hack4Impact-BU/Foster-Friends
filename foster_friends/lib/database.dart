@@ -102,13 +102,23 @@ Future<Map<String, dynamic>> getUserData(String uid) async {
   final ref = Firestore.instance; // instantiate database
   DocumentSnapshot s = await ref.collection("users").document(uid).get();
 
+  CollectionReference pets = ref.collection("pets");
+  List<Map<String,dynamic>>  petInfo = []; 
+  for(var petID in s.data['pets']){
+    final pet = await pets.document(petID).get();
+    final petData = pet.data;
+    petInfo.add( Map.from(petData) );
+  }
+
+  print("Pet info is $petInfo");
+
   return {
     'name': s.data['name'],
     'phone number': s.data['phone number'],
     'email': s.data['email'],
     'address': s.data['address'],
     'photo': s.data['photo'],
-    'pets': s.data['pets'],
+    'pets': petInfo,
     'type': s.data['type'],
     'description': s.data['description']
   };

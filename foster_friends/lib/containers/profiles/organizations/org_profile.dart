@@ -9,7 +9,6 @@ String email;
 String phoneNumber;
 String photo;
 List pets;
-List<Map<String, dynamic>> petInfo;
 
 // Define a custom Form widget.
 class OrgProfile extends StatefulWidget {
@@ -126,7 +125,7 @@ List<Widget> _buildGridTileList(int count, BuildContext context) {
           child: Container(
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: NetworkImage(_chooseImage(petInfo[i]['Photo'])),
+                      image: NetworkImage(_chooseImage(pets[i]['Photo'])),
                       fit: BoxFit.cover),
                   borderRadius: BorderRadius.all(Radius.circular(100))),
               child: FlatButton(
@@ -134,7 +133,7 @@ List<Widget> _buildGridTileList(int count, BuildContext context) {
                 padding: EdgeInsets.all(0.0),
                 onPressed: () {
                   Navigator.pushNamed(context, '/Pet_Profile',
-                      arguments: petInfo[i]);
+                      arguments: pets[i]);
                 },
               )),
         ),
