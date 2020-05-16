@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foster_friends/state/appState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
+import 'package:foster_friends/containers/grid/grid.dart';
 
 String name;
 String description;
@@ -65,7 +66,7 @@ class OrgState extends State<OrgProfile> {
                               CircleAvatar(
                                 radius: 70,
                                 backgroundImage:
-                                    NetworkImage(_chooseImage(photo)),
+                                    NetworkImage(chooseImage(photo)),
                               ),
                               Text(name,
                                   style: Theme.of(context).textTheme.headline6),
@@ -81,7 +82,7 @@ class OrgState extends State<OrgProfile> {
                                   margin: const EdgeInsets.all(10.0),
                                   width: 400.0,
                                   height: 400.0,
-                                  child: _buildGrid(context)),
+                                  child: buildGrid(pets)),
                             ]))));
             ;
           }
@@ -89,57 +90,6 @@ class OrgState extends State<OrgProfile> {
   }
 }
 
-String _chooseImage(String pet) {
-  print("url is $pet");
-
-  if (pet == null) {
-    return 'http://www.hostingreviewbox.com/wp-content/uploads/2016/02/image-error.png';
-  } else if (pet.length < 7) {
-    return 'http://www.hostingreviewbox.com/wp-content/uploads/2016/02/image-error.png';
-  } else if (pet.substring(0, 8) != 'https://'){
-      if (pet.substring(0, 7) != 'http://') {
-            return 'http://www.hostingreviewbox.com/wp-content/uploads/2016/02/image-error.png';
-
-      }
-  }
-
-  return pet;
-}
-
-Widget _buildGrid(BuildContext context) => GridView.count(
-    shrinkWrap: true,
-    crossAxisCount: 3,
-    scrollDirection: Axis.vertical,
-    padding: const EdgeInsets.all(4),
-    children: _buildGridTileList(pets.length, context));
-
-List<Widget> _buildGridTileList(int count, BuildContext context) {
-  print("Count is $count");
-  if(count < 1){
-    return new List(0);
-  }
-  return  List.generate(count, (i) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ClipOval(
-          child: Container(
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: NetworkImage(_chooseImage(pets[i]['image'])),
-                      fit: BoxFit.cover),
-                  borderRadius: BorderRadius.all(Radius.circular(100))),
-              child: FlatButton(
-                child: null,
-                padding: EdgeInsets.all(0.0),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/Pet_Profile',
-                      arguments: pets[i]);
-                },
-              )),
-        ),
-      );
-    });
-}
 
 class _ProfileViewModel {
   final List<Map<String, dynamic>> pets;
