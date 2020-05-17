@@ -56,18 +56,30 @@ class UpdateQueryAction {
 
   UpdateQueryAction(this._results);
 }
+
 // async function that pulls data based on query from database
 ThunkAction<AppState> query = (Store<AppState> store) async {
   List<Map<String, dynamic>> petInfo = [];
   final ref = Firestore.instance;
-  ref.collection('pets').getDocuments().then((querySnapshot) {
-    var doc = querySnapshot.documents;
-    for (var snapshot in doc) {
-      Map<String, dynamic> pet = Map.from(snapshot.data);
-      petInfo.add(pet);
-    }
-    print(petInfo);
-  });
+  /* 
+    Type
+    Breed
+    Sex
+    Activity Level
+    Age
+    Location --> Radius search?
+  */
+
+  // The syntax for the query should be something like this:
+  CollectionReference pets = ref.collection('pets');
+  QuerySnapshot result =  await pets.where('type', isEqualTo: 'Dog').getDocuments();
+
+  for (var snapshot in result.documents) {
+    Map<String, dynamic> pet = Map.from(snapshot.data);
+    print("Query yields $pet");
+    petInfo.add(pet);
+  }
+
   store.dispatch(new UpdateQueryAction(petInfo));
 };
 
@@ -88,5 +100,5 @@ AppState reducer(AppState prev, dynamic action) {
 
 /* --------------------- INITIALIZATION OF STORE  --------------------- */
 final store = new Store<AppState>(reducer,
-    initialState: new AppState(null, null, null, 0),
+    initialState: new AppState(null, null, [], 0),
     middleware: [thunkMiddleware]);
