@@ -93,7 +93,7 @@ class OrgState extends State<OrgProfile> {
                               margin: const EdgeInsets.all(10.0),
                               width: 400.0,
                               height: 400.0,
-                              child: buildGrid(pets)),
+                              child: buildGrid(pets, context)),
                         ])));
           }
         });
