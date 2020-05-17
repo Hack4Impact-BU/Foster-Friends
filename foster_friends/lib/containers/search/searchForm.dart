@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foster_friends/state/appState.dart';
 
 class SearchForm extends StatefulWidget {
   @override
@@ -25,91 +26,126 @@ class SearchFormState extends State<SearchForm> {
     super.dispose();
   }
 
-
   // -------------------------- variables for pet type, breed, sex dropdown menu ----------------------------
   //static Map<String, List<String>> map = {'Dog':['Labrador Retrievers', 'German Shepherd Dogs', 'Golden Retrievers'],'Cat':['Maine Coon','Bengal','Siamese'],'Bird':['Maine Coon','Bengal','Siamese']};
   List<String> _petTypes = ['Dog', 'Cat', 'Bird'];
-  List<String> _dogBreed = ['Labrador Retrievers', 'German Shepherd Dogs', 'Golden Retrievers'];
-  List<String> _catBreed = ['Maine Coon','Bengal','Siamese'];
+  List<String> _dogBreed = [
+    'Labrador Retrievers',
+    'German Shepherd Dogs',
+    'Golden Retrievers'
+  ];
+  List<String> _catBreed = ['Maine Coon', 'Bengal', 'Siamese'];
   List<String> _birdBreed = [''];
   static List<String> _breedType = [];
   String _selectedPetTypes;
   String _selectedBreedTypes;
   String _selectedSex;
   String _selectedActivityLevel;
-  List<String> _sex = ['Female','Male'];
-  List<String> _activity = ['High','Medium','Low'];
+  List<String> _sex = ['Female', 'Male'];
+  List<String> _activity = ['High', 'Medium', 'Low'];
 
   // -------------------------- enable / disable SUBMIT button ----------------------------
   // bool _enabled = false;
 
   Color color = const Color(0xFFFFCC80);
+  void _onPressed() async {
+    /* 
+    Type
+    Breed
+    Sex
+    Activity Level
+    Age
+    Location --> Radius search?
+  */
+    print("Searching for pet of type $_selectedPetTypes");
+    Map<String, String> params = {
+      'type': _selectedPetTypes, 
+      'breed': _selectedBreedTypes,
+      'sex': _selectedSex,
+      'activity level': _selectedActivityLevel,
+      };
+    store.dispatch(makeQuery(store, params));
+  }
 
   @override
   Widget build(BuildContext context) {
-    var _onPressed;
-    if (petAge!="" && petType!="" && petBreed!="" && petSex!="" && petActivityLevel!="") {
-      _onPressed = () async {
-        print("Searching for pet");
-      };
-    }
     const List<Color> orangeGradients = [
       Color(0xFFFFCC80),
       Color(0xFFFE8853),
       Color(0xFFFEF5350),
     ];
     return Column(children: <Widget>[
-      ClipPath(
-        clipper: TopWaveClipper(),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-                colors: orangeGradients,
-                begin: Alignment.topLeft,
-                end: Alignment.center),
-          ),
-          height: MediaQuery.of(context).size.height / 7.5,
+      Container(
+        alignment: Alignment.topRight,
+        child: CloseButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
-      
-      Container(width: 100.0, child: TextFormField(
-          decoration: const InputDecoration(
-            hintText: 'Pet Age',
-          ),
-          validator: (value) {
-            if (value.isEmpty) {
-              return 'Please enter a pet age';
+      Container(
+        width: 200.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+                width: 75.0,
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    hintText: 'Age Min',
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter a minimum age';
+                    }
+                    return null;
+                  },
+                  controller: petAge,
+                )),
+            Container(width: 20.0),
+            Container(
+                width: 75.0,
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    hintText: 'Age Max',
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter a maximum age';
+                    }
+                    return null;
+                  },
+                  controller: petAge,
+                ))
+          ],
+        ),
+      ),
+      DropdownButton(
+        hint: Text('Pet Type'), // Not necessary for Option 1
+        value: _selectedPetTypes,
+        onChanged: (newValue) {
+          _selectedBreedTypes = null;
+          setState(() {
+            petType.text = newValue;
+            _selectedPetTypes = newValue;
+            if (newValue == "Dog") {
+              _breedType = _dogBreed;
+            } else if (newValue == "Cat") {
+              _breedType = _catBreed;
+            } else if (newValue == "Bird") {
+              _breedType = _birdBreed;
             }
-            return null;
-          },
-          controller: petAge,
-      )),
+          });
+        },
+        items: _petTypes.map((location) {
+          return DropdownMenuItem(
+            child: new Text(location),
+            value: location,
+          );
+        }).toList(),
+      ),
       DropdownButton(
-            hint: Text('Select a Pet Type'), // Not necessary for Option 1
-            value: _selectedPetTypes,
-            onChanged: (newValue) {
-              _selectedBreedTypes = null;
-              setState(() {
-                petType.text = newValue;
-                _selectedPetTypes = newValue;
-                if (newValue == "Dog") {
-                  _breedType = _dogBreed;
-                } else if (newValue == "Cat") {
-                  _breedType = _catBreed;
-                } else if (newValue == "Bird") {
-                  _breedType = _birdBreed;
-                }
-              });
-            },
-            items: _petTypes.map((location) {
-              return DropdownMenuItem(
-                child: new Text(location),
-                value: location,
-              );
-            }).toList(),
-          ),
-      DropdownButton(
-        hint: Text('Select a Breed Type'), // Not necessary for Option 1
+        hint: Text('Breed'), // Not necessary for Option 1
         value: _selectedBreedTypes,
         onChanged: (newValue) {
           setState(() {
@@ -126,7 +162,7 @@ class SearchFormState extends State<SearchForm> {
         }).toList(),
       ),
       DropdownButton(
-        hint: Text('Select a Sex'), // Not necessary for Option 1
+        hint: Text('Sex'), // Not necessary for Option 1
         value: _selectedSex,
         onChanged: (newValue) {
           setState(() {
@@ -143,7 +179,7 @@ class SearchFormState extends State<SearchForm> {
         }).toList(),
       ),
       DropdownButton(
-        hint: Text('Select an Activity Level'), // Not necessary for Option 1
+        hint: Text('Activity Level'), // Not necessary for Option 1
         value: _selectedActivityLevel,
         onChanged: (newValue) {
           setState(() {
@@ -159,41 +195,19 @@ class SearchFormState extends State<SearchForm> {
           );
         }).toList(),
       ),
-
-      SizedBox(height: 10,),
-        Row (
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 30, 30, 0),
-            child: Center(
+      Padding(
+          padding: EdgeInsets.fromLTRB(0, 40, 0, 10),
+          child: Center(
               child: RaisedButton(
-                color: Theme.of(context).buttonColor,
-                onPressed: _onPressed,
-                child: Text("SUBMIT",
+            color: Theme.of(context).buttonColor,
+            onPressed: _onPressed,
+            child: Text("Find a friend!",
                 style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).backgroundColor)),
-              ))),
-          Padding(
-            padding: EdgeInsets.fromLTRB(30, 30, 0, 0),
-            child: Center(
-              child: RaisedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                textColor: Colors.white,
-                
-                child: Text("CANCEL",
-                  style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          )),
-                
-              )))]),
-              
-    ]); 
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).backgroundColor)),
+          ))),
+    ]);
   }
 }
 
@@ -214,14 +228,15 @@ class TopWaveClipper extends CustomClipper<Path> {
     //creating second curver near center
     var secondControlPoint = Offset(size.width / 2, size.height / 5);
     var secondEndPoint = Offset(size.width / 1.5, size.height / 5);
-    
+
     path.quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy,
         secondEndPoint.dx, secondEndPoint.dy);
 
     //creating third curver near top right corner
-    var thirdControlPoint = Offset(size.width - (size.width / 11), size.height / 5);
+    var thirdControlPoint =
+        Offset(size.width - (size.width / 11), size.height / 5);
     var thirdEndPoint = Offset(size.width, 0.0);
-    
+
     path.quadraticBezierTo(thirdControlPoint.dx, thirdControlPoint.dy,
         thirdEndPoint.dx, thirdEndPoint.dy);
 
@@ -232,8 +247,6 @@ class TopWaveClipper extends CustomClipper<Path> {
     path.close();
     return path;
   }
-  
-  
 
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) {

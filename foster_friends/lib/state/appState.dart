@@ -4,6 +4,8 @@ import 'package:redux/redux.dart';
 import 'package:foster_friends/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+final ref = Firestore.instance;
+
 // AppState
 class AppState {
   FirebaseUser _user;
@@ -57,31 +59,49 @@ class UpdateQueryAction {
   UpdateQueryAction(this._results);
 }
 
+class QueryAction {
+  String param;
+
+  QueryAction(this.param);
+}
+
 // async function that pulls data based on query from database
-ThunkAction<AppState> query = (Store<AppState> store) async {
+ThunkActionWithExtraArgument<AppState, Map<String, String>> makeQuery =
+    (Store<AppState> store, Map<String, String> params) async {
   List<Map<String, dynamic>> petInfo = [];
-  final ref = Firestore.instance;
-  /* 
-    Type
-    Breed
-    Sex
-    Activity Level
-    Age
-    Location --> Radius search?
-  */
 
-  // The syntax for the query should be something like this:
-  CollectionReference pets = ref.collection('pets');
-  QuerySnapshot result =  await pets.where('type', isEqualTo: 'Dog').getDocuments();
+  if (params.isEmpty) {
+    petInfo = await getAllPets();
+  } else {
+    CollectionReference pets = ref.collection('pets');
+    QuerySnapshot result =
+        await pets.where('type', isEqualTo: params['type']).getDocuments();
 
-  for (var snapshot in result.documents) {
-    Map<String, dynamic> pet = Map.from(snapshot.data);
-    print("Query yields $pet");
-    petInfo.add(pet);
+    for (var snapshot in result.documents) {
+      Map<String, dynamic> pet = Map.from(snapshot.data);
+      // print("Query yields $pet");
+      petInfo.add(pet);
+    }
   }
 
   store.dispatch(new UpdateQueryAction(petInfo));
 };
+
+Future<List<Map<String, dynamic>>> getAllPets() async {
+  List<Map<String, dynamic>> petInfo = [];
+
+  // The syntax for the query should be something like this:
+  CollectionReference pets = ref.collection('pets');
+  QuerySnapshot result =
+      await pets.where('type', isEqualTo: 'Dog').getDocuments();
+
+  for (var snapshot in result.documents) {
+    Map<String, dynamic> pet = Map.from(snapshot.data);
+    petInfo.add(pet);
+  }
+
+  return petInfo;
+}
 
 /* --------------------- REDUCER: HANDLES ACTION TYPES  --------------------- */
 AppState reducer(AppState prev, dynamic action) {
@@ -93,6 +113,18 @@ AppState reducer(AppState prev, dynamic action) {
     AppState newAppState =
         new AppState(prev.user, prev.userData, action.results, prev.userIndex);
     return newAppState;
+    // } else if (action is QueryAction) {
+    //   // Query action has a param
+    //   // asynchronius function --> return some result
+    //   // Return AppState with result (, , resultOfFunction)
+    //   try {
+    //     makeQuery(action.param).then((result) {
+    //       print('REsult is $result');
+    //       return new AppState(prev.user, prev.userData, result, prev.index);
+    //     });
+    //   } catch (error) {
+    //     print("Error: $error");
+    //   }
   } else {
     return prev;
   }

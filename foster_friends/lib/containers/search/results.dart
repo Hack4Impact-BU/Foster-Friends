@@ -26,7 +26,7 @@ class _Results extends State<Results> {
         if(store.state.query.isEmpty){
           return loading();
         } else{
-          return buildGrid(store.state.query);
+          return buildGrid(store.state.query, context);
         }
       }   
     );
