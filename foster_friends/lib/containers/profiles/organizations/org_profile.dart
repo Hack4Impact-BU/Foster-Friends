@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:foster_friends/database.dart';
 import './uploadPet.dart';
 import 'package:foster_friends/containers/authentication/authentication.dart';
 
-final databaseReference = Firestore.instance; // instantiate database
-final petsDatabase = databaseReference.collection("petstest");
+import 'package:foster_friends/state/appState.dart';
 
-String name = '';
-String description = '';
-String email = '';
-String ph = '';
-String photo = '';
+final name = store.state.userData['name'];
+final email = store.state.userData['email'];
+final phoneNumber = store.state.userData['phone number'];
+final description = store.state.userData['description'];
+
+
 List pets = [];
 List<Map<String, dynamic>> petInfo = [];
-
+Map<String, dynamic> orgInfo;
 
 // Define a custom Form widget.
 class OrgProfile extends StatefulWidget {
@@ -32,6 +32,14 @@ class OrgState extends State<OrgProfile> {
   }
 
   Widget build(BuildContext context) {
+
+    if (orgInfo == null) {
+      return new Scaffold(
+        appBar: new AppBar(
+          title: new Text("Loading..."),
+        ),
+      );
+    } else {
     return Container(
         child: Scaffold(
             body: Container(
@@ -41,10 +49,10 @@ class OrgState extends State<OrgProfile> {
                     children: <Widget>[
                       CircleAvatar(
                         radius: 70,
-                        backgroundImage: NetworkImage(photo),
+                        backgroundImage: NetworkImage(orgInfo['photo']),
                       ),
-                      Text(name, style: Theme.of(context).textTheme.title),
-                      Text(description,
+                      Text(orgInfo['name'], style: Theme.of(context).textTheme.title),
+                      Text(orgInfo['description'],
                           style: TextStyle(
                               color: Colors.red,
                               fontFamily: 'roboto',
@@ -89,51 +97,21 @@ class OrgState extends State<OrgProfile> {
                             width: 400.0,
                             height: 393.0,
                             child: _buildGrid(context)),
-                    ]))));
+                    ]))));}
   }
 
   getData() async {
-    await databaseReference
-        .collection("organizations")
-        .document("IahwMOjwYdgEKY2cli5f")
-        .get()
-        .then((DocumentSnapshot snapshot) async {
-          
-      name = snapshot.data['name'];
-      description = snapshot.data['description'];
-      email = snapshot.data['email'];
-      ph = snapshot.data['phone number'];
-      photo = snapshot.data['photo'];
-      pets = snapshot.data['pets'];
+    orgInfo = await getUserData("1HqRtP4hCbZqQswuMLHA");
+    
+    for (var i in orgInfo['pets']) {
+         
+         final pet = await getPetData(i);
+         petInfo.add(pet);     }
 
-      for (var i in pets) {
-        var ind = pets.indexOf(i);
-        await getPet(i, ind);
-      }
+         setState(() {});
 
-      print(pets.length);
-      if (this.mounted) {
-        setState(() {});
-      }
-    });
-    return;
   }
 
-  getPet(String petID, int ind) async {
-    await databaseReference
-        .collection("petstest")
-        .document(petID)
-        .get()
-        .then((DocumentSnapshot snapshot) {
-      if (snapshot.data != null) {
-        petInfo.add(snapshot.data);
-       
-        petInfo[ind]['ID'] = petID;
-      }
-    });
-
-    return;
-  }
 }
 
 Widget _buildGrid(BuildContext context) => GridView.count(
@@ -141,7 +119,7 @@ Widget _buildGrid(BuildContext context) => GridView.count(
     crossAxisCount: 3,
     scrollDirection: Axis.vertical,
     padding: const EdgeInsets.all(4),
-    children: _buildGridTileList(pets.length, context));
+    children: _buildGridTileList(petInfo.length, context));
 
 List<Widget> _buildGridTileList(int count, BuildContext context) =>
     List.generate(count, (i) {
@@ -151,7 +129,7 @@ List<Widget> _buildGridTileList(int count, BuildContext context) =>
           child: Container(
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: NetworkImage(petInfo[i]['Photo']),
+                      image: NetworkImage(petInfo[i]['image']),
                       fit: BoxFit.cover),
                   borderRadius: BorderRadius.all(Radius.circular(100))),
               child: FlatButton(

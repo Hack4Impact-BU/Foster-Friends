@@ -107,7 +107,29 @@ Future<Map<String, dynamic>> getUserData(String uid) async {
     'email': s.data['email'],
     'address': s.data['address'],
     'photo': s.data['photo'],
+    'description': s.data['description'],
     'pets': s.data['pets'],
     'type': s.data['type']
   };
 }
+
+Future<Map<String, dynamic>> getPetData(String petID) async {
+  final ref = Firestore.instance; 
+  DocumentSnapshot s = await ref.collection("pets").document(petID).get();
+    
+  return {
+    'name': s.data['name'],
+    'age': s.data['age'],
+    'breed': s.data['breed'],
+    'activityLevel': s.data['activityLevel'],
+    'description': s.data['description'],
+    'id': s.data['id'],
+    'image': s.data['image'],
+    'orgAddress': s.data['orgAddress'],
+    'organization': s.data['organization'],
+    'sex': s.data['sex'],
+    'type': s.data['type'],
+  };
+}
+    
+  
