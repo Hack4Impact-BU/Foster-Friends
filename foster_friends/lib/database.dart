@@ -188,16 +188,22 @@ void deletePet (String petID) async {
 
     await ref.get()
         .then((DocumentSnapshot snapshot)  {
-        favPets = snapshot.data['fav pets'];
+        favPets = snapshot.data['pets'];
         });
 
-    if (toggleInfo == true)
+    if (toggleInfo == false)
       favPets.removeWhere((item) => item == petID);
     else
-      favPets.add(petID);
+      {
+        int temp = favPets.indexWhere((pet) => pet ==petID);
+        if (temp == -1)
+          favPets.add(petID);
+          
+          
+      }
 
     await ref.updateData({
-      "fav pets" : favPets
+      "pets" : favPets
 
     });
   }
