@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:foster_friends/containers/profiles/organizations/pet_profile.dart';
 
-Widget buildGrid(List<Map<String, dynamic>> posts, BuildContext context) => GridView.count(
-    crossAxisCount: 3,
-    scrollDirection: Axis.vertical,
-    padding: const EdgeInsets.all(4),
-    children: buildGridTileList(posts,context));
+Widget buildGrid(List<Map<String, dynamic>> posts, BuildContext context) =>
+    GridView.count(
+        crossAxisCount: 3,
+        scrollDirection: Axis.vertical,
+        padding: const EdgeInsets.all(4),
+        children: buildGridTileList(posts, context));
 
-List<Widget> buildGridTileList(List<Map<String, dynamic>> posts, BuildContext context) {
+List<Widget> buildGridTileList(
+    List<Map<String, dynamic>> posts, BuildContext context) {
   if (posts.length < 1) {
     return new List(0);
   }
@@ -25,7 +28,12 @@ List<Widget> buildGridTileList(List<Map<String, dynamic>> posts, BuildContext co
               padding: EdgeInsets.all(0.0),
               onPressed: () {
                 print("Show profile");
-                Navigator.pushNamed(context, '/Pet_Profile', arguments: posts[i]);
+                // Navigator.pushNamed(context, '/Pet_Profile', arguments: posts[i]);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            new PetProfile(posts[i])));
               },
             )),
       ),

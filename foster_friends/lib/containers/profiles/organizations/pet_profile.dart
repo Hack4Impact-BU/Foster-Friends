@@ -5,9 +5,13 @@ import 'package:foster_friends/database.dart';
 
 // Define a custom Form widget.
 class PetProfile extends StatefulWidget {
+  final data;
+
+  PetProfile(this.data);
+
   @override
   PetState createState() {
-    return PetState();
+    return PetState(this.data);
   }
 }
 
@@ -16,15 +20,33 @@ List<bool> isSelected = [false];
 
 
 class PetState extends State<PetProfile> {
-   
-  Map data = {};
+  
+
+
+  Map<String,dynamic> data;
+
+  PetState(this.data);
+
+
+  @override
+  void initState() {
+    // data = ModalRoute.of(context).settings.arguments;
+    String petID = data['id'];
+    List<Map<String,dynamic>> favPets = store.state.userData['pets'];
+    for (Map pet in favPets){
+      if (pet['id'] == petID){
+        isSelected[0] = true;
+      } else{
+        isSelected[0] = false;
+      }
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
 
-  data = ModalRoute.of(context).settings.arguments;
-
-  //existsFav(data['id']).then((value){ isSelected[0] = value;});
   
 
   //print(isSelected);
