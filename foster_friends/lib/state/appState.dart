@@ -93,7 +93,7 @@ Future<List<Map<String, dynamic>>> getAllPets() async {
   // The syntax for the query should be something like this:
   CollectionReference pets = ref.collection('pets');
   QuerySnapshot result =
-      await pets.where('type', isEqualTo: 'Dog').getDocuments();
+      await pets.getDocuments();
 
   for (var snapshot in result.documents) {
     Map<String, dynamic> pet = Map.from(snapshot.data);

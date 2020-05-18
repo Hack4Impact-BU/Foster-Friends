@@ -29,20 +29,21 @@ class SearchFormState extends State<SearchForm> {
   // -------------------------- variables for pet type, breed, sex dropdown menu ----------------------------
   //static Map<String, List<String>> map = {'Dog':['Labrador Retrievers', 'German Shepherd Dogs', 'Golden Retrievers'],'Cat':['Maine Coon','Bengal','Siamese'],'Bird':['Maine Coon','Bengal','Siamese']};
   List<String> _petTypes = ['Dog', 'Cat', 'Bird'];
-  List<String> _dogBreed = [
-    'Labrador Retrievers',
-    'German Shepherd Dogs',
-    'Golden Retrievers'
-  ];
+  List<String> _dogBreed = [ 'Labrador Retrievers','German Shepherd Dogs','Golden Retrievers'];
   List<String> _catBreed = ['Maine Coon', 'Bengal', 'Siamese'];
   List<String> _birdBreed = [''];
+    List<String> _sex = ['Female', 'Male'];
+  List<String> _activity = ['High', 'Medium', 'Low'];
+
   static List<String> _breedType = [];
+
   String _selectedPetTypes;
   String _selectedBreedTypes;
   String _selectedSex;
   String _selectedActivityLevel;
-  List<String> _sex = ['Female', 'Male'];
-  List<String> _activity = ['High', 'Medium', 'Low'];
+  int minAge;
+  int maxAge;
+
 
   // -------------------------- enable / disable SUBMIT button ----------------------------
   // bool _enabled = false;
@@ -57,7 +58,7 @@ class SearchFormState extends State<SearchForm> {
     Age
     Location --> Radius search?
   */
-    print("Searching for pet of type $_selectedPetTypes");
+
     Map<String, String> params = {
       'type': _selectedPetTypes, 
       'breed': _selectedBreedTypes,
@@ -69,11 +70,6 @@ class SearchFormState extends State<SearchForm> {
 
   @override
   Widget build(BuildContext context) {
-    const List<Color> orangeGradients = [
-      Color(0xFFFFCC80),
-      Color(0xFFFE8853),
-      Color(0xFFFEF5350),
-    ];
     return Column(children: <Widget>[
       Container(
         alignment: Alignment.topRight,
@@ -91,6 +87,7 @@ class SearchFormState extends State<SearchForm> {
             Container(
                 width: 75.0,
                 child: TextFormField(
+                  keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     hintText: 'Age Min',
                   ),
@@ -106,6 +103,7 @@ class SearchFormState extends State<SearchForm> {
             Container(
                 width: 75.0,
                 child: TextFormField(
+                  keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     hintText: 'Age Max',
                   ),
