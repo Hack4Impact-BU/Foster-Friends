@@ -47,9 +47,13 @@ class PetState extends State<PetProfile> {
                     selectedBorderColor: Colors.white,
                     splashColor: Colors.white,
                     onPressed: (int index) async {
+                      
+                      print("hi $isSelected");
                       await toggleFavPet(data['id'],isSelected[0]);
                       setState(() {
                       isSelected[index] = !isSelected[index];
+
+                      print("bye $isSelected");
 
     });
   },

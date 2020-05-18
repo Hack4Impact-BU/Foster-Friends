@@ -191,7 +191,7 @@ void deletePet (String petID) async {
         favPets = snapshot.data['fav pets'];
         });
 
-    if (toggleInfo == false)
+    if (toggleInfo == true)
       favPets.removeWhere((item) => item == petID);
     else
       favPets.add(petID);
