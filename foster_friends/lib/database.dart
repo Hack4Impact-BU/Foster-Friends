@@ -98,6 +98,19 @@ Future<bool> existsInDatabase() async {
   return doc.exists;
 }
 
+Future<bool> existsFav(checkPet) async {
+  FirebaseUser user = await getCurrentUser();
+  final String uid = user.uid;
+  DocumentReference ref = firestore.collection('users').document(uid);
+  DocumentSnapshot doc = await ref.get();
+
+  for(var pet in doc.data['fav pets']) {
+    if (pet == checkPet)
+     return true;
+  }
+  return false;
+}
+
 Future<Map<String, dynamic>> getUserData(String uid) async {
   final ref = Firestore.instance; // instantiate database
   DocumentSnapshot s = await ref.collection("users").document(uid).get();
@@ -142,5 +155,51 @@ Future<Map<String, dynamic>> getPetData(String petID) async {
     'type': s.data['type'],
   };
 }
+
+void deletePet (String petID) async {
+
+    FirebaseUser user = await getCurrentUser();
+    final String uid = user.uid;
+    var pets;
+    DocumentReference ref1 = Firestore.instance.collection("pets").document(petID);
+    DocumentReference ref2 = Firestore.instance.collection("users").document(uid);
+
+    await ref2.get()
+        .then((DocumentSnapshot snapshot)  {
+        pets = snapshot.data['pets'];
+        });
+
+    pets.removeWhere((item) => item == petID);
+
+    await ref1.delete();
+    await ref2.updateData({
+      "pets" : pets
+
+    });
+  }
+
+
+  Future <void> toggleFavPet (String petID, bool toggleInfo) async {
+
+    FirebaseUser user = await getCurrentUser();
+    final String uid = user.uid;
+    var favPets;
+    DocumentReference ref = Firestore.instance.collection("users").document(uid);
+
+    await ref.get()
+        .then((DocumentSnapshot snapshot)  {
+        favPets = snapshot.data['fav pets'];
+        });
+
+    if (toggleInfo == false)
+      favPets.removeWhere((item) => item == petID);
+    else
+      favPets.add(petID);
+
+    await ref.updateData({
+      "fav pets" : favPets
+
+    });
+  }
     
   

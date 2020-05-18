@@ -7,6 +7,7 @@ import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:foster_friends/database.dart';
 
 // Define a custom Form widget.
 class EditPetProfile extends StatefulWidget {
@@ -127,7 +128,9 @@ class EditPetProfile extends StatefulWidget {
                                     FlatButton(
                                       child: Text('Yes'),
                                       onPressed: () {
-                                        deletePet(context);
+                                        deletePet(petID);
+                                        Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => OrgProfile()),
+                                        ModalRoute.withName('/'));
                                       },
                                     ),
                                     FlatButton(
@@ -315,30 +318,6 @@ class EditPetProfile extends StatefulWidget {
                   )
                   ]),
             )));        
-  }
-
-  deletePet (BuildContext context) async {
-
-    DocumentReference ref1 = Firestore.instance.collection("pets").document(petID);
-    DocumentReference ref2 = Firestore.instance.collection("organizations").document("IahwMOjwYdgEKY2cli5f");
-
-    await ref2.get()
-        .then((DocumentSnapshot snapshot)  {
-        pets = snapshot.data['pets'];
-        });
-
-    pets.removeWhere((item) => item == petID);
-
-    await ref1.delete();
-    await ref2.updateData({
-      "pets" : pets
-
-    });
-
-
-    Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => OrgProfile()),
-  ModalRoute.withName('/'),
-);
   }
 
 

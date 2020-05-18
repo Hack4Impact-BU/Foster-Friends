@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:foster_friends/database.dart';
-import './uploadPet.dart';
-import 'package:foster_friends/containers/authentication/authentication.dart';
 import 'package:foster_friends/state/appState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
@@ -29,14 +26,14 @@ class OrgState extends State<OrgProfile> {
   @override
   void initState() {
     final data = store.state.userData;
-    print("User data is $data");
+    //print("User data is $data");
     name = data['name'];
     description = data['description'];
     phoneNumber = data['phone number'];
     photo = data['photo'];
     pets = data['pets'];
 
-    print("Data is\n$name\n$description\n$phoneNumber\n$photo\n$pets");
+   // print("Data is\n$name\n$description\n$phoneNumber\n$photo\n$pets");
 
     super.initState();
   }
@@ -168,7 +165,7 @@ class OrgState extends State<OrgProfile> {
         converter: _ProfileViewModel.fromStore,
         builder: (BuildContext context, _ProfileViewModel vm) {
           final a = store.state.userData;
-          print(a);
+          //print(a);
           if (_anyAreNull()) {
             return Center(
               child: CircularProgressIndicator(),

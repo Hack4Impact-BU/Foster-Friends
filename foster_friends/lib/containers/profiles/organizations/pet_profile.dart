@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:foster_friends/state/appState.dart';
+import 'package:foster_friends/database.dart';
+
 
 // Define a custom Form widget.
 class PetProfile extends StatefulWidget {
@@ -9,6 +12,7 @@ class PetProfile extends StatefulWidget {
 }
 
 
+List<bool> isSelected = [false];
 
 
 class PetState extends State<PetProfile> {
@@ -19,12 +23,39 @@ class PetState extends State<PetProfile> {
   Widget build(BuildContext context) {
 
   data = ModalRoute.of(context).settings.arguments;
-  
-  //double c_height = MediaQuery.of(context).size.height*0.3;
 
+  //existsFav(data['id']).then((value){ isSelected[0] = value;});
+  
+
+  //print(isSelected);
+  
     return Container(
         child: Scaffold(
-          appBar: AppBar(),
+          appBar: AppBar(
+            actions: <Widget>[
+            // action button
+            ToggleButtons(
+              children: [Icon (
+                      Icons.favorite,
+                    
+                    )],
+                    isSelected: isSelected,
+                    selectedColor: Colors.red,
+                    color: Colors.black26,
+                    fillColor: Colors.white,
+                    borderColor: Colors.white,
+                    selectedBorderColor: Colors.white,
+                    splashColor: Colors.white,
+                    onPressed: (int index) async {
+                      await toggleFavPet(data['id'],isSelected[0]);
+                      setState(() {
+                      isSelected[index] = !isSelected[index];
+
+    });
+  },
+          
+            )]
+          ),
           
             body: Container(
                 margin: EdgeInsets.all(20),
@@ -68,12 +99,15 @@ class PetState extends State<PetProfile> {
                           
                           SizedBox(height: 30),
 
-                      FlatButton(
-                        
-                          child: Text('Edit Pet Profile'),
-                          color: Colors.black12,
-                          onPressed: () {Navigator.pushNamed(context, '/Edit_Pet_Profile',arguments: data);}
-                        ),
+                      Visibility(
+                        visible: data['organization'] == store.state.userData['name'],
+                       child: FlatButton(
+                          
+                            child: Text('Edit Pet Profile'),
+                            color: Colors.black12,
+                            onPressed: () {Navigator.pushNamed(context, '/Edit_Pet_Profile',arguments: data);}
+                          ),
+                      ),
 
                       Divider(color: Colors.grey),
 
