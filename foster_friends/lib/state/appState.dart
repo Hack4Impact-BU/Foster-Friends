@@ -1,10 +1,9 @@
+import 'package:foster_friends/containers/profiles/image.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:redux/redux.dart';
 import 'package:foster_friends/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:foster_friends/containers/authentication/authentication.dart';
-
 final ref = Firestore.instance;
 
 // AppState
@@ -81,7 +80,7 @@ ThunkActionWithExtraArgument<AppState, Map<String, String>> makeQuery =
 
     for (var snapshot in result.documents) {
       Map<String, dynamic> pet = Map.from(snapshot.data);
-      // print("Query yields $pet");
+      pet['image'] = await getNetworkUrl(pet['image']);
       petInfo.add(pet);
     }
   }
@@ -99,6 +98,7 @@ Future<List<Map<String, dynamic>>> getAllPets() async {
 
   for (var snapshot in result.documents) {
     Map<String, dynamic> pet = Map.from(snapshot.data);
+    pet['image'] = await getNetworkUrl(pet['image']);
     petInfo.add(pet);
   }
 

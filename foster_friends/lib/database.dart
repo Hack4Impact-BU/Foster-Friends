@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:foster_friends/containers/authentication/authentication.dart';
+import 'package:foster_friends/containers/profiles/image.dart';
 import 'package:foster_friends/state/appState.dart';
 
 final Firestore firestore = Firestore.instance;
@@ -109,8 +110,9 @@ Future<Map<String, dynamic>> getUserData(String uid) async {
   List<Map<String,dynamic>>  petInfo = []; 
   for(var petID in s.data['pets']){
     final pet = await pets.document(petID).get();
-    final petData = pet.data;
-    petInfo.add( Map.from(petData) );
+    Map<String,dynamic> petMap = Map.from(pet.data);
+    petMap['image'] = await getNetworkUrl(petMap['image']);
+    petInfo.add(petMap);
   }
 
   print("Pet info is $petInfo");
@@ -120,7 +122,7 @@ Future<Map<String, dynamic>> getUserData(String uid) async {
     'phone number': s.data['phone number'],
     'email': s.data['email'],
     'address': s.data['address'],
-    'photo': s.data['photo'],
+    'photo': await getNetworkUrl(s.data['photo']),
     'pets': petInfo,
     'type': s.data['type'],
     'description': s.data['description']
