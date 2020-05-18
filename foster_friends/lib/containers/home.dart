@@ -3,32 +3,34 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:foster_friends/state/appState.dart';
 import 'package:foster_friends/containers/profiles/profile.dart';
-import 'package:foster_friends/main.dart';
+import 'package:foster_friends/containers/search/search.dart';
+import 'package:foster_friends/containers/search/results.dart';
 
 
 // main application build
-class Search extends StatelessWidget {
+class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SearchState(0);
+    return HomeState(0);
   }
 }
 
 // building state
-class SearchState extends StatefulWidget {
+class HomeState extends StatefulWidget {
   // SearchState({Key key}) : super(key: key); // have no idea what this is
   final int index;
-  SearchState(this.index);
+  HomeState(this.index);
   @override
-  SearchStateUser createState() => SearchStateUser(null, "", index);
+  _HomeState createState() => _HomeState(null, "", index);
 }
 
 // This is the bottom bar body options
-class SearchStateUser extends State<SearchState> {
+class _HomeState extends State<HomeState> {
   
   @override
   void initState(){
     store.dispatch(getFirebaseUser);
+    store.dispatch(query);
   }
 
   FirebaseUser _user;
@@ -38,14 +40,14 @@ class SearchStateUser extends State<SearchState> {
   FirebaseUser get user => _user;
   String get userType => _userType;
 
-  SearchStateUser(this._user, this._userType, this._selectedIndex);
+  _HomeState(this._user, this._userType, this._selectedIndex);
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   static List<Widget> _widgetOptions = <Widget>[
 
-    Text("Search"),
+    Results(),
     Profile()
     
   ];
@@ -69,25 +71,11 @@ class SearchStateUser extends State<SearchState> {
       
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(70.0), 
-          child: AppBar(
-        title: const Text('Foster Friends'), // top bar
-        //backgroundColor: Color(0xFFFFCC80),
-        flexibleSpace: 
-          ClipPath(
-              clipper: TopWaveClipper(),
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: orangeGradients,
-                      begin: Alignment.topLeft,
-                      end: Alignment.center),
-                ),
-                height: MediaQuery.of(context).size.height / 7.5,
-              ),
-            ),
-        
+          child: AppBar(title: const Text('Foster Friends'), // top bar
       )),
-      
+      floatingActionButton: FloatingActionButton(onPressed: (){
+        showDialog(context: context, builder: (BuildContext context) => Search());
+      }),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:foster_friends/containers/authentication/authentication.dart';
+import 'package:foster_friends/state/appState.dart';
 
 final Firestore firestore = Firestore.instance;
 
@@ -40,7 +41,7 @@ Future<void> writeUser(String email, String name, String location) async {
   });
 }
 
-void pushProfile(
+Future<void> pushProfile(
     String userID,
     String phoneNumber,
     String email,
@@ -49,7 +50,7 @@ void pushProfile(
     String address,
     String description,
     String photoLink,
-    bool isIndividual) {
+    bool isIndividual) async {
   if (isIndividual) {
     pushIndividualProfile(
         userID, phoneNumber, email, location, name, photoLink);
@@ -69,7 +70,7 @@ void pushIndividualProfile(String userID, String phoneNumber, String email,
     "location": location,
     "name": name,
     "type": "individual"
-  });
+  }).then((value) => store.dispatch(getFirebaseUser));
   print("User profile submitted");
 }
 
@@ -101,15 +102,25 @@ Future<Map<String, dynamic>> getUserData(String uid) async {
   final ref = Firestore.instance; // instantiate database
   DocumentSnapshot s = await ref.collection("users").document(uid).get();
 
+  CollectionReference pets = ref.collection("pets");
+  List<Map<String,dynamic>>  petInfo = []; 
+  for(var petID in s.data['pets']){
+    final pet = await pets.document(petID).get();
+    final petData = pet.data;
+    petInfo.add( Map.from(petData) );
+  }
+
+  print("Pet info is $petInfo");
+
   return {
     'name': s.data['name'],
     'phone number': s.data['phone number'],
     'email': s.data['email'],
     'address': s.data['address'],
     'photo': s.data['photo'],
-    'description': s.data['description'],
-    'pets': s.data['pets'],
-    'type': s.data['type']
+    'pets': petInfo,
+    'type': s.data['type'],
+    'description': s.data['description']
   };
 }
 
