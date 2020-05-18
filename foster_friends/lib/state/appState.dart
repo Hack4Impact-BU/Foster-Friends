@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:redux/redux.dart';
 import 'package:foster_friends/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:foster_friends/containers/authentication/authentication.dart';
 
 final ref = Firestore.instance;
 
@@ -39,6 +40,7 @@ class UpdateUserAction {
 
 // Async function that pulls user profile from database
 ThunkAction<AppState> getFirebaseUser = (Store<AppState> store) async {
+  // await signOut();
   FirebaseAuth.instance.currentUser().then((u) async {
     if (u == null) {
       store.dispatch(new UpdateUserAction(null, null, 1));

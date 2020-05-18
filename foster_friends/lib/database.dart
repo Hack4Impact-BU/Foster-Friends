@@ -69,7 +69,9 @@ void pushIndividualProfile(String userID, String phoneNumber, String email,
     "phone number": phoneNumber,
     "location": location,
     "name": name,
-    "type": "individual"
+    "type": "individual",
+    "pets": [],
+    "photo": ""
   }).then((value) => store.dispatch(getFirebaseUser));
   print("User profile submitted");
 }
@@ -85,7 +87,8 @@ void pushOrganizationProfile(String userID, String address, String description,
     "name": name,
     "phone number": phoneNumber,
     "photo": photoLink,
-    "type": "organization"
+    "type": "organization",
+    "pets": []
   });
   print("Organization profile submitted");
 }
