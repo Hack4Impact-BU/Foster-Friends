@@ -87,8 +87,13 @@ ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery =
     }
   }
 
-  if (params['ageMax'] != null) {
-    query = query.orderBy('age');
+  if (params['maxAge'] != null) {
+    print(params['minAge']);
+    if(params['minAge'] == null){
+      query = query.where('age', isLessThanOrEqualTo: params['maxAge'] );
+    } else{
+      query = query.orderBy('age');
+    }
   }
 
   QuerySnapshot result = await query.getDocuments();
