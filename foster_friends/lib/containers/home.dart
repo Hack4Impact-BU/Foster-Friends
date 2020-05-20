@@ -80,14 +80,17 @@ class _HomeState extends State<HomeState> {
               ),
             ),
           )),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-              context: context, builder: (BuildContext context) => Search());
-        },
-        child: Icon(Icons.search),
-        backgroundColor: Color(0xFFFEF53500),
-      ),
+      floatingActionButton: (_selectedIndex == 1)
+          ? null
+          : FloatingActionButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) => Search());
+              },
+              child: Icon(Icons.search),
+              backgroundColor: Color(0xFFFEF53500),
+            ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
