@@ -30,6 +30,8 @@ class _HomeState extends State<HomeState> {
   void initState() {
     store.dispatch(getFirebaseUser);
     store.dispatch(makeQuery(store, {}));
+
+    super.initState();
   }
 
   FirebaseUser _user;

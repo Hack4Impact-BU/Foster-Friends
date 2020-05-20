@@ -40,7 +40,7 @@ class UpdateUserAction {
 
 // Async function that pulls user profile from database
 ThunkAction<AppState> getFirebaseUser = (Store<AppState> store) async {
-  // await signOut();
+//  await signOut();
   FirebaseAuth.instance.currentUser().then((u) async {
     if (u == null) {
       store.dispatch(new UpdateUserAction(null, null, 1));
@@ -74,12 +74,22 @@ ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery =
   // Query query = pets;
 
   for (String elem in params.keys) {
-    if ( elem != 'ageMin' && elem!='ageMax' && params[elem] != null) {
-      print("Searching for $elem equaling " + params[elem].toString());
+    if (params[elem] != null) {
+      print("Searching for $elem " +
+          params[elem].runtimeType.toString() +
+          " " +
+          params[elem].toString());
+      if (elem == 'minAge') {
+        query = query.where('age', isGreaterThanOrEqualTo: params[elem]);
+      } else if (elem != 'maxAge') {
         query = query.where(elem, isEqualTo: params[elem]);
+      }
     }
   }
 
+  if (params['ageMax'] != null) {
+    query = query.orderBy('age');
+  }
 
   QuerySnapshot result = await query.getDocuments();
 
@@ -88,8 +98,8 @@ ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery =
     // print("Query yields $pet");
     petInfo.add(pet);
   }
+
   print("Results are $petInfo");
-  // }
 
   store.dispatch(new UpdateQueryAction(petInfo));
 };
@@ -123,6 +133,7 @@ AppState reducer(AppState prev, dynamic action) {
     return prev;
   }
 }
+
 /* --------------------- INITIALIZATION OF STORE  --------------------- */
 final store = new Store<AppState>(reducer,
     initialState: new AppState(null, null, [], 0),
