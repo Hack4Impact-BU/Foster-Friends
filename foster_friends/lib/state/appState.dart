@@ -53,7 +53,7 @@ ThunkAction<AppState> getFirebaseUser = (Store<AppState> store) async {
 };
 
 /* --------------------- QUERIES  --------------------- */
-// Query class --> holds results of a query
+// Query class --> holds results of a query and updates UI
 class UpdateQueryAction {
   List<Map<String, dynamic>> _results;
   List<Map<String, dynamic>> get results => this._results;
@@ -61,30 +61,35 @@ class UpdateQueryAction {
   UpdateQueryAction(this._results);
 }
 
-class QueryAction {
-  String param;
-
-  QueryAction(this.param);
-}
-
 // async function that pulls data based on query from database
-ThunkActionWithExtraArgument<AppState, Map<String, String>> makeQuery =
-    (Store<AppState> store, Map<String, String> params) async {
+ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery =
+    (Store<AppState> store, Map<String, dynamic> params) async {
   List<Map<String, dynamic>> petInfo = [];
 
-  if (params.isEmpty) {
-    petInfo = await getAllPets();
-  } else {
-    CollectionReference pets = ref.collection('pets');
-    QuerySnapshot result =
-        await pets.where('type', isEqualTo: params['type']).getDocuments();
+  /* 
+    'Type', 'Breed', 'Sex', 'Age', 'Shelter', 'Address'
+  */
+  print("Search params are $params");
+  Query query = ref.collection('pets');
+  // Query query = pets;
 
-    for (var snapshot in result.documents) {
-      Map<String, dynamic> pet = Map.from(snapshot.data);
-      // print("Query yields $pet");
-      petInfo.add(pet);
+  for (String elem in params.keys) {
+    if ( elem != 'ageMin' && elem!='ageMax' && params[elem] != null) {
+      print("Searching for $elem equaling " + params[elem].toString());
+        query = query.where(elem, isEqualTo: params[elem]);
     }
   }
+
+
+  QuerySnapshot result = await query.getDocuments();
+
+  for (var snapshot in result.documents) {
+    Map<String, dynamic> pet = Map.from(snapshot.data);
+    // print("Query yields $pet");
+    petInfo.add(pet);
+  }
+  print("Results are $petInfo");
+  // }
 
   store.dispatch(new UpdateQueryAction(petInfo));
 };
@@ -94,8 +99,7 @@ Future<List<Map<String, dynamic>>> getAllPets() async {
 
   // The syntax for the query should be something like this:
   CollectionReference pets = ref.collection('pets');
-  QuerySnapshot result =
-      await pets.getDocuments();
+  QuerySnapshot result = await pets.getDocuments();
 
   for (var snapshot in result.documents) {
     Map<String, dynamic> pet = Map.from(snapshot.data);
@@ -115,23 +119,10 @@ AppState reducer(AppState prev, dynamic action) {
     AppState newAppState =
         new AppState(prev.user, prev.userData, action.results, prev.userIndex);
     return newAppState;
-    // } else if (action is QueryAction) {
-    //   // Query action has a param
-    //   // asynchronius function --> return some result
-    //   // Return AppState with result (, , resultOfFunction)
-    //   try {
-    //     makeQuery(action.param).then((result) {
-    //       print('REsult is $result');
-    //       return new AppState(prev.user, prev.userData, result, prev.index);
-    //     });
-    //   } catch (error) {
-    //     print("Error: $error");
-    //   }
   } else {
     return prev;
   }
 }
-
 /* --------------------- INITIALIZATION OF STORE  --------------------- */
 final store = new Store<AppState>(reducer,
     initialState: new AppState(null, null, [], 0),

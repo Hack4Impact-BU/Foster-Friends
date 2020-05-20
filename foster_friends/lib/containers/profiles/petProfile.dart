@@ -1,43 +1,33 @@
 import 'package:flutter/material.dart';
+// import 'package:foster_friends/containers/profiles/organizations/pet_profile.dart';
 // import 'package:f'
 
 // Define a custom Form widget.
 class PetProfile extends StatefulWidget {
+  final data;
+
+  PetProfile(this.data);
   @override
   PetState createState() {
-    return PetState();
+    return PetState(this.data);
   }
 }
 
-class PetInfo {
-  PetInfo(
-      [this.name,
-      this.description,
-      this.breed,
-      this.sex,
-      this.organization,
-      this.type,
-      this.age,
-      this.photo]);
-  final String name;
-  final String breed;
-  final String photo;
-  final String organization;
-  final String sex;
-  //final String location;
-  final String type;
-  final String description;
-  final String age;
-}
 
 class PetState extends State<PetProfile> {
-  Map data = {};
+  Map data;
+
+  PetState(this.data);
 
   TextStyle _label = TextStyle(
       color: Colors.redAccent, decoration: TextDecoration.none, fontSize: 20.0);
   TextStyle _data = TextStyle(
       color: Colors.black, decoration: TextDecoration.none, fontSize: 20.0);
 
+  @override
+  initState(){
+    print(this.data);
+  }
   Widget _header() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -79,7 +69,7 @@ class PetState extends State<PetProfile> {
         _detail(details[0], data[databaseFields[0]]),
         _detail(details[1], data[databaseFields[1]]),
         _detail(details[2], data[databaseFields[2]]),
-        _detail(details[3], data[databaseFields[3]]),
+        _detail(details[3], data[databaseFields[3]].toString() ),
         _detail(details[4], data[databaseFields[4]]),
         _detail(details[5], data[databaseFields[5]])
       ],
