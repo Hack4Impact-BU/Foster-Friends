@@ -12,14 +12,12 @@ class AppState {
   FirebaseUser _user;
   Map<String, dynamic> _userData;
   List<Map<String, dynamic>> _query;
-  int _userIndex;
 
   FirebaseUser get user => _user;
   Map<String, dynamic> get userData => _userData;
   List<Map<String, dynamic>> get query => _query;
-  int get userIndex => this._userIndex;
 
-  AppState(this._user, this._userData, this._query, this._userIndex);
+  AppState(this._user, this._userData, this._query);
 
   get index => null;
 }
@@ -29,13 +27,11 @@ class AppState {
 class UpdateUserAction {
   FirebaseUser _user;
   Map<String, dynamic> _userData;
-  int _userIndex;
 
   FirebaseUser get user => this._user;
   Map<String, dynamic> get userData => this._userData;
-  int get userIndex => this._userIndex;
 
-  UpdateUserAction(this._user, this._userData, this._userIndex);
+  UpdateUserAction(this._user, this._userData);
 }
 
 // Async function that pulls user profile from database
@@ -43,11 +39,11 @@ ThunkAction<AppState> getFirebaseUser = (Store<AppState> store) async {
 //  await signOut();
   FirebaseAuth.instance.currentUser().then((u) async {
     if (u == null) {
-      store.dispatch(new UpdateUserAction(null, null, 1));
+      store.dispatch(new UpdateUserAction(null, null));
     } else {
       final data = await getUserData(u.uid);
 
-      store.dispatch(new UpdateUserAction(u, data, 1));
+      store.dispatch(new UpdateUserAction(u, data));
     }
   });
 };
@@ -128,11 +124,11 @@ Future<List<Map<String, dynamic>>> getAllPets() async {
 AppState reducer(AppState prev, dynamic action) {
   if (action is UpdateUserAction) {
     AppState newAppState = new AppState(
-        action.user, action.userData, prev._query, action.userIndex);
+        action.user, action.userData, prev._query);
     return newAppState;
   } else if (action is UpdateQueryAction) {
     AppState newAppState =
-        new AppState(prev.user, prev.userData, action.results, prev.userIndex);
+        new AppState(prev.user, prev.userData, action.results);
     return newAppState;
   } else {
     return prev;
@@ -141,5 +137,5 @@ AppState reducer(AppState prev, dynamic action) {
 
 /* --------------------- INITIALIZATION OF STORE  --------------------- */
 final store = new Store<AppState>(reducer,
-    initialState: new AppState(null, null, [], 0),
+    initialState: new AppState(null, null, []),
     middleware: [thunkMiddleware]);
