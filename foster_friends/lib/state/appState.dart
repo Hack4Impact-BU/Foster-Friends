@@ -1,3 +1,5 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:foster_friends/containers/authentication/authentication.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:redux/redux.dart';
@@ -39,6 +41,7 @@ class UpdateUserAction {
 
 // Async function that pulls user profile from database
 ThunkAction<AppState> getFirebaseUser = (Store<AppState> store) async {
+//  await signOut();
   FirebaseAuth.instance.currentUser().then((u) async {
     if (u == null) {
       store.dispatch(new UpdateUserAction(null, null, 1));
@@ -66,24 +69,45 @@ class QueryAction {
 }
 
 // async function that pulls data based on query from database
-ThunkActionWithExtraArgument<AppState, Map<String, String>> makeQuery =
-    (Store<AppState> store, Map<String, String> params) async {
+ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery =
+    (Store<AppState> store, Map<String, dynamic> params) async {
+  print('Rest in rest');
   List<Map<String, dynamic>> petInfo = [];
 
-  if (params.isEmpty) {
-    petInfo = await getAllPets();
-  } else {
-    CollectionReference pets = ref.collection('pets');
-    QuerySnapshot result =
-        await pets.where('type', isEqualTo: params['type']).getDocuments();
-
-    for (var snapshot in result.documents) {
-      Map<String, dynamic> pet = Map.from(snapshot.data);
-      // print("Query yields $pet");
-      petInfo.add(pet);
+  Query query = ref.collection('pets');
+  // Handles all fields except age and location
+  for (String elem in params.keys) {
+    if (elem != 'ageMin' && elem != 'ageMax' && params[elem] != null) {
+      print("Searching for $elem equaling " + params[elem].toString());
+      query = query.where(elem, isEqualTo: params[elem]);
     }
   }
-
+  // if (params['type'] != null) {
+  //   query = query.where('type', isEqualTo: params['type']);
+  // }
+  // if(params['breed'] != null) {
+  //   query = query.where('breed', isEqualTo: params['breed']);
+  // }
+  // if(params['sex'] != null) {
+  //   query = query.where('sex', isEqualTo: params['sex']);
+  // }
+  // if(params['activity level'] != null) {
+  //   query = query.where('activityLevel', isEqualTo: params['activity level']);
+  // }
+  // if(params['min age'] != null) {
+  //   query = query.where('age', isGreaterThanOrEqualTo: params['min age']);
+  // }
+  // if(params['max age'] != null) {
+  //   query = query.where('age', isLessThanOrEqualTo: params['max age']);
+  // }
+  print('Rest in rest2');
+  QuerySnapshot result = await query.getDocuments();
+  for (var snapshot in result.documents) {
+    Map<String, dynamic> pet = Map.from(snapshot.data);
+    // print("Query yields $pet");
+    petInfo.add(pet);
+  }
+  print('Rest in rest3');
   store.dispatch(new UpdateQueryAction(petInfo));
 };
 
@@ -92,8 +116,7 @@ Future<List<Map<String, dynamic>>> getAllPets() async {
 
   // The syntax for the query should be something like this:
   CollectionReference pets = ref.collection('pets');
-  QuerySnapshot result =
-      await pets.getDocuments();
+  QuerySnapshot result = await pets.getDocuments();
 
   for (var snapshot in result.documents) {
     Map<String, dynamic> pet = Map.from(snapshot.data);
