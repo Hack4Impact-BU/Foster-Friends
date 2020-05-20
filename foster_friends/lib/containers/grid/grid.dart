@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foster_friends/containers/profiles/petProfile.dart';
 
 Widget buildGrid(List<Map<String, dynamic>> posts, BuildContext context) => GridView.count(
     crossAxisCount: 3,
@@ -24,8 +25,7 @@ List<Widget> buildGridTileList(List<Map<String, dynamic>> posts, BuildContext co
               child: null,
               padding: EdgeInsets.all(0.0),
               onPressed: () {
-                 Navigator.pushNamed(context, '/Pet_Profile',
-                      arguments: posts[i]);
+                showDialog(context: context, builder: (BuildContext context) => PetProfile(posts[i]));
               },
             )),
       ),

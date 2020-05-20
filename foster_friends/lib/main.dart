@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
             // '/Form': (BuildContext context) => new InputForm(),
             // '/UploadPet': (BuildContext context) => new UploadPet(),
             // '/Org_Profile': (BuildContext context) => new OrgProfile(),
-            '/Pet_Profile': (BuildContext context) => new PetProfile(),
+            // '/Pet_Profile': (BuildContext context) => new PetProfile(),
             // '/User_Profile' : (BuildContext context) => new UserProfile(),
           }),
     );
