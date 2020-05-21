@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './edit_user_profile.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -210,7 +211,8 @@ class UserState extends State<UserProfile>{
                       color: Theme.of(context).buttonColor,
                         onPressed: () {
                           print("Pressed edit profile");
-                          Navigator.pushNamed(  context, '/Edit_User_Profile');
+                          // Navigator.pushNamed(  context, '/Edit_User_Profile');
+                          EditUserProfile();
                           },
                         
                         child: Text("Edit Profile",
