@@ -11,6 +11,8 @@ import 'package:foster_friends/state/appState.dart';
 final name = store.state.userData['name'];
 final email = store.state.userData['email'];
 final phoneNumber = store.state.userData['phone number'];
+final photo = store.state.userData['photo'];
+final pets = store.state.userData['pets'];
 
 
 // Define a custom Form widget.
@@ -177,7 +179,7 @@ class UserState extends State<UserProfile>{
               SizedBox(height: 20,),
               CircleAvatar(
                 radius:70,
-                backgroundImage: NetworkImage("https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50"),
+                backgroundImage: NetworkImage(photo),
               ),
               SizedBox(height: 20,),
               Text(name, style: TextStyle(fontWeight: FontWeight.w600, fontSize:20)),
@@ -229,7 +231,7 @@ class UserState extends State<UserProfile>{
             mainAxisSpacing: 1.5,
             crossAxisSpacing: 1.5,
             children: <Widget>[
-              for(int i=0; i<10; i++)
+              for(int i=0; i<pets.length; i++)
                 Container(
                   // height: MediaQuery.of(context).size.width/3,
                   // width: MediaQuery.of(context).size.width/3,
