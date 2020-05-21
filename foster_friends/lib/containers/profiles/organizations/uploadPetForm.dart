@@ -198,7 +198,7 @@ class UploadPetFormState extends State<UploadPetForm> {
     );
   }
     var _onPressed;
-    if (petName!= "" && petAge!="" && petOrganization!="" && petType!="" && petBreed!="" && petSex!="" && petActivityLevel!="" && petDescription!="" && petLocation1!="" && petLocation2!="" && petImage!=null) {
+    if (petName.text!= "" && petAge.text!="" && petOrganization!="" && petType.text!=""  && selectedBreedType.isNotEmpty && petSex.text!="" && petActivityLevel.text!="" && petDescription.text!="" && petLocation1!="" && petLocation2!="" && petImage!=null) {
       _onPressed = () async {
         DocumentReference ref = Firestore.instance.collection("pets").document();
         String petId = ref.documentID;
@@ -360,6 +360,7 @@ class UploadPetFormState extends State<UploadPetForm> {
                     _breedType = _catBreed;
                   }
                   else {
+                    petType.text="";
                     _selectedPetTypes = newValue;
                     _breedType = [];
                   }
@@ -384,8 +385,10 @@ class UploadPetFormState extends State<UploadPetForm> {
                   return '';
                 }
                 else {
-                  petType.text = value;
-                  controller: petType;
+                  if (petType.text == "Others") {
+                    petType.text = value;
+                    controller: petType;
+                  }
                 }
                 return null;
               },
