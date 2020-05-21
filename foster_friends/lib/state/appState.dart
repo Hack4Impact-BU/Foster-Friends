@@ -4,8 +4,10 @@ import 'package:redux/redux.dart';
 import 'package:foster_friends/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:foster_friends/containers/authentication/authentication.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 
 final ref = Firestore.instance;
+Geoflutterfire geo = Geoflutterfire();
 
 // AppState
 class AppState {
@@ -67,30 +69,51 @@ ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery =
   */
   print("Search params are $params");
   Query query = ref.collection('pets');
-  // Query query = pets;
 
-  for (String elem in params.keys) {
-    if (params[elem] != null) {
-      print("Searching for $elem " +
-          params[elem].runtimeType.toString() +
-          " " +
-          params[elem].toString());
-      if (elem == 'minAge') {
-        query = query.where('age', isGreaterThanOrEqualTo: params[elem]);
-      } else if (elem != 'maxAge') {
-        query = query.where(elem, isEqualTo: params[elem]);
-      }
+  GeoFirePoint g = geo.point(latitude: 37.785834, longitude: -122.406417);
+
+  print("Firepoint is " + g.hash);
+  double radius = 50;
+  String field = 'test';
+
+  CollectionReference petCollection = ref.collection('pets');
+  geo
+      .collection(collectionRef: petCollection)
+      .setPoint('7ODiubljoL0SHEETdH1V', 'test', g.latitude , g.longitude);
+
+  Stream<List<DocumentSnapshot>> results = geo
+      .collection(collectionRef: petCollection)
+      .within(center: g, radius: radius, field: field, strictMode: true);
+
+  await for (List<DocumentSnapshot> res in results) {
+    for (DocumentSnapshot pet in res) {
+      petInfo.add(Map.from(pet.data));
     }
+    print(petInfo);
   }
 
-  if (params['maxAge'] != null) {
-    print(params['minAge']);
-    if(params['minAge'] == null){
-      query = query.where('age', isLessThanOrEqualTo: params['maxAge'] );
-    } else{
-      query = query.orderBy('age');
-    }
-  }
+  // for (String elem in params.keys) {
+  //   if (params[elem] != null) {
+  //     print("Searching for $elem " +
+  //         params[elem].runtimeType.toString() +
+  //         " " +
+  //         params[elem].toString());
+  //     if (elem == 'minAge') {
+  //       query = query.where('age', isGreaterThanOrEqualTo: params[elem]);
+  //     } else if (elem != 'maxAge') {
+  //       query = query.where(elem, isEqualTo: params[elem]);
+  //     }
+  //   }
+  // }
+
+  // if (params['maxAge'] != null) {
+  //   print(params['minAge']);
+  //   if(params['minAge'] == null){
+  //     query = query.where('age', isLessThanOrEqualTo: params['maxAge'] );
+  //   } else{
+  //     query = query.orderBy('age');
+  //   }
+  // }
 
   QuerySnapshot result = await query.getDocuments();
 
@@ -123,8 +146,8 @@ Future<List<Map<String, dynamic>>> getAllPets() async {
 /* --------------------- REDUCER: HANDLES ACTION TYPES  --------------------- */
 AppState reducer(AppState prev, dynamic action) {
   if (action is UpdateUserAction) {
-    AppState newAppState = new AppState(
-        action.user, action.userData, prev._query);
+    AppState newAppState =
+        new AppState(action.user, action.userData, prev._query);
     return newAppState;
   } else if (action is UpdateQueryAction) {
     AppState newAppState =
@@ -137,5 +160,4 @@ AppState reducer(AppState prev, dynamic action) {
 
 /* --------------------- INITIALIZATION OF STORE  --------------------- */
 final store = new Store<AppState>(reducer,
-    initialState: new AppState(null, null, []),
-    middleware: [thunkMiddleware]);
+    initialState: new AppState(null, null, []), middleware: [thunkMiddleware]);
