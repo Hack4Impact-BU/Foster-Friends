@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:foster_friends/containers/authentication/authentication.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
@@ -83,6 +81,8 @@ class UploadPetFormState extends State<UploadPetForm> {
     petType.dispose();
     petOrganization.dispose();
     petImage = "";
+    _selectedPetTypes = "";
+    _selectedBreedTypes = null;
     super.dispose();
   }
 
@@ -92,7 +92,6 @@ class UploadPetFormState extends State<UploadPetForm> {
   List<String> _petTypes = ['Dog', 'Cat', 'Others'];
   List<String> _dogBreed = ['Labrador Retrievers', 'German Shepherd Dogs', 'Golden Retrievers','Others'];
   List<String> _catBreed = ['Maine Coon','Bengal','Siamese','Others'];
-  List<String> _birdBreed = [''];
   static List<String> _breedType = [];
   final List<String> selectedBreedType = <String>[];
   String _selectedPetTypes;
@@ -101,33 +100,6 @@ class UploadPetFormState extends State<UploadPetForm> {
   String _selectedActivityLevel;
   List<String> _sex = ['Female','Male'];
   List<String> _activity = ['High','Medium','Low'];
-  
-
-  // -------------------------- variables for shelter name dropdown menu ----------------------------
-  //List<String> _shelters = Firestore.instance.collection("organizations").getDocuments() as List<String>;
-  //Future<QuerySnapshot> ref = Firestore.instance.collectionGroup("organizations").getDocuments();
-  //Firestore.instance.collection('organizations').snapshots().listen((data) => data.documents.forEach((doc) => print(doc["name"])));
-  //static List<String> _organizations;
-  String _selectedOrganization;
-  //StreamSubscription<QuerySnapshot> getOrganizations = Firestore.instance.collection('organizations')
-  //  .snapshots().listen(
-  //        (data) => _organizations.add('${data.documents[0]['name']}')
-  //  );
-  void _getOrganizations() async {
-    
-    QuerySnapshot querySnapshot = await Firestore.instance.collection("collection").getDocuments().then((onValue){
-      return onValue;
-    });
-    print(querySnapshot);
-    //var list = querySnapshot.documents;
-   // Firestore.instance.collection("collection").getDocuments().then((onValue) {
-    //  _organizations.add(onValue.data["name"]);
-    //});
-    setState(() {
-      _organizations = ["list"];
-    });
-  }
-  
 
   // -------------------------- upload photo -------------------------------
   File _image;
@@ -202,7 +174,9 @@ class UploadPetFormState extends State<UploadPetForm> {
               child: new Text("Continue"),
               onPressed: () {
                 //Navigator.popUntil(context, ModalRoute.withName("/Landing"));
-                Navigator.popAndPushNamed(context, "/Landing");
+                //Navigator.popAndPushNamed(context, "/Landing");
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -218,7 +192,7 @@ class UploadPetFormState extends State<UploadPetForm> {
         uploadPic(context);
         await ref.setData({
                 "id": petId,
-                "age": petAge.text,
+                "age": int.parse(petAge.text),
                 "breed": petBreed,
                 "description": petDescription.text,
                 "geolocation": new GeoPoint(double.parse(petLocation1.split(",")[0]),double.parse(petLocation1.split(",")[1])),
@@ -227,7 +201,7 @@ class UploadPetFormState extends State<UploadPetForm> {
                 "sex": petSex.text,
                 "activityLevel": petActivityLevel.text,
                 "type": petType.text,
-                "organization": petOrganization.text,
+                "organization": store.state.userData["name"],
                 "image": petImage,
               });
         print("haro");
