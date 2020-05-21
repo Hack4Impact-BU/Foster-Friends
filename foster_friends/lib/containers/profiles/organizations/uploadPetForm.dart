@@ -207,7 +207,7 @@ class UploadPetFormState extends State<UploadPetForm> {
                 "description": petDescription.text,
                 //"geopoint": new GeoPoint(double.parse(petLocation1.split(",")[0]),double.parse(petLocation1.split(",")[1])),
                 "point": myLocation.data,
-                "orgAddress": petLocation2,
+                "orgAddress": store.state.userData["address"],
                 "name": petName.text,
                 "sex": petSex.text,
                 "activityLevel": petActivityLevel.text,
