@@ -348,13 +348,19 @@ class UploadPetFormState extends State<UploadPetForm> {
                 selectedBreedType.removeRange(0, selectedBreedType.length);
                 setState(() {
                   petType.text = newValue;
-                  _selectedPetTypes = newValue;
-                  if (newValue == "Dog") {
+                  if (newValue == _selectedPetTypes) {
+                    _selectedPetTypes = null;
+                    _breedType = [];
+                  }
+                  else if (newValue == "Dog") {
+                    _selectedPetTypes = newValue;
                     _breedType = _dogBreed;
                   } else if (newValue == "Cat") {
+                    _selectedPetTypes = newValue;
                     _breedType = _catBreed;
                   }
                   else {
+                    _selectedPetTypes = newValue;
                     _breedType = [];
                   }
                 });
