@@ -96,7 +96,7 @@ class UploadPetFormState extends State<UploadPetForm> {
   // -------------------------- variables for pet type, breed, sex dropdown menu ----------------------------
   //static Map<String, List<String>> map = {'Dog':['Labrador Retrievers', 'German Shepherd Dogs', 'Golden Retrievers'],'Cat':['Maine Coon','Bengal','Siamese'],'Bird':['Maine Coon','Bengal','Siamese']};
   List<String> _petTypes = ['Dog', 'Cat', 'Others'];
-  List<String> _dogBreed = ['Labrador Retrievers', 'German Shepherd Dogs', 'Golden Retrievers','Others'];
+  List<String> _dogBreed = ['Labrador Retrievers', 'Golden Retrievers','Others'];
   List<String> _catBreed = ['Maine Coon','Bengal','Siamese','Others'];
   static List<String> _breedType = [];
   final List<String> selectedBreedType = <String>[];
@@ -134,6 +134,13 @@ class UploadPetFormState extends State<UploadPetForm> {
   bool _enabled = false;
 
   Color color = const Color(0xFFFFCC80);
+
+  var maxWidthChild = SizedBox(
+            width: 130,
+            child: Text("View Entered Breed",
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis));
+
 
   @override
   Widget build(BuildContext context) {
@@ -396,7 +403,6 @@ class UploadPetFormState extends State<UploadPetForm> {
                     selectedBreedType.add(newValue);
                   }
                   petBreed = selectedBreedType;
-                  //_selectedBreedTypes = newValue;
                 });
               },
               items: _breedType.map((location) {
@@ -419,7 +425,7 @@ class UploadPetFormState extends State<UploadPetForm> {
             padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
             child: FlatButton(
               color: color,
-              child: Text("View Entered Breed"),
+              child: maxWidthChild,
               onPressed: () {
                 showSelectedBreed();
               }
@@ -477,7 +483,6 @@ class UploadPetFormState extends State<UploadPetForm> {
               _selectedSex = newValue;
             });
           },
-          // ??????????????????????? if () _breedType
           items: _sex.map((location) {
             return DropdownMenuItem(
               child: new Text(location),
@@ -489,7 +494,7 @@ class UploadPetFormState extends State<UploadPetForm> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget> [
           DropdownButton(
-          hint: Text('Select an Activity Level *'), // Not necessary for Option 1
+          hint: Text('Select an Activity Level *'),
           value: _selectedActivityLevel,
           onChanged: (newValue) {
             setState(() {
@@ -497,7 +502,6 @@ class UploadPetFormState extends State<UploadPetForm> {
               _selectedActivityLevel = newValue;
             });
           },
-          // ??????????????????????? if () _breedType
           items: _activity.map((location) {
             return DropdownMenuItem(
               child: new Text(location),
@@ -507,6 +511,8 @@ class UploadPetFormState extends State<UploadPetForm> {
         )]),
       TextFormField(
         keyboardType: TextInputType.multiline,
+        textInputAction: TextInputAction.newline,
+        maxLines: null,
         decoration: const InputDecoration(
             hintText: 'Pet Description *',
           ),
