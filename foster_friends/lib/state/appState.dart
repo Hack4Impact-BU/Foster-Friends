@@ -14,10 +14,16 @@ class AppState {
   FirebaseUser _user;
   Map<String, dynamic> _userData;
   List<Map<String, dynamic>> _query;
+  bool _searching;
 
   FirebaseUser get user => _user;
   Map<String, dynamic> get userData => _userData;
   List<Map<String, dynamic>> get query => _query;
+
+  bool get searching => this._searching;
+  set searching(bool b) {
+    _searching = b;
+  }
 
   AppState(this._user, this._userData, this._query);
 
@@ -74,45 +80,50 @@ ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery =
 
   print("Firepoint is " + g.hash);
   double radius = 50;
-  String field = 'test';
+  String field = 'point';
 
-  CollectionReference petCollection = ref.collection('pets');
-  geo
-      .collection(collectionRef: petCollection)
-      .setPoint('7ODiubljoL0SHEETdH1V', 'test', g.latitude , g.longitude);
-
-  Stream<List<DocumentSnapshot>> results = geo
-      .collection(collectionRef: petCollection)
-      .within(center: g, radius: radius, field: field, strictMode: true);
-
-  await for (List<DocumentSnapshot> res in results) {
-    for (DocumentSnapshot pet in res) {
-      petInfo.add(Map.from(pet.data));
+  for (String elem in params.keys) {
+    if (params[elem] != null) {
+      print("Searching for $elem " +
+          params[elem].runtimeType.toString() +
+          " " +
+          params[elem].toString());
+      if (elem == 'minAge') {
+        query = query.where('age', isGreaterThanOrEqualTo: params[elem]);
+      } else if (elem != 'maxAge') {
+        query = query.where(elem, isEqualTo: params[elem]);
+      }
     }
-    print(petInfo);
   }
 
-  // for (String elem in params.keys) {
-  //   if (params[elem] != null) {
-  //     print("Searching for $elem " +
-  //         params[elem].runtimeType.toString() +
-  //         " " +
-  //         params[elem].toString());
-  //     if (elem == 'minAge') {
-  //       query = query.where('age', isGreaterThanOrEqualTo: params[elem]);
-  //     } else if (elem != 'maxAge') {
-  //       query = query.where(elem, isEqualTo: params[elem]);
-  //     }
-  //   }
+  // if(params['minAge'] != null || params['maxAge'] != null){
+  //   query = query.orderBy('age');
   // }
+
+  // CollectionReference petCollection = ref.collection('pets');
 
   // if (params['maxAge'] != null) {
   //   print(params['minAge']);
-  //   if(params['minAge'] == null){
-  //     query = query.where('age', isLessThanOrEqualTo: params['maxAge'] );
-  //   } else{
+  //   if (params['minAge'] == null) {
+  //     query = query.where('age', isLessThanOrEqualTo: params['maxAge']);
+  //   } else {
   //     query = query.orderBy('age');
   //   }
+  // }
+
+  // Stream<List<DocumentSnapshot>> results = geo
+  //     .collection(collectionRef: query)
+  //     .within(center: g, radius: radius, field: field, strictMode: true);
+
+  // await for (List<DocumentSnapshot> res in results) {
+  //   for (DocumentSnapshot pet in res) {
+  //     petInfo.add(Map.from(pet.data));
+  //   }
+  //   print("petInfo is $petInfo");
+  //   print("Results are $petInfo");
+  //   store.state.searching = false;
+  //   print(store.state.searching);
+  //   store.dispatch(new UpdateQueryAction(petInfo));
   // }
 
   QuerySnapshot result = await query.getDocuments();
@@ -121,11 +132,11 @@ ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery =
     Map<String, dynamic> pet = Map.from(snapshot.data);
     // print("Query yields $pet");
     petInfo.add(pet);
+    print("Results are $petInfo");
+    store.state.searching = false;
+    print(store.state.searching);
+    store.dispatch(new UpdateQueryAction(petInfo));
   }
-
-  print("Results are $petInfo");
-
-  store.dispatch(new UpdateQueryAction(petInfo));
 };
 
 Future<List<Map<String, dynamic>>> getAllPets() async {

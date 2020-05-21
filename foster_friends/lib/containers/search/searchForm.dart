@@ -59,6 +59,7 @@ class SearchFormState extends State<SearchForm> {
   void _onPressed() async {
   final form = _formKey.currentState;
   form.save();
+  _breedType = [];
     /* 
     Type
     Breed
@@ -77,6 +78,8 @@ class SearchFormState extends State<SearchForm> {
     };
     print(params);
     store.dispatch(makeQuery(store, params));
+    store.state.searching = true;
+    print(store.state.searching);
     Navigator.pop(context);
   }
 
