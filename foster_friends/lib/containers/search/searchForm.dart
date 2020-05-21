@@ -31,17 +31,38 @@ class SearchFormState extends State<SearchForm> {
 
   // -------------------------- variables for pet type, breed, sex dropdown menu ----------------------------
   //static Map<String, List<String>> map = {'Dog':['Labrador Retrievers', 'German Shepherd Dogs', 'Golden Retrievers'],'Cat':['Maine Coon','Bengal','Siamese'],'Bird':['Maine Coon','Bengal','Siamese']};
-  List<String> _petTypes = ['Dog', 'Cat', 'Bird'];
+  List<String> _petTypes = ['', 'Dog', 'Cat', 'Bird'];
   List<String> _dogBreed = [
+    '',
     'Labrador Retrievers',
     'German Shepherd Dogs',
     'Golden Retrievers'
   ];
-  List<String> _catBreed = ['Maine Coon', 'Bengal', 'Siamese'];
+  List<String> _catBreed = ['', 'Maine Coon', 'Bengal', 'Siamese'];
   List<String> _birdBreed = [''];
-  List<String> _sex = ['Female', 'Male'];
-  List<String> _activity = ['High', 'Medium', 'Low'];
-  List<int> _ages = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
+  List<String> _sex = ['', 'Female', 'Male'];
+  List<String> _activity = ['', 'High', 'Medium', 'Low'];
+  List<dynamic> _ages = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ];
 
   static List<String> _breedType = [];
 
@@ -57,9 +78,8 @@ class SearchFormState extends State<SearchForm> {
 
   Color color = const Color(0xFFFFCC80);
   void _onPressed() async {
-  final form = _formKey.currentState;
-  form.save();
-  _breedType = [];
+    final form = _formKey.currentState;
+    form.save();
     /* 
     Type
     Breed
@@ -102,45 +122,52 @@ class SearchFormState extends State<SearchForm> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                    width: 90.0,
-                    child: DropdownButton(
-                      hint: Text('Age Min'), // Not necessary for Option 1
-                      value: minAge,
-                      onChanged: (newValue) { 
-                        setState(() {
-                          minAge = newValue;
-                        });
-                      },
-                      items: _ages.sublist(0, maxAge != null ? maxAge : _ages.last).map((location) {
-                        //if(maxAge == null || location < maxAge) {
-                          return DropdownMenuItem(
-                            child: new Text(location.toString()),
-                            value: location,
-                        );}
-                      //}
-                      ).toList(),
-                    ),
+                  width: 90.0,
+                  child: DropdownButton(
+                    hint: Text('Age Min'), // Not necessary for Option 1
+                    value: minAge,
+                    onChanged: (newValue) {
+                      setState(() {
+                        minAge = newValue;
+                      });
+                    },
+                    items: _ages
+                        .sublist(0, maxAge != null ? maxAge : _ages.last)
+                        .map((location) {
+                      //if(maxAge == null || location < maxAge) {
+                      return DropdownMenuItem(
+                        child: Text(location.toString()),
+                        value: location,
+                      );
+                    }
+                            //}
+                            ).toList(),
+                  ),
                 ),
                 Container(width: 20.0),
                 Container(
-                    width: 90.0,
-                    child: DropdownButton(
-                      hint: Text('Age Max'), // Not necessary for Option 1
-                      value: maxAge,
-                      onChanged: (newValue) {
-                        maxAge = null;
-                        setState(() {
-                          maxAge = newValue;
-                        });
-                      },
-                      items: _ages.sublist((minAge != null ? minAge : _ages.first) - 1, _ages.last).map((location) {
-                        return DropdownMenuItem(
-                          child: new Text(location.toString()),
-                          value: location,
-                        );
-                      }).toList(),
-                    ),
-                )],
+                  width: 90.0,
+                  child: DropdownButton(
+                    hint: Text('Age Max'), // Not necessary for Option 1
+                    value: maxAge,
+                    onChanged: (newValue) {
+                      maxAge = null;
+                      setState(() {
+                        maxAge = newValue;
+                      });
+                    },
+                    items: _ages
+                        .sublist(
+                            minAge != null ? minAge : _ages.first, _ages.last)
+                        .map((location) {
+                      return DropdownMenuItem(
+                        child: Text(location.toString()),
+                        value: location,
+                      );
+                    }).toList(),
+                  ),
+                )
+              ],
             ),
           ),
           Container(
@@ -152,16 +179,19 @@ class SearchFormState extends State<SearchForm> {
                       hint: Text('Pet Type'), // Not necessary for Option 1
                       value: _selectedPetTypes,
                       onChanged: (newValue) {
+                        print("old value: $_selectedPetTypes");
                         _selectedBreedTypes = null;
+                        _selectedPetTypes = newValue;
+                        print("new value is $_selectedPetTypes");
                         setState(() {
-                          petType.text = newValue;
-                          _selectedPetTypes = newValue;
-                          if (newValue == "Dog") {
+                          if (_selectedPetTypes == "Dog") {
                             _breedType = _dogBreed;
-                          } else if (newValue == "Cat") {
+                          } else if (_selectedPetTypes == "Cat") {
                             _breedType = _catBreed;
-                          } else if (newValue == "Bird") {
+                          } else if (_selectedPetTypes == "Bird") {
                             _breedType = _birdBreed;
+                          } else {
+                            _selectedPetTypes = null;
                           }
                         });
                       },
@@ -177,8 +207,11 @@ class SearchFormState extends State<SearchForm> {
                       value: _selectedBreedTypes,
                       onChanged: (newValue) {
                         setState(() {
-                          petBreed.text = newValue;
-                          _selectedBreedTypes = newValue;
+                          if (newValue == '') {
+                            _selectedBreedTypes = null;
+                          } else {
+                            _selectedBreedTypes = newValue;
+                          }
                         });
                       },
                       // ??????????????????????? if () _breedType
@@ -194,8 +227,11 @@ class SearchFormState extends State<SearchForm> {
                       value: _selectedSex,
                       onChanged: (newValue) {
                         setState(() {
-                          petSex.text = newValue;
-                          _selectedSex = newValue;
+                          if (newValue == '') {
+                            _selectedSex = null;
+                          } else {
+                            _selectedSex = newValue;
+                          }
                         });
                       },
                       // ??????????????????????? if () _breedType
@@ -212,8 +248,11 @@ class SearchFormState extends State<SearchForm> {
                       value: _selectedActivityLevel,
                       onChanged: (newValue) {
                         setState(() {
-                          petActivityLevel.text = newValue;
-                          _selectedActivityLevel = newValue;
+                          if (newValue == '') {
+                            _selectedActivityLevel = null;
+                          } else {
+                            _selectedActivityLevel = newValue;
+                          }
                         });
                       },
                       // ??????????????????????? if () _breedType
