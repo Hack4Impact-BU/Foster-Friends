@@ -76,7 +76,7 @@ ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery =
   print("Search params are $params");
   Query query = ref.collection('pets');
 
-  GeoFirePoint g = geo.point(latitude: 37.785834, longitude: -122.406417);
+  GeoFirePoint g = geo.point(latitude: 35.785834, longitude: -122.406417);
 
   print("Firepoint is " + g.hash);
   double radius = 50;
@@ -130,13 +130,25 @@ ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery =
 
   for (var snapshot in result.documents) {
     Map<String, dynamic> pet = Map.from(snapshot.data);
+    var petLocation = pet['point'];
+    if(petLocation != null){
+      print(petLocation['geopoint'].toString());
+      GeoFirePoint p = GeoFirePoint(petLocation['geopoint'].latitude, petLocation['geopoint'].longitude);
+      print("Firepoint is $p");
+      double distance = p.distance(lat: g.latitude, lng: g.longitude);
+      print("distance is $distance");
+    }
+    
+    // if (petLocation.distance(lat: g.latitude, lng: g.longitude) <= radius) {
+    //   petInfo.add(pet);
+    // }
     // print("Query yields $pet");
-    petInfo.add(pet);
-    print("Results are $petInfo");
-    store.state.searching = false;
-    print(store.state.searching);
-    store.dispatch(new UpdateQueryAction(petInfo));
   }
+
+  print("Results are $petInfo");
+  store.state.searching = false;
+  print(store.state.searching);
+  store.dispatch(new UpdateQueryAction(petInfo));
 };
 
 Future<List<Map<String, dynamic>>> getAllPets() async {
