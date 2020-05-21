@@ -40,14 +40,17 @@ class UploadPetFormState extends State<UploadPetForm> {
   Geoflutterfire geo = Geoflutterfire();
   String petLocation1 = "";
   String petLocation2 = "";
+  var myLocation;
+  bool getloc = false;
+
   void _getCurrentLocation() async {
-    final position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    setState(() {
-      _locationMessageCoordinate = "Coordinates Get!";
-      petLocation1 = "${position.latitude},${position.longitude}";
-      print(petLocation1);
-      //print(_organizations);
-    });
+    // Geoflutterfire geo = Geoflutterfire();
+
+      final position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      setState(() {
+        petLocation1 = "${position.latitude},${position.longitude}";
+      });
+    
   }
   void _getCurrentLocation2() async {
     String temp = store.state.userData["address"];
@@ -188,17 +191,22 @@ class UploadPetFormState extends State<UploadPetForm> {
     );
   }
     var _onPressed;
-    if (petName!= "" && petAge!="" && petOrganization!="" && petType!="" && petBreed!="" && petSex!="" && petActivityLevel!="" && petDescription!="" && (petLocation1!="" || petLocation2!="") && petImage!="") {
+    if (petName!= "" && petAge!="" && petOrganization!="" && petType!="" && petBreed!="" && petSex!="" && petActivityLevel!="" && petDescription!="" && petLocation1!="" && petImage!="") {
       _onPressed = () async {
         DocumentReference ref = Firestore.instance.collection("pets").document();
         String petId = ref.documentID;
         uploadPic(context);
+        var pos = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        GeoFirePoint myLocation = geo.point(latitude: pos.latitude, longitude: pos.longitude);
+
+        
         await ref.setData({
                 "id": petId,
                 "age": int.parse(petAge.text),
                 "breed": petBreed,
                 "description": petDescription.text,
-                "geolocation": new GeoPoint(double.parse(petLocation1.split(",")[0]),double.parse(petLocation1.split(",")[1])),
+                //"geopoint": new GeoPoint(double.parse(petLocation1.split(",")[0]),double.parse(petLocation1.split(",")[1])),
+                "point": myLocation.data,
                 "orgAddress": petLocation2,
                 "name": petName.text,
                 "sex": petSex.text,
@@ -207,6 +215,8 @@ class UploadPetFormState extends State<UploadPetForm> {
                 "organization": store.state.userData["name"],
                 "image": petImage,
               });
+        
+        petBreed = [];
         print("haro");
         _showDialog();
       };
