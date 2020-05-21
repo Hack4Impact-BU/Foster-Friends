@@ -12,10 +12,16 @@ class AppState {
   FirebaseUser _user;
   Map<String, dynamic> _userData;
   List<Map<String, dynamic>> _query;
+  bool _searching;
 
   FirebaseUser get user => _user;
   Map<String, dynamic> get userData => _userData;
   List<Map<String, dynamic>> get query => _query;
+
+  bool get searching => this._searching;
+  set searching(bool b) {
+    _searching = b;
+  }
 
   AppState(this._user, this._userData, this._query);
 
@@ -70,25 +76,19 @@ ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery =
   // Query query = pets;
 
   for (String elem in params.keys) {
-    if (params[elem] != null) {
-      print("Searching for $elem " +
-          params[elem].runtimeType.toString() +
-          " " +
-          params[elem].toString());
-      if (elem == 'minAge') {
+    if(params[elem] != null) {
+      if(elem == 'minAge') {
+        print("Searching for $elem >= " + params[elem].toString());
         query = query.where('age', isGreaterThanOrEqualTo: params[elem]);
-      } else if (elem != 'maxAge') {
+      }
+      else if(elem == 'maxAge') {
+        print("Searching for $elem <= " + params[elem].toString());
+        query = query.where('age', isLessThanOrEqualTo: params[elem]);
+      }
+      else {
+        print("Searching for $elem == " + params[elem].toString());
         query = query.where(elem, isEqualTo: params[elem]);
       }
-    }
-  }
-
-  if (params['maxAge'] != null) {
-    print(params['minAge']);
-    if(params['minAge'] == null){
-      query = query.where('age', isLessThanOrEqualTo: params['maxAge'] );
-    } else{
-      query = query.orderBy('age');
     }
   }
 
@@ -101,7 +101,8 @@ ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery =
   }
 
   print("Results are $petInfo");
-
+  store.state.searching = false; 
+  print(store.state.searching);
   store.dispatch(new UpdateQueryAction(petInfo));
 };
 

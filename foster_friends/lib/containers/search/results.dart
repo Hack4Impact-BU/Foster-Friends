@@ -24,8 +24,14 @@ class _Results extends State<Results> {
       converter: _QueryViewModel.fromStore,
       builder: (BuildContext context, _QueryViewModel vm){
         if(store.state.query.isEmpty){
-          return loading();
-        } else{
+          if(store.state.searching == true) {
+            return loading();
+          }
+          else {
+            return new Text("No results found", textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.bold),);
+          }
+        }
+        else {
           return buildGrid(store.state.query, context);
         }
       }   
