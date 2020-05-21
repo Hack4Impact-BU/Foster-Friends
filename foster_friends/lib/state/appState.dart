@@ -76,11 +76,10 @@ ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery =
   print("Search params are $params");
   Query query = ref.collection('pets');
 
-  GeoFirePoint g = geo.point(latitude: 35.785834, longitude: -122.406417);
+  GeoFirePoint g = geo.point(latitude: 36.785834, longitude: -122.406417);
+  store.state.searching = true;
 
-  print("Firepoint is " + g.hash);
-  double radius = 50;
-  String field = 'point';
+  double radius = 500;
 
   for (String elem in params.keys) {
     if (params[elem] != null) {
@@ -90,59 +89,27 @@ ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery =
           params[elem].toString());
       if (elem == 'minAge') {
         query = query.where('age', isGreaterThanOrEqualTo: params[elem]);
+      } else if (elem == 'maxAge') {
+        query = query.where('age', isLessThanOrEqualTo: params[elem]);
       } else if (elem != 'maxAge') {
         query = query.where(elem, isEqualTo: params[elem]);
       }
     }
   }
 
-  // if(params['minAge'] != null || params['maxAge'] != null){
-  //   query = query.orderBy('age');
-  // }
-
-  // CollectionReference petCollection = ref.collection('pets');
-
-  // if (params['maxAge'] != null) {
-  //   print(params['minAge']);
-  //   if (params['minAge'] == null) {
-  //     query = query.where('age', isLessThanOrEqualTo: params['maxAge']);
-  //   } else {
-  //     query = query.orderBy('age');
-  //   }
-  // }
-
-  // Stream<List<DocumentSnapshot>> results = geo
-  //     .collection(collectionRef: query)
-  //     .within(center: g, radius: radius, field: field, strictMode: true);
-
-  // await for (List<DocumentSnapshot> res in results) {
-  //   for (DocumentSnapshot pet in res) {
-  //     petInfo.add(Map.from(pet.data));
-  //   }
-  //   print("petInfo is $petInfo");
-  //   print("Results are $petInfo");
-  //   store.state.searching = false;
-  //   print(store.state.searching);
-  //   store.dispatch(new UpdateQueryAction(petInfo));
-  // }
-
   QuerySnapshot result = await query.getDocuments();
-
+  // Iteraing through results, only adds whichever ones are in specified radius
   for (var snapshot in result.documents) {
     Map<String, dynamic> pet = Map.from(snapshot.data);
-    var petLocation = pet['point'];
-    if(petLocation != null){
-      print(petLocation['geopoint'].toString());
-      GeoFirePoint p = GeoFirePoint(petLocation['geopoint'].latitude, petLocation['geopoint'].longitude);
-      print("Firepoint is $p");
+    Map petLocation = pet['point'];
+    if (petLocation != null) {
+      GeoFirePoint p = GeoFirePoint(
+          petLocation['geopoint'].latitude, petLocation['geopoint'].longitude);
       double distance = p.distance(lat: g.latitude, lng: g.longitude);
-      print("distance is $distance");
+      if (distance <= radius) {
+        petInfo.add(pet);
+      }
     }
-    
-    // if (petLocation.distance(lat: g.latitude, lng: g.longitude) <= radius) {
-    //   petInfo.add(pet);
-    // }
-    // print("Query yields $pet");
   }
 
   print("Results are $petInfo");
