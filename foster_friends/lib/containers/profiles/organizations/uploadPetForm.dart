@@ -48,6 +48,7 @@ class UploadPetFormState extends State<UploadPetForm> {
 
       final position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       setState(() {
+        _locationMessageCoordinate = "Coordinate Get!";
         petLocation1 = "${position.latitude},${position.longitude}";
       });
     
@@ -71,7 +72,7 @@ class UploadPetFormState extends State<UploadPetForm> {
   final petType = TextEditingController();
   final otherBreed = TextEditingController();
   final petOrganization = TextEditingController();
-  String petImage;
+  var petImage;
 
   @override
   void dispose() {
@@ -85,7 +86,7 @@ class UploadPetFormState extends State<UploadPetForm> {
     petType.dispose();
     petOrganization.dispose();
     otherBreed.dispose();
-    petImage = "";
+    //petImage = "";
     _selectedPetTypes = "";
     _selectedBreedTypes = null;
     super.dispose();
@@ -109,12 +110,11 @@ class UploadPetFormState extends State<UploadPetForm> {
 
   // -------------------------- upload photo -------------------------------
   File _image;
-  Future getImage() async {
+   getImage() async {
       var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-
+      petImage = image;
       setState(() {
         _image = image;
-          print('Image Path $_image');
       });
     }
 
@@ -191,7 +191,7 @@ class UploadPetFormState extends State<UploadPetForm> {
     );
   }
     var _onPressed;
-    if (petName!= "" && petAge!="" && petOrganization!="" && petType!="" && petBreed!="" && petSex!="" && petActivityLevel!="" && petDescription!="" && petLocation1!="" && petImage!="") {
+    if (petName!= "" && petAge!="" && petOrganization!="" && petType!="" && petBreed!="" && petSex!="" && petActivityLevel!="" && petDescription!="" && petLocation1!="" && petLocation2!="" && petImage!=null) {
       _onPressed = () async {
         DocumentReference ref = Firestore.instance.collection("pets").document();
         String petId = ref.documentID;
@@ -215,8 +215,6 @@ class UploadPetFormState extends State<UploadPetForm> {
                 "organization": store.state.userData["name"],
                 "image": petImage,
               });
-        
-        petBreed = [];
         print("haro");
         _showDialog();
       };
