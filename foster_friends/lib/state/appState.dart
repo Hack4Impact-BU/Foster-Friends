@@ -1,3 +1,4 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:redux/redux.dart';
@@ -68,70 +69,23 @@ class UpdateQueryAction {
 // async function that pulls data based on query from database
 ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery =
     (Store<AppState> store, Map<String, dynamic> params) async {
-  List<Map<String, dynamic>> petInfo = [];
-
   /* 
+    Firebase Query of:
     'Type', 'Breed', 'Sex', 'Age', 'Shelter', 'Address'
+    Dispatches new information unto QueryViewModel
   */
   print("Search params are $params");
-  Query query = ref.collection('pets');
-
-  GeoFirePoint g = geo.point(latitude: 36.785834, longitude: -122.406417);
   store.state.searching = true;
 
-  double radius = 500;
+  double radius = 10000;
+  params['distance'] = radius;
 
-  for (String elem in params.keys) {
-    if (params[elem] != null) {
-      print("Searching for $elem " +
-          params[elem].runtimeType.toString() +
-          " " +
-          params[elem].toString());
-      if (elem == 'minAge') {
-        query = query.where('age', isGreaterThanOrEqualTo: params[elem]);
-      } else if (elem == 'maxAge') {
-        query = query.where('age', isLessThanOrEqualTo: params[elem]);
-      } else if (elem != 'maxAge') {
-        query = query.where(elem, isEqualTo: params[elem]);
-      }
-    }
-  }
+  List<Map<String,dynamic>> petInfo = await databaseQuery(params);  
 
-  QuerySnapshot result = await query.getDocuments();
-  // Iteraing through results, only adds whichever ones are in specified radius
-  for (var snapshot in result.documents) {
-    Map<String, dynamic> pet = Map.from(snapshot.data);
-    Map petLocation = pet['point'];
-    if (petLocation != null) {
-      GeoFirePoint p = GeoFirePoint(
-          petLocation['geopoint'].latitude, petLocation['geopoint'].longitude);
-      double distance = p.distance(lat: g.latitude, lng: g.longitude);
-      if (distance <= radius) {
-        petInfo.add(pet);
-      }
-    }
-  }
-
-  print("Results are $petInfo");
   store.state.searching = false;
-  print(store.state.searching);
   store.dispatch(new UpdateQueryAction(petInfo));
 };
 
-Future<List<Map<String, dynamic>>> getAllPets() async {
-  List<Map<String, dynamic>> petInfo = [];
-
-  // The syntax for the query should be something like this:
-  CollectionReference pets = ref.collection('pets');
-  QuerySnapshot result = await pets.getDocuments();
-
-  for (var snapshot in result.documents) {
-    Map<String, dynamic> pet = Map.from(snapshot.data);
-    petInfo.add(pet);
-  }
-
-  return petInfo;
-}
 
 /* --------------------- REDUCER: HANDLES ACTION TYPES  --------------------- */
 AppState reducer(AppState prev, dynamic action) {

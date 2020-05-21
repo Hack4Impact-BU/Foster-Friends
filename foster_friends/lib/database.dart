@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:foster_friends/containers/authentication/authentication.dart';
 import 'package:foster_friends/state/appState.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geolocator/geolocator.dart';
 
 final Firestore firestore = Firestore.instance;
 
@@ -106,11 +108,11 @@ Future<Map<String, dynamic>> getUserData(String uid) async {
   DocumentSnapshot s = await ref.collection("users").document(uid).get();
 
   CollectionReference pets = ref.collection("pets");
-  List<Map<String,dynamic>>  petInfo = []; 
-  for(var petID in s.data['pets']){
+  List<Map<String, dynamic>> petInfo = [];
+  for (var petID in s.data['pets']) {
     final pet = await pets.document(petID).get();
     final petData = pet.data;
-    petInfo.add( Map.from(petData) );
+    petInfo.add(Map.from(petData));
   }
 
   print("Pet info is $petInfo");
@@ -125,4 +127,61 @@ Future<Map<String, dynamic>> getUserData(String uid) async {
     'type': s.data['type'],
     'description': s.data['description']
   };
+}
+
+Future<List<Map<String, dynamic>>> databaseQuery(
+    Map<String, dynamic> params) async {
+  /* 
+    Queries based on given age range, type, breed, sex, and activity level.
+    Then determines which are at proper distance
+  */
+  Query query = firestore.collection('pets');
+  for (String elem in params.keys) {
+    if (params[elem] != null && elem != 'distance') {
+      print("Searching for $elem " +
+          params[elem].runtimeType.toString() +
+          " " +
+          params[elem].toString());
+      if (elem == 'minAge') {
+        query = query.where('age', isGreaterThanOrEqualTo: params[elem]);
+      } else if (elem == 'maxAge') {
+        query = query.where('age', isLessThanOrEqualTo: params[elem]);
+      } else if (elem != 'maxAge') {
+        query = query.where(elem, isEqualTo: params[elem]);
+      }
+    }
+  }
+
+  return filterByLocation(
+      await query.getDocuments(), params['distance'], params.isNotEmpty);
+}
+
+Future<List<Map<String, dynamic>>> filterByLocation(
+    QuerySnapshot result, double radius, bool isNotEmpty) async {
+  /*
+    Find distance between current location and pet location.
+    Checks if within radius.
+  */
+  List<Map<String, dynamic>> petInfo = [];
+
+  for (var snapshot in result.documents) {
+    Map<String, dynamic> pet = Map.from(snapshot.data);
+    Map petLocation = pet['point'];
+    if (isNotEmpty && petLocation != null) {
+      Position position = await Geolocator()
+          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      GeoFirePoint p = GeoFirePoint(
+          petLocation['geopoint'].latitude, petLocation['geopoint'].longitude);
+      double distance =
+          p.distance(lat: position.latitude, lng: position.longitude);
+      print("distance between $p and $position is $distance");
+      if (distance <= radius) {
+        petInfo.add(pet);
+      }
+    } else {
+      petInfo.add(pet);
+    }
+  }
+
+  return petInfo;
 }
