@@ -146,12 +146,11 @@ Future<List<Map<String, dynamic>>> databaseQuery(
         query = query.where('age', isGreaterThanOrEqualTo: params[elem]);
       } else if (elem == 'maxAge') {
         query = query.where('age', isLessThanOrEqualTo: params[elem]);
-      } else if (elem != 'maxAge') {
+      } else {
         query = query.where(elem, isEqualTo: params[elem]);
       }
     }
   }
-
   return filterByLocation(
       await query.getDocuments(), params['distance'], params.isNotEmpty);
 }
