@@ -35,8 +35,8 @@ class UploadPetFormState extends State<UploadPetForm> {
   }
 
   // -------------------------- map location function -----------------------
-  String _locationMessageCoordinate = "Get Coordinate";
-  String _locationMessageAddress = "Use Org Address";
+  String _locationMessageCoordinate = "Get Coordinate *";
+  String _locationMessageAddress = "Get Org Address *";
   Geoflutterfire geo = Geoflutterfire();
   String petLocation1 = "";
   String petLocation2 = "";
@@ -66,6 +66,7 @@ class UploadPetFormState extends State<UploadPetForm> {
   final petSex = TextEditingController();
   final petActivityLevel = TextEditingController();
   final petType = TextEditingController();
+  final otherBreed = TextEditingController();
   final petOrganization = TextEditingController();
   String petImage;
 
@@ -80,6 +81,7 @@ class UploadPetFormState extends State<UploadPetForm> {
     petActivityLevel.dispose();
     petType.dispose();
     petOrganization.dispose();
+    otherBreed.dispose();
     petImage = "";
     _selectedPetTypes = "";
     _selectedBreedTypes = null;
@@ -96,6 +98,7 @@ class UploadPetFormState extends State<UploadPetForm> {
   final List<String> selectedBreedType = <String>[];
   String _selectedPetTypes;
   String _selectedBreedTypes;
+  //String otherBreedStr;
   String _selectedSex;
   String _selectedActivityLevel;
   List<String> _sex = ['Female','Male'];
@@ -209,11 +212,80 @@ class UploadPetFormState extends State<UploadPetForm> {
       };
     }
     
+    void _showDialogAdd(addnew) {
+    // flutter defined function
+      if (petType.text!="" && addnew!="") {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: new Text("New breed added: "+addnew),
+              actions: <Widget>[
+                // usually buttons at the bottom of the dialog
+                new FlatButton(
+                  child: new Text("Cancel"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                new FlatButton(
+                  child: new Text("Confirm"),
+                  onPressed: () {
+                    selectedBreedType.add(addnew);
+                    otherBreed.text = "";
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          }
+        );
+      }
+      else if (petType.text=="") {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: new Text("Please select a pet type first"),
+              actions: <Widget>[
+                // usually buttons at the bottom of the dialog
+                new FlatButton(
+                  child: new Text("Back"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          }
+        );
+      }
+      else if (addnew == "") {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: new Text("Please enter a breed type"),
+              actions: <Widget>[
+                // usually buttons at the bottom of the dialog
+                new FlatButton(
+                  child: new Text("Back"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          }
+        );
+      }
+    }
+
     return Column(children: <Widget>[
       
       TextFormField(
           decoration: const InputDecoration(
-            hintText: 'Pet Name',
+            hintText: 'Pet Name *',
           ),
           validator: (value) {
             if (value.isEmpty) {
@@ -225,7 +297,7 @@ class UploadPetFormState extends State<UploadPetForm> {
           ),
       TextFormField(
           decoration: const InputDecoration(
-            hintText: 'Pet Age',
+            hintText: 'Pet Age *',
           ),
           validator: (value) {
             if (value.isEmpty) {
@@ -254,7 +326,7 @@ class UploadPetFormState extends State<UploadPetForm> {
           Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: DropdownButton(
-              hint: Text('Select a Pet Type'), // Not necessary for Option 1
+              hint: Text('Select a Pet Type *'), // Not necessary for Option 1
               value: _selectedPetTypes,
               onChanged: (newValue) {
                 _selectedBreedTypes = null;
@@ -306,7 +378,7 @@ class UploadPetFormState extends State<UploadPetForm> {
           Padding (
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: DropdownButton(
-              hint: Text('Select a Breed Type'), // Not necessary for Option 1
+              hint: Text('Select Breed Type(s) *'), // Not necessary for Option 1
               value: selectedBreedType.isEmpty ? null:selectedBreedType.last,
               onChanged: (String newValue) {
                 setState(() {
@@ -350,8 +422,46 @@ class UploadPetFormState extends State<UploadPetForm> {
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget> [
+          Expanded(
+            child: Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: TextFormField(
+              decoration: const InputDecoration(
+                hintText: 'Other breed types',
+              ),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return '';
+                }
+                else {
+                  otherBreed.text = value;
+                  controller: otherBreed;
+                }
+                return null;
+              },
+              controller: otherBreed,
+            ))),
+          Padding (
+            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+            child: RaisedButton(
+              color: color,
+              child: Text("Add"),
+              //onPressed: _showAdd,
+              onPressed: () {
+                  String add = otherBreed.text;
+                  _showDialogAdd(add);
+                  otherBreed.text = "";
+              }
+            )
+          )
+        ]
+      ),
+          
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget> [
           DropdownButton(
-          hint: Text('Select a Sex'), // Not necessary for Option 1
+          hint: Text('Select a Sex *'), // Not necessary for Option 1
           value: _selectedSex,
           onChanged: (newValue) {
             setState(() {
@@ -371,7 +481,7 @@ class UploadPetFormState extends State<UploadPetForm> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget> [
           DropdownButton(
-          hint: Text('Select an Activity Level'), // Not necessary for Option 1
+          hint: Text('Select an Activity Level *'), // Not necessary for Option 1
           value: _selectedActivityLevel,
           onChanged: (newValue) {
             setState(() {
@@ -390,7 +500,7 @@ class UploadPetFormState extends State<UploadPetForm> {
       TextFormField(
         keyboardType: TextInputType.multiline,
         decoration: const InputDecoration(
-            hintText: 'Pet Description',
+            hintText: 'Pet Description *',
           ),
           validator: (value) {
             if (value.isEmpty) {
