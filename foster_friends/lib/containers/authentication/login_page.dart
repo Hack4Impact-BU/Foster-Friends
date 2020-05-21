@@ -25,7 +25,6 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Image(image: AssetImage('assets/logo.png')),
               SizedBox(height: 50),
               _gsignInButton(),
               SizedBox(height: 25),
@@ -33,23 +32,6 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                   padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
                   child: showErrorMessage()),
-              RaisedButton(
-                onPressed: () {
-                  print('Pressed signout');
-                  signOut();
-                },
-                color: Colors.deepPurple,
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Sign Out',
-                    style: TextStyle(fontSize: 25, color: Colors.white),
-                  ),
-                ),
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40)),
-              ),
             ],
           ),
         ),

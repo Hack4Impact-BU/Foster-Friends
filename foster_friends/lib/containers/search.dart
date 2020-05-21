@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:foster_friends/state/appState.dart';
 import 'package:foster_friends/containers/profiles/profile.dart';
+import 'package:foster_friends/main.dart';
 
 
 // main application build
@@ -59,15 +60,40 @@ class SearchStateUser extends State<SearchState> {
 
   @override
   Widget build(BuildContext context) {
+    const List<Color> orangeGradients = [
+      Color(0xFFFFCC80),
+      Color(0xFFFE8853),
+      Color(0xFFFEF5350),
+    ];
     return Scaffold(
-      appBar: AppBar(
+      
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(70.0), 
+          child: AppBar(
         title: const Text('Foster Friends'), // top bar
-      ),
+        //backgroundColor: Color(0xFFFFCC80),
+        flexibleSpace: 
+          ClipPath(
+              clipper: TopWaveClipper(),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: orangeGradients,
+                      begin: Alignment.topLeft,
+                      end: Alignment.center),
+                ),
+                height: MediaQuery.of(context).size.height / 7.5,
+              ),
+            ),
+        
+      )),
+      
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       // Contruction of navigation
       bottomNavigationBar: BottomNavigationBar(
+        //backgroundColor: Color(0xFFFFCC80),
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
