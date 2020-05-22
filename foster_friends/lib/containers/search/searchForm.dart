@@ -11,7 +11,6 @@ class SearchForm extends StatefulWidget {
 class SearchFormState extends State<SearchForm> {
   // -------------------------- save user inputs ----------------------------
   final petAge = TextEditingController();
-  final petAge1 = TextEditingController();
   final petBreed = TextEditingController();
   final petSex = TextEditingController();
   final petActivityLevel = TextEditingController();
@@ -27,6 +26,9 @@ class SearchFormState extends State<SearchForm> {
     petSex.dispose();
     petActivityLevel.dispose();
     petType.dispose();
+    petAge.dispose();
+    radius.dispose();
+
     super.dispose();
   }
 
@@ -101,8 +103,8 @@ class SearchFormState extends State<SearchForm> {
       'maxAge': maxAge,
       'distance': (_radius == '' || _radius==null) ? null : double.parse(_radius)
     };
+    store.dispatch(new UpdateQueryAction([]));
     store.dispatch(makeQuery(store, params));
-    store.state.searching = true;
     Navigator.pop(context);
   }
 

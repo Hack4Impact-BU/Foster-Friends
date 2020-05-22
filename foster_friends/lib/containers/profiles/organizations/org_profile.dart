@@ -63,7 +63,7 @@ class OrgState extends State<OrgProfile> {
                         children: <Widget>[
                           CircleAvatar(
                             radius: 70,
-                            backgroundImage: NetworkImage(chooseImage(photo)),
+                            backgroundImage: NetworkImage(photo),
                           ),
                           Text(name,
                               style: Theme.of(context).textTheme.headline6),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:foster_friends/containers/authentication/authentication.dart';
+import 'package:foster_friends/containers/profiles/image.dart';
 import 'package:foster_friends/state/appState.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
@@ -111,8 +112,9 @@ Future<Map<String, dynamic>> getUserData(String uid) async {
   List<Map<String, dynamic>> petInfo = [];
   for (var petID in s.data['pets']) {
     final pet = await pets.document(petID).get();
-    final petData = pet.data;
-    petInfo.add(Map.from(petData));
+    Map<String,dynamic> petMap = Map.from(pet.data);
+    petMap['image'] = await getNetworkUrl(petMap['image']);
+    petInfo.add(petMap);
   }
 
   print("Pet info is $petInfo");
@@ -122,7 +124,7 @@ Future<Map<String, dynamic>> getUserData(String uid) async {
     'phone number': s.data['phone number'],
     'email': s.data['email'],
     'address': s.data['address'],
-    'photo': s.data['photo'],
+    'photo': await getNetworkUrl(s.data['photo']),
     'pets': petInfo,
     'type': s.data['type'],
     'description': s.data['description']
@@ -169,13 +171,14 @@ Future<List<Map<String, dynamic>>> filterByLocation(
   for (var snapshot in result.documents) {
     Map<String, dynamic> pet = Map.from(snapshot.data);
     Map petLocation = pet['point'];
+    pet['image'] = await getNetworkUrl(pet['image']);
     
-    if (isNotEmpty && petLocation != null) {
+    if (isNotEmpty && petLocation != null && radius != null) {
       GeoFirePoint p = GeoFirePoint(
           petLocation['geopoint'].latitude, petLocation['geopoint'].longitude);
       double distance =
           p.distance(lat: position.latitude, lng: position.longitude);
-      print("distance between $p and $position is $distance");
+      // print("distance between $p and $position is $distance");
       if (distance <= radius) {
         petInfo.add(pet);
       }

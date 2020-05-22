@@ -18,7 +18,7 @@ List<Widget> buildGridTileList(List<Map<String, dynamic>> posts, BuildContext co
         child: Container(
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: NetworkImage(chooseImage(posts[i]['image'])),
+                    image: NetworkImage(posts[i]['image']),
                     fit: BoxFit.cover),
                 borderRadius: BorderRadius.all(Radius.circular(100))),
             child: FlatButton(
@@ -31,17 +31,4 @@ List<Widget> buildGridTileList(List<Map<String, dynamic>> posts, BuildContext co
       ),
     );
   });
-}
-
-String chooseImage(String url) {
-  if (url == null) {
-    return 'http://www.hostingreviewbox.com/wp-content/uploads/2016/02/image-error.png';
-  } else if (url.length < 7) {
-    return 'http://www.hostingreviewbox.com/wp-content/uploads/2016/02/image-error.png';
-  } else if (url.substring(0, 8) != 'https://') {
-    if (url.substring(0, 7) != 'http://') {
-      return 'http://www.hostingreviewbox.com/wp-content/uploads/2016/02/image-error.png';
-    }
-  }
-  return url;
 }

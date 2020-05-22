@@ -1,4 +1,3 @@
-import 'package:geolocator/geolocator.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:redux/redux.dart';
@@ -15,16 +14,10 @@ class AppState {
   FirebaseUser _user;
   Map<String, dynamic> _userData;
   List<Map<String, dynamic>> _query;
-  bool _searching;
 
   FirebaseUser get user => _user;
   Map<String, dynamic> get userData => _userData;
   List<Map<String, dynamic>> get query => _query;
-
-  bool get searching => this._searching;
-  set searching(bool b) {
-    _searching = b;
-  }
 
   AppState(this._user, this._userData, this._query);
 
@@ -75,12 +68,16 @@ ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery =
     Dispatches new information unto QueryViewModel
   */
   print("Search params are $params");
-  List<Map<String,dynamic>> petInfo = await databaseQuery(params);  
+  List<Map<String, dynamic>> petInfo = await databaseQuery(params);
 
-  store.state.searching = false;
-  store.dispatch(new UpdateQueryAction(petInfo));
+  print("$petInfo");
+  if (petInfo.isEmpty) {
+    store.dispatch(new UpdateQueryAction([{}]));
+    print([{}].isEmpty);
+  } else {
+    store.dispatch(new UpdateQueryAction(petInfo));
+  }
 };
-
 
 /* --------------------- REDUCER: HANDLES ACTION TYPES  --------------------- */
 AppState reducer(AppState prev, dynamic action) {
