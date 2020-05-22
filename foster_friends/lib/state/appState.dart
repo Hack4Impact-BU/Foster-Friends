@@ -75,10 +75,6 @@ ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery =
     Dispatches new information unto QueryViewModel
   */
   print("Search params are $params");
-
-  double radius = 10000;
-  params['distance'] = radius;
-
   List<Map<String,dynamic>> petInfo = await databaseQuery(params);  
 
   store.state.searching = false;

@@ -163,12 +163,14 @@ Future<List<Map<String, dynamic>>> filterByLocation(
   */
   List<Map<String, dynamic>> petInfo = [];
 
+  Position position = await Geolocator()
+          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+
   for (var snapshot in result.documents) {
     Map<String, dynamic> pet = Map.from(snapshot.data);
     Map petLocation = pet['point'];
+    
     if (isNotEmpty && petLocation != null) {
-      Position position = await Geolocator()
-          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       GeoFirePoint p = GeoFirePoint(
           petLocation['geopoint'].latitude, petLocation['geopoint'].longitude);
       double distance =

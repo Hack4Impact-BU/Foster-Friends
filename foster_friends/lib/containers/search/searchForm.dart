@@ -65,7 +65,7 @@ class SearchFormState extends State<SearchForm> {
     19
   ];
 
-  List<String> _radiusOptions = [''] + List.generate(8, (index) => (index*5).toString());
+  List<String> _radiusOptions = [''] + List.generate(10, (index) => ((index+1)*5).toString());
 
   static List<String> _breedType = [];
 
@@ -99,12 +99,10 @@ class SearchFormState extends State<SearchForm> {
       'activityLevel': _selectedActivityLevel,
       'minAge': minAge,
       'maxAge': maxAge,
-      'distance': radius
+      'distance': (_radius == '' || _radius==null) ? null : double.parse(_radius)
     };
-    print(params);
     store.dispatch(makeQuery(store, params));
     store.state.searching = true;
-    print(store.state.searching);
     Navigator.pop(context);
   }
 
