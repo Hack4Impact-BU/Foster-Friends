@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foster_friends/containers/profiles/petProfile.dart';
+import 'package:foster_friends/containers/profiles/organizations/pet_profile.dart';
 
 Widget buildGrid(List<Map<String, dynamic>> posts, BuildContext context) => GridView.count(
     crossAxisCount: 3,

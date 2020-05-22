@@ -10,7 +10,10 @@ String description;
 String email;
 String phoneNumber;
 String photo;
-List pets;
+List pets = [];
+List<Map<String, dynamic>> petInfo = [];
+Map<String, dynamic> orgInfo;
+
 
 // Define a custom Form widget.
 class OrgProfile extends StatefulWidget {
@@ -24,14 +27,14 @@ class OrgState extends State<OrgProfile> {
   @override
   void initState() {
     final data = store.state.userData;
-    print("User data is $data");
+    //print("User data is $data");
     name = data['name'];
     description = data['description'];
     phoneNumber = data['phone number'];
     photo = data['photo'];
     pets = data['pets'];
 
-    print("Data is\n$name\n$description\n$phoneNumber\n$photo\n$pets");
+   // print("Data is\n$name\n$description\n$phoneNumber\n$photo\n$pets");
 
     super.initState();
   }

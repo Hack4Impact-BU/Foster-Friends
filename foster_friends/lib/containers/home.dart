@@ -7,6 +7,7 @@ import 'package:foster_friends/containers/search/search.dart';
 import 'package:foster_friends/containers/search/results.dart';
 import 'package:foster_friends/main.dart';
 
+
 // main application build
 class Home extends StatelessWidget {
   @override
