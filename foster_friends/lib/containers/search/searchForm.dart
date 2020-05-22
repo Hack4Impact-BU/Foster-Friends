@@ -16,6 +16,7 @@ class SearchFormState extends State<SearchForm> {
   final petSex = TextEditingController();
   final petActivityLevel = TextEditingController();
   final petType = TextEditingController();
+  final radius = TextEditingController();
 
   final _formKey = new GlobalKey<FormState>();
 
@@ -64,6 +65,8 @@ class SearchFormState extends State<SearchForm> {
     19
   ];
 
+  List<String> _radiusOptions = [''] + List.generate(8, (index) => (index*5).toString());
+
   static List<String> _breedType = [];
 
   String _selectedPetTypes;
@@ -72,6 +75,7 @@ class SearchFormState extends State<SearchForm> {
   String _selectedActivityLevel;
   int minAge;
   int maxAge;
+  String _radius;
 
   // -------------------------- enable / disable SUBMIT button ----------------------------
   // bool _enabled = false;
@@ -94,7 +98,8 @@ class SearchFormState extends State<SearchForm> {
       'sex': _selectedSex,
       'activityLevel': _selectedActivityLevel,
       'minAge': minAge,
-      'maxAge': maxAge
+      'maxAge': maxAge,
+      'distance': radius
     };
     print(params);
     store.dispatch(makeQuery(store, params));
@@ -257,6 +262,27 @@ class SearchFormState extends State<SearchForm> {
                       },
                       // ??????????????????????? if () _breedType
                       items: _activity.map((location) {
+                        return DropdownMenuItem(
+                          child: new Text(location),
+                          value: location,
+                        );
+                      }).toList(),
+                    ),
+                    DropdownButton(
+                      hint:
+                          Text('Within'), // Not necessary for Option 1
+                      value: _radius,
+                      onChanged: (newValue) {
+                        setState(() {
+                          if (newValue == '') {
+                            _radius = null;
+                          } else {
+                            _radius = newValue;
+                          }
+                        });
+                      },
+                      // ??????????????????????? if () _breedType
+                      items: _radiusOptions.map((location) {
                         return DropdownMenuItem(
                           child: new Text(location),
                           value: location,
