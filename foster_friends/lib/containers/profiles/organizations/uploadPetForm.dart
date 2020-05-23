@@ -119,7 +119,7 @@ class UploadPetFormState extends State<UploadPetForm> {
     }
 
     Future uploadPic(BuildContext context) async{
-       String fileName = basename(_image.path);
+       String fileName = "http://"+basename(_image.path);
        petImage = fileName;
        StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);
        StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
