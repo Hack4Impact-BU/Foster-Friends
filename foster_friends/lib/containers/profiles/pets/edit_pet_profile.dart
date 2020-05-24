@@ -11,9 +11,12 @@ import 'package:foster_friends/database.dart';
 
 // Define a custom Form widget.
 class EditPetProfile extends StatefulWidget {
+  final data;
+  EditPetProfile(this.data);
+
   @override
   EditPetState createState() {
-    return EditPetState();
+    return EditPetState(this.data);
   }
 }
 
@@ -23,7 +26,7 @@ class EditPetProfile extends StatefulWidget {
   String sex; 
   String type; 
   String description;
-  String age;
+  int age;
   String petID;
   String organization;
   String orgAddress;
@@ -47,7 +50,9 @@ class EditPetProfile extends StatefulWidget {
   final petName = TextEditingController();
 
 
-  Map data = {};
+  Map<String, dynamic> data;
+
+  EditPetState(this.data);
     
 
 // -------------------------- upload photo -------------------------------
@@ -80,11 +85,11 @@ class EditPetProfile extends StatefulWidget {
   @override
   Widget build(BuildContext context) {
 
-    data = ModalRoute.of(context).settings.arguments;
+    // data = ModalRoute.of(context).settings.arguments;
 
     //setting local variables
     name = data['name'];
-    breed = data['breed'];
+    breed = data['breed'].toString();
     sex =data['sex'];
     type =data['type'];
     description =data['description'];
@@ -100,7 +105,7 @@ class EditPetProfile extends StatefulWidget {
     //setting initial text field values
     petName.text = name;
     petDescription.text = description;
-    petAge.text = age;
+    petAge.text = age.toString();
     petBreed.text = breed;
 
     return Container(

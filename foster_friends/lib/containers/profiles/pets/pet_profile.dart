@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foster_friends/containers/profiles/pets/edit_pet_profile.dart';
 import 'package:foster_friends/state/appState.dart';
 import 'package:foster_friends/database.dart';
 
@@ -121,8 +122,7 @@ class PetState extends State<PetProfile> {
               child: Text('Edit Pet Profile'),
               color: Colors.black12,
               onPressed: () {
-                Navigator.pushNamed(context, '/Edit_Pet_Profile',
-                    arguments: data);
+                showDialog(context: context, builder: (BuildContext context) => EditPetProfile(data));
               }),
         ),
       ],
