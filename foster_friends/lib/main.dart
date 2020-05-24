@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:foster_friends/state/appState.dart';
 import 'package:foster_friends/containers/profiles/organizations/org_profile.dart';
-import 'package:foster_friends/containers/profiles/organizations/edit_pet_profile.dart';
+import 'package:foster_friends/containers/profiles/pets/edit_pet_profile.dart';
 import 'package:foster_friends/containers/home.dart';
 void main() => runApp(new MyApp());
 

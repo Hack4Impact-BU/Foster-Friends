@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foster_friends/containers/profiles/organizations/pet_profile.dart';
+import 'package:foster_friends/containers/profiles/pets/pet_profile.dart';
 import 'package:foster_friends/containers/grid/grid.dart';
 import 'package:foster_friends/state/appState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
