@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:foster_friends/containers/profiles/organizations/org_profile.dart';
+import 'package:foster_friends/state/appState.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:path/path.dart';
@@ -134,8 +134,7 @@ class EditPetProfile extends StatefulWidget {
                                       child: Text('Yes'),
                                       onPressed: () {
                                         deletePet(petID);
-                                        Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => OrgProfile()),
-                                        ModalRoute.withName('/'));
+                                        Navigator.pop(context);
                                       },
                                     ),
                                     FlatButton(
@@ -333,7 +332,7 @@ class EditPetProfile extends StatefulWidget {
         //uploadPic(context);
         await ref.updateData({
                
-                "age": petAge.text,
+                "age": int.parse(petAge.text),
                 "breed": petBreed.text,
                 "description": petDescription.text,
                 "name": petName.text,
@@ -341,10 +340,9 @@ class EditPetProfile extends StatefulWidget {
                 "type": _selectedPetTypes,
                 "image": image,
               });
-              
-        Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => OrgProfile()),
-        ModalRoute.withName('/'),
-        );
+        store.dispatch(getFirebaseUser);
+        Navigator.pop(context);
+        
       }
 }
 

@@ -192,7 +192,7 @@ class PetState extends State<PetProfile> {
   }
 
   Widget _showFavorite() {
-    if (store.state.user != null && store.state.userData['type'] != 'organization') {
+    if (store.state.user == null || ( store.state.user != null && store.state.userData['type'] != 'organization')) {
       return ToggleButtons(
         children: [Icon(Icons.favorite)],
         isSelected: _isSelected,

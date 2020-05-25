@@ -241,6 +241,7 @@ void deletePet (String petID) async {
       "pets" : pets
 
     });
+    store.dispatch(getFirebaseUser);
   }
 
 
