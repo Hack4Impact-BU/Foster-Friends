@@ -15,25 +15,13 @@ class Profile extends StatelessWidget {
       converter: _ViewModel.fromStore,
       builder: (BuildContext context, _ViewModel vm){
         if (store.state.user == null){
-          return Container(
-                  child: Scaffold(
-                      body: Container(
-                          child: LoginPage(),
-            )));
+          return LoginPage();
         }
         switch(store.state.userData["type"]){
           case 'individual':
-            return Container(
-                    child: Scaffold(
-                        body: Container(
-                            child: UserProfile(),
-              )));
+            return UserProfile();
           case 'organization':
-            return Container(
-                    child: Scaffold(
-                        body: Container(
-                            child: OrgProfile(),
-              )));
+            return OrgProfile();
         }
         
       }

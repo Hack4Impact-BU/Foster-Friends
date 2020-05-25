@@ -49,10 +49,11 @@ class InputFormState extends State<InputForm> {
     if (validateAndSave()) {
       FirebaseUser user = await getCurrentUser();
       try {
-        pushProfile(user.uid, _phone, user.email, _address, _name, _address, 
+        await pushProfile(user.uid, _phone, user.email, _address, _name, _address, 
         _description, _photo, isIndividual);
         
         store.dispatch(getFirebaseUser);
+        
         Navigator.pop(context);
 
         setState(() {
@@ -292,7 +293,7 @@ class InputFormState extends State<InputForm> {
         keyboardType: TextInputType.phone,
         autofocus: false,
         decoration: new InputDecoration(
-            hintText: 'Enter your organization\'s phone number',
+            hintText: isIndividual ? 'Enter your phone number' : 'Enter your organization\'s phone number',
             icon: new Icon(
               Icons.phone,
               color: Colors.grey,
