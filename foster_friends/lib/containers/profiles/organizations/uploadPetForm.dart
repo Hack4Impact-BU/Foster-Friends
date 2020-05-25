@@ -224,6 +224,7 @@ class UploadPetFormState extends State<UploadPetForm> {
               });
         print("haro");
         _showDialog();
+        store.dispatch(getFirebaseUser);
       };
     }
     

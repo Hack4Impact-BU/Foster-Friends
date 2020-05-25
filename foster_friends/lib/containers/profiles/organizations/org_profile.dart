@@ -4,6 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:foster_friends/containers/grid/grid.dart';
 import 'package:foster_friends/containers/authentication/authentication.dart';
+import './uploadPet.dart';
 
 String name;
 String description;
@@ -77,6 +78,24 @@ class OrgState extends State<OrgProfile> {
                                   fontSize: 15.0,
                                   letterSpacing: 1.5),
                               textAlign: TextAlign.center),
+                        Row (
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                          padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          child: RaisedButton(
+                            color: Theme.of(context).buttonColor,
+                              onPressed: () {
+                                Navigator.push(context,
+                                  MaterialPageRoute(builder: (BuildContext context) => new UploadPet()));
+                                },
+                              
+                              child: Text("Upload Pet",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context).backgroundColor)),
+                                      ),),
                           Padding(
                               padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                               child: RaisedButton(
@@ -90,7 +109,7 @@ class OrgState extends State<OrgProfile> {
                                         fontWeight: FontWeight.bold,
                                         color:
                                             Theme.of(context).backgroundColor)),
-                              )),
+                              ))],),
                           Divider(color: Colors.grey),
                           Container(
                               margin: const EdgeInsets.all(10.0),
@@ -109,6 +128,6 @@ class _ProfileViewModel {
   _ProfileViewModel({this.pets});
 
   static _ProfileViewModel fromStore(Store<AppState> store) {
-    return new _ProfileViewModel(pets: store.state.query);
+    return new _ProfileViewModel(pets: store.state.userData['pets']);
   }
 }

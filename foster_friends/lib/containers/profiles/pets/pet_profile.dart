@@ -122,6 +122,7 @@ class PetState extends State<PetProfile> {
               child: Text('Edit Pet Profile'),
               color: Colors.black12,
               onPressed: () {
+                Navigator.pop(context);
                 showDialog(context: context, builder: (BuildContext context) => EditPetProfile(data));
               }),
         ),
