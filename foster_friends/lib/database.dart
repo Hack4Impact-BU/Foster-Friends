@@ -7,6 +7,8 @@ import 'package:foster_friends/state/appState.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 
+import 'dart:math' as math;
+
 final Firestore firestore = Firestore.instance;
 
 CollectionReference get indivs => firestore.collection('individuals');
@@ -168,6 +170,17 @@ Future<List<Map<String, dynamic>>> databaseQuery(
   }
   return filterByLocation(
       await query.getDocuments(), params['distance'], params.isNotEmpty);
+
+  // Return for alternate distance function
+
+  // Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  // if(params['distance'] != null) {
+  //   query = restrictDistance(query, position.latitude, position.longitude, params['distance']);
+  // }
+  // QuerySnapshot result = await query.getDocuments();
+  // for (var snapshot in result.documents)
+  //  petInfo.add(Map.from(snapshot.data));
+  // return petInfo;
 }
 
 Future<List<Map<String, dynamic>>> filterByLocation(
@@ -202,6 +215,22 @@ Future<List<Map<String, dynamic>>> filterByLocation(
 
   return petInfo;
 }
+// Alternative distance filter function, requires pet latitude and longitude stored separately 
+Query restrictDistance (Query q, double lat, double long, double dist) {
+  const R = 3958.8; // Earth radius in miles
+  double latRatio = 180 / (math.pi * R); // Constant in degrees / mile
+  double lonRatio = 180/(math.pi * dist) * math.acos(
+    (math.cos(dist/R) - math.sin(lat)*math.sin(lat))
+                          /
+            (math.cos(lat)*math.cos(lat))
+    ); // in degrees / mile
+  
+  return q.where('latitude', isLessThanOrEqualTo: lat + dist*latRatio)
+          .where('latitude', isGreaterThanOrEqualTo: lat - dist*latRatio)
+          .where('longitude', isLessThanOrEqualTo: long + dist*lonRatio)
+          .where('longitude', isGreaterThanOrEqualTo: long - dist*lonRatio);
+}
+
 Future<Map<String, dynamic>> getPetData(String petID) async {
   final ref = Firestore.instance; 
   DocumentSnapshot s = await ref.collection("pets").document(petID).get();
