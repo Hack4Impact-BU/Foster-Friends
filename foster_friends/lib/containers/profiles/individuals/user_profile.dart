@@ -95,7 +95,7 @@ class UserState extends State<UserProfile>{
             mainAxisSpacing: 1.5,
             crossAxisSpacing: 1.5,
             children: <Widget>[
-              for(int i=0; i<10; i++)
+            for(int i=0; i<10; i++)
                 Container(
                   // height: MediaQuery.of(context).size.width/3,
                   // width: MediaQuery.of(context).size.width/3,

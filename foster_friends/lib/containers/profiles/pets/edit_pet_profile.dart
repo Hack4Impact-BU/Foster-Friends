@@ -1,39 +1,43 @@
 
 import 'package:flutter/material.dart';
-import 'package:foster_friends/containers/profiles/organizations/org_profile.dart';
+import 'package:foster_friends/state/appState.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:foster_friends/database.dart';
 
 // Define a custom Form widget.
 class EditPetProfile extends StatefulWidget {
+  final data;
+  EditPetProfile(this.data);
+
   @override
   EditPetState createState() {
-    return EditPetState();
+    return EditPetState(this.data);
   }
 }
 
   String name;
   String breed;
-  String photo; 
-  bool sex; 
-  bool sex_final = sex;
-  String sex_str;
+  String image; 
+  String sex; 
   String type; 
   String description;
-  String age;
+  int age;
   String petID;
+  String organization;
+  String orgAddress;
+  String activityLevel;
   List pets = [];
   
 
-  //fror curreent dropdown item
+  //for current dropdown item
   String _selectedPetTypes = type;
   String _selectedBreedTypes;
-  String _selectedSex = sex_str;
+  String _selectedSex = sex;
 
   List<String> _petTypes = ['Dog', 'Cat', 'Bird'];
   List<String> _sex = ['Female','Male'];
@@ -46,7 +50,9 @@ class EditPetProfile extends StatefulWidget {
   final petName = TextEditingController();
 
 
-    Map data = {};
+  Map<String, dynamic> data;
+
+  EditPetState(this.data);
     
 
 // -------------------------- upload photo -------------------------------
@@ -62,7 +68,7 @@ class EditPetProfile extends StatefulWidget {
 
     Future uploadPic(BuildContext context) async{
        String fileName = basename(_image.path);
-       photo = fileName;
+       image = fileName;
        StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);
        StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
        StorageTaskSnapshot taskSnapshot=await uploadTask.onComplete;
@@ -79,31 +85,27 @@ class EditPetProfile extends StatefulWidget {
   @override
   Widget build(BuildContext context) {
 
-    data = ModalRoute.of(context).settings.arguments;
+    // data = ModalRoute.of(context).settings.arguments;
 
     //setting local variables
-    name = data['Name'];
-    breed = data['Breed'];
-    sex =data['Sex'];
-    type =data['Type'];
-    description =data['Description'];
-    age =data['Age'];
-    photo = data['Photo'];
-    petID = data['ID'];
+    name = data['name'];
+    breed = data['breed'].toString();
+    sex =data['sex'];
+    type =data['type'];
+    description =data['description'];
+    age =data['age'];
+    image = data['image'];
+    petID = data['id'];
+    organization = data['organization'];
+    orgAddress = data['orgAddress'];
+    activityLevel = data['activityLevel'];
    
-
-    //converting bool sex to string
-    if(sex == true)
-    sex_str = "Female";
-    else
-    sex_str = "Male";
-
 
    
     //setting initial text field values
     petName.text = name;
     petDescription.text = description;
-    petAge.text = age;
+    petAge.text = age.toString();
     petBreed.text = breed;
 
     return Container(
@@ -131,7 +133,8 @@ class EditPetProfile extends StatefulWidget {
                                     FlatButton(
                                       child: Text('Yes'),
                                       onPressed: () {
-                                        deletePet(context);
+                                        deletePet(petID);
+                                        Navigator.pop(context);
                                       },
                                     ),
                                     FlatButton(
@@ -183,7 +186,7 @@ class EditPetProfile extends StatefulWidget {
                                     _image,
                                     fit: BoxFit.cover,
                                   ):Image.network(
-                                  photo,
+                                  image,
                                   fit: BoxFit.cover,
                                   ),
                               ),
@@ -280,11 +283,8 @@ class EditPetProfile extends StatefulWidget {
                     
                     onChanged: (String newValue) {
                       setState(() {
-                        if (newValue == 'Male')
-                        sex_final = false;
-                        else
-                        sex_final = true;
-
+                        sex = newValue;
+                        
                         _selectedSex = newValue;
                       });
                     },
@@ -324,50 +324,25 @@ class EditPetProfile extends StatefulWidget {
             )));        
   }
 
-  deletePet (BuildContext context) async {
-
-    DocumentReference ref1 = Firestore.instance.collection("petstest").document(petID);
-    DocumentReference ref2 = Firestore.instance.collection("organizations").document("IahwMOjwYdgEKY2cli5f");
-
-    await ref2.get()
-        .then((DocumentSnapshot snapshot)  {
-        pets = snapshot.data['pets'];
-        });
-
-    pets.removeWhere((item) => item == petID);
-
-    await ref1.delete();
-    await ref2.updateData({
-      "pets" : pets
-
-    });
-
-
-    Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => OrgProfile()),
-  ModalRoute.withName('/'),
-);
-  }
-
 
   saveEdit (BuildContext context) async {
 
 
-        DocumentReference ref = Firestore.instance.collection("petstest").document(petID);
-        uploadPic(context);
+        DocumentReference ref = Firestore.instance.collection("pets").document(petID);
+        //uploadPic(context);
         await ref.updateData({
                
-                "Age": petAge.text,
-                "Breed": petBreed.text,
-                "Description": petDescription.text,
-                "Name": petName.text,
-                "Sex": sex_final,
-                "Type": _selectedPetTypes,
-                "Photo": photo,
+                "age": int.parse(petAge.text),
+                "breed": petBreed.text,
+                "description": petDescription.text,
+                "name": petName.text,
+                "sex": sex,
+                "type": _selectedPetTypes,
+                "image": image,
               });
-              
-        Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => OrgProfile()),
-        ModalRoute.withName('/'),
-        );
+        store.dispatch(getFirebaseUser);
+        Navigator.pop(context);
+        
       }
 }
 
