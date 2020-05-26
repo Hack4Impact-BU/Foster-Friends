@@ -41,7 +41,7 @@ ThunkAction<AppState> getFirebaseUser = (Store<AppState> store) async {
 //  await signOut();
   FirebaseAuth.instance.currentUser().then((u) async {
     if (u == null) {
-      store.dispatch(new UpdateUserAction(null, null));
+      store.dispatch(new UpdateUserAction(null, {}));
     } else {
       final data = await getUserData(u.uid);
 

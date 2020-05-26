@@ -123,11 +123,14 @@ Future<Map<String, dynamic>> getUserData(String uid) async {
 
   CollectionReference pets = ref.collection("pets");
   List<Map<String, dynamic>> petInfo = [];
-  for (var petID in s.data['pets']) {
-    final pet = await pets.document(petID).get();
-    Map<String,dynamic> petMap = Map.from(pet.data);
-    petMap['image'] = await getNetworkUrl(petMap['image']);
-    petInfo.add(petMap);
+  if(s.data['pets'] != null){
+    for (var petID in s.data['pets']) {
+      final pet = await pets.document(petID).get();
+      print("Pet is $pet");
+      Map<String,dynamic> petMap = Map.from(pet.data);
+      petMap['image'] = await getNetworkUrl(petMap['image']);
+      petInfo.add(petMap);
+    }
   }
 
   print("Pet info is $petInfo");
@@ -234,13 +237,14 @@ void deletePet (String petID) async {
         pets = snapshot.data['pets'];
         });
 
-    pets.removeWhere((item) => item == petID);
+    pets.removeWhere((item) => item.toString() == petID);
 
     await ref1.delete();
     await ref2.updateData({
       "pets" : pets
 
     });
+
     store.dispatch(getFirebaseUser);
   }
 

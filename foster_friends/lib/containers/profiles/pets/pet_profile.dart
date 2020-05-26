@@ -54,7 +54,7 @@ class PetState extends State<PetProfile> {
   @override
   void dispose() async {
     super.dispose();
-    if (store.state.user != null) {
+    if (store.state.user == null || ( store.state.user != null && store.state.userData['type'] != 'organization')) {
       await toggleFavPet(data['id'], _isSelected[0]).then((value) => store
           .dispatch(getFirebaseUser)
           .then((value) =>
