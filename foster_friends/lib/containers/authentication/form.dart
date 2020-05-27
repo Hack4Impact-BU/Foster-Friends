@@ -54,7 +54,7 @@ class InputFormState extends State<InputForm> {
         
         store.dispatch(getFirebaseUser);
         
-        Navigator.pop(context);
+        Navigator.popUntil(context, ModalRoute.withName('/'));
 
         setState(() {
           _isLoading = false;
@@ -93,11 +93,10 @@ class InputFormState extends State<InputForm> {
   @override
   Widget build(BuildContext context) {
     //print("hi");
-    return new Scaffold(
-        appBar: new AppBar(
-          title: new Text('Foster Friends'),
-        ),
-        body: Stack(
+    return new Card(
+
+        child: Stack(
+          alignment: Alignment.topCenter,
           children: <Widget>[
             _showForm(),
             _showCircularProgress(),
