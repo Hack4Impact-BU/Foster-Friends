@@ -80,8 +80,8 @@ class UploadPetFormState extends State<UploadPetForm> {
   //static Map<String, List<String>> map = {'Dog':['Labrador Retrievers', 'German Shepherd Dogs', 'Golden Retrievers'],'Cat':['Maine Coon','Bengal','Siamese'],'Bird':['Maine Coon','Bengal','Siamese']};
   List<String> _petTypes = ['Dog', 'Cat', 'Others'];
   List<String> _dogBreed = [
-    'Labrador Retrievers',
-    'Golden Retrievers'];
+    'Labrador Retriever',
+    'Golden Retriever'];
   List<String> _catBreed = ['Maine Coon', 'Bengal', 'Siamese'];
   static List<String> _breedType = [];
   final List<String> selectedBreedType = <String>[];
