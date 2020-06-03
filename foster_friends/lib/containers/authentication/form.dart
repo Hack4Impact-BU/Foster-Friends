@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:foster_friends/database.dart';
 import 'package:foster_friends/containers/authentication/authentication.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:foster_friends/state/appState.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 // Email login and sign up page
 
@@ -129,6 +133,7 @@ class InputFormState extends State<InputForm> {
               // showLastNameInput(),
               showPhoneInput(),
               showAddressInput(),
+              showProfilePicInput(),
               showPrimaryButton(),
               showErrorMessage(),
             ],
@@ -317,6 +322,72 @@ class InputFormState extends State<InputForm> {
     // }
     // return SizedBox(height: 0);
   }
+
+  File _image;
+  var petImage;
+  getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = image;
+    });
+  }
+
+  Future uploadPic(BuildContext context) async {
+    petImage = _image.path;
+    _photo = petImage;
+    StorageReference firebaseStorageRef =
+        FirebaseStorage.instance.ref().child(petImage);
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+  }
+  
+  Widget showProfilePicInput() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+      child: new Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+        SizedBox(
+          height: 20.0,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Align(
+              alignment: Alignment.center,
+              child: CircleAvatar(
+                radius: 50,
+                backgroundColor: Color(0xff476cfb),
+                child: ClipOval(
+                  child: new SizedBox(
+                    width: 100.0,
+                    height: 100.0,
+                    child: (_image != null)
+                        ? Image.file(
+                            _image,
+                            fit: BoxFit.fill,
+                          )
+                        : Image.network(
+                            "https://images.unsplash.com/photo-1502164980785-f8aa41d53611?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                            fit: BoxFit.fill,
+                          ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 40.0),
+              child: IconButton(
+                icon: Icon(
+                  FontAwesomeIcons.camera,
+                  size: 30.0,
+                ),
+                onPressed: () {
+                  getImage();
+                },
+              ),
+            ),
+          ],
+        )
+      ]));}
 
   Widget showPrimaryButton() {
     return new Padding(

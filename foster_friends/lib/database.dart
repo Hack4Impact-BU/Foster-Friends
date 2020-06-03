@@ -67,7 +67,7 @@ Future<void> pushProfile(
 void pushIndividualProfile(String userID, String phoneNumber, String email,
     String location, String name, String photoLink) async {
   DocumentReference ref = firestore.collection("users").document(userID);
-  FirebaseUser user = await getCurrentUser();
+  
   await ref.setData({
     "email": email,
     "phone number": phoneNumber,
@@ -75,7 +75,7 @@ void pushIndividualProfile(String userID, String phoneNumber, String email,
     "name": name,
     "type": "individual",
     "pets": [],
-    "photo": user.photoUrl,
+    "photo": photoLink,
   }).then((value) => store.dispatch(getFirebaseUser));
   print("User profile submitted");
 }
