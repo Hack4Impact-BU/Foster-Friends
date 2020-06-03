@@ -3,6 +3,7 @@ import 'package:foster_friends/state/appState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:foster_friends/containers/grid/grid.dart';
+import 'package:foster_friends/containers/authentication/authentication.dart';
 
 String name;
 //String description;
@@ -73,6 +74,20 @@ class UserState extends State<UserProfile> {
                               style: Theme.of(context).textTheme.headline6),
                           Text(email,
                               style: Theme.of(context).textTheme.headline6),
+                          Padding(
+                              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                              child: RaisedButton(
+                                color: Theme.of(context).buttonColor,
+                                onPressed: () {
+                                  signOut();
+                                },
+                                child: Text("Sign Out",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color:
+                                            Theme.of(context).backgroundColor)),
+                              )),
                           Divider(color: Colors.grey),
                           Container(
                               margin: const EdgeInsets.all(10.0),

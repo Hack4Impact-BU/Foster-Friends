@@ -67,7 +67,7 @@ Future<void> pushProfile(
 void pushIndividualProfile(String userID, String phoneNumber, String email,
     String location, String name, String photoLink) async {
   DocumentReference ref = firestore.collection("users").document(userID);
-  
+  print(photoLink);
   await ref.setData({
     "email": email,
     "phone number": phoneNumber,

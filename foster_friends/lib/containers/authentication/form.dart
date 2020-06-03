@@ -7,6 +7,8 @@ import 'package:foster_friends/state/appState.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart';
+
 
 // Email login and sign up page
 
@@ -44,35 +46,46 @@ class InputFormState extends State<InputForm> {
     return false;
   }
 
-  // Perform login or signup
-  void validateAndSubmit() async {
-    setState(() {
-      _errorMessage = "";
-      _isLoading = true;
-    });
-    if (validateAndSave()) {
-      FirebaseUser user = await getCurrentUser();
-      try {
-        await pushProfile(user.uid, _phone, user.email, _address, _name, _address, 
-        _description, _photo, isIndividual);
-        
-        store.dispatch(getFirebaseUser);
-        
-        Navigator.pop(context);
-
-        setState(() {
-          _isLoading = false;
-        });
-      } catch (e) {
-        print('Error: $e');
-        setState(() {
-          _isLoading = false;
-          _errorMessage = e.message;
-          _formKey.currentState.reset();
-        });
-      }
-    }
+  Future uploadPic(BuildContext context) async {
+    String fileName = basename(_image.path);
+    _photo = fileName;
+    StorageReference firebaseStorageRef =
+        FirebaseStorage.instance.ref().child(fileName);
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
   }
+  
+  // Perform login or signup
+  
+  // void validateAndSubmit() async {
+  //   setState(() {
+  //     _errorMessage = "";
+  //     _isLoading = true;
+  //   });
+  //   if (validateAndSave()) {
+  //     FirebaseUser user = await getCurrentUser();
+  //     try {
+  //       await pushProfile(user.uid, _phone, user.email, _address, _name, _address, 
+  //       _description, _photo, isIndividual);
+  //       uploadPic(context);
+        
+  //       store.dispatch(getFirebaseUser);
+        
+  //       Navigator.pop(context);
+
+  //       setState(() {
+  //         _isLoading = false;
+  //       });
+  //     } catch (e) {
+  //       print('Error: $e');
+  //       setState(() {
+  //         _isLoading = false;
+  //         _errorMessage = e.message;
+  //         _formKey.currentState.reset();
+  //       });
+  //     }
+  //   }
+  // }
 
   @override
   void initState() {
@@ -97,6 +110,36 @@ class InputFormState extends State<InputForm> {
   @override
   Widget build(BuildContext context) {
     //print("hi");
+    var validateAndSubmit;
+    validateAndSubmit = () async {
+      uploadPic(context);
+      setState(() {
+        _errorMessage = "";
+        _isLoading = true;
+      });
+      if (validateAndSave()) {
+        FirebaseUser user = await getCurrentUser();
+        try {
+          await pushProfile(user.uid, _phone, user.email, _address, _name, _address, 
+          _description, _photo, isIndividual);
+          
+          store.dispatch(getFirebaseUser);
+          
+          Navigator.pop(context);
+
+          setState(() {
+            _isLoading = false;
+          });
+        } catch (e) {
+          print('Error: $e');
+          setState(() {
+            _isLoading = false;
+            _errorMessage = e.message;
+            _formKey.currentState.reset();
+          });
+        }
+      }
+    };
     return new Scaffold(
         appBar: new AppBar(
           title: new Text('Foster Friends'),
@@ -104,6 +147,21 @@ class InputFormState extends State<InputForm> {
         body: Stack(
           children: <Widget>[
             _showForm(),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                child: SizedBox(
+                  height: 40.0,
+                  child: new RaisedButton(
+                    elevation: 5.0,
+                    shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0)),
+                    color: Colors.red,
+                    child: new Text('Finish Creating Profile',
+                        style: new TextStyle(fontSize: 20.0, color: Colors.white)),
+                    onPressed: validateAndSubmit,
+                  ),
+                ))),
             _showCircularProgress(),
           ],
         ));
@@ -134,7 +192,7 @@ class InputFormState extends State<InputForm> {
               showPhoneInput(),
               showAddressInput(),
               showProfilePicInput(),
-              showPrimaryButton(),
+              
               showErrorMessage(),
             ],
           ),
@@ -332,14 +390,7 @@ class InputFormState extends State<InputForm> {
     });
   }
 
-  Future uploadPic(BuildContext context) async {
-    petImage = _image.path;
-    _photo = petImage;
-    StorageReference firebaseStorageRef =
-        FirebaseStorage.instance.ref().child(petImage);
-    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
-    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
-  }
+  
   
   Widget showProfilePicInput() {
     return Padding(
@@ -389,22 +440,7 @@ class InputFormState extends State<InputForm> {
         )
       ]));}
 
-  Widget showPrimaryButton() {
-    return new Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
-        child: SizedBox(
-          height: 40.0,
-          child: new RaisedButton(
-            elevation: 5.0,
-            shape: new RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(30.0)),
-            color: Colors.red,
-            child: new Text('Finish Creating Profile',
-                style: new TextStyle(fontSize: 20.0, color: Colors.white)),
-            onPressed: validateAndSubmit,
-          ),
-        ));
-  }
+
 
   Widget showToggleButton() {
     return Row(
