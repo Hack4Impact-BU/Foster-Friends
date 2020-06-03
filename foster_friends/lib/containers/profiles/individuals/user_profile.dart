@@ -30,7 +30,7 @@ class UserState extends State<UserProfile> {
     name = data['name'];
     email = data['email'];
     phoneNumber = data['phone number'];
-    // photo = data['photo'];
+    photo = data['photo'];
     pets = data['pets'];
 
    // print("Data is\n$name\n$description\n$phoneNumber\n$photo\n$pets");
@@ -44,7 +44,7 @@ class UserState extends State<UserProfile> {
     return data['name'] == null ||
         data['email'] == null ||
         data['phone number'] == null ||
-        // data['photo'] == null ||
+        data['photo'] == null ||
         data['pets'] == null;
   }
 
@@ -65,7 +65,7 @@ class UserState extends State<UserProfile> {
                         children: <Widget>[
                           CircleAvatar(
                             radius: 70,
-                            //backgroundImage: NetworkImage(photo),
+                            backgroundImage: NetworkImage(photo),
                           ),
                           Text(name,
                               style: Theme.of(context).textTheme.headline6),
