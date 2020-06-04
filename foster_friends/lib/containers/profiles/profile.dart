@@ -19,9 +19,11 @@ class Profile extends StatelessWidget {
         }
         switch(store.state.userData["type"]){
           case 'individual':
-            return UserProfile();
+            final data = store.state.userData;
+            return UserProfile(data);
           case 'organization':
-            return OrgProfile();
+            final data = store.state.userData;
+            return OrgProfile(data);
         }
         
       }

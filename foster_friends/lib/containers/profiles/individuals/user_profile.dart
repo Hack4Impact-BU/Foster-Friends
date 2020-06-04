@@ -4,6 +4,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:foster_friends/containers/grid/grid.dart';
 import 'package:foster_friends/containers/authentication/authentication.dart';
+import 'package:foster_friends/containers/profiles/individuals/edit_individual_profile.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 String name;
 //String description;
@@ -17,13 +19,19 @@ List pets = [];
 
 // Define a custom Form widget.
 class UserProfile extends StatefulWidget {
+  final data;
+  UserProfile(this.data);
+
   @override
   UserState createState() {
-    return UserState();
+    return UserState(this.data);
   }
 }
 
 class UserState extends State<UserProfile> {
+  Map<String, dynamic> data;
+  UserState(this.data);
+
   @override
   void initState() {
     final data = store.state.userData;
@@ -70,29 +78,49 @@ class UserState extends State<UserProfile> {
                           ),
                           Text(name,
                               style: Theme.of(context).textTheme.headline6),
-                          Text(phoneNumber,
-                              style: Theme.of(context).textTheme.headline6),
-                          Text(email,
-                              style: Theme.of(context).textTheme.headline6),
-                          Padding(
-                              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                              child: RaisedButton(
-                                color: Theme.of(context).buttonColor,
-                                onPressed: () {
-                                  signOut();
-                                },
-                                child: Text("Sign Out",
+                          Text("Phone number: " + phoneNumber,
+                              style: TextStyle(color: Colors.red,fontFamily: 'roboto',
+                                  fontSize: 15.0,letterSpacing: 1.5)),
+                          Text("Email: " + email,
+                              style: TextStyle(color: Colors.red,fontFamily: 'roboto',
+                                  fontSize: 15.0,letterSpacing: 1.5)),
+                          Row (
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                            Padding(
+                            padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                            child: RaisedButton(
+                              color: Theme.of(context).buttonColor,
+                              child: Text("Edit Profile",
                                     style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
-                                        color:
-                                            Theme.of(context).backgroundColor)),
-                              )),
+                                        color: Theme.of(context).backgroundColor)),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                showDialog(context: context, builder: (BuildContext context) => EditIndividualProfile(data));
+                              })),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
+                                child: IconButton(
+                                  icon: Icon(FontAwesomeIcons.signOutAlt),
+                                  color: Theme.of(context).buttonColor,
+                                  onPressed: () {
+                                    signOut();
+                                  },
+                                  // child: Text("Sign Out",
+                                  //     style: TextStyle(
+                                  //         fontSize: 18,
+                                  //         fontWeight: FontWeight.bold,
+                                  //         color:
+                                  //             Theme.of(context).backgroundColor)),
+                                )),
+                            ]),
                           Divider(color: Colors.grey),
                           Container(
                               margin: const EdgeInsets.all(10.0),
-                              width: 400.0,
-                              height: 400.0,
+                              width: MediaQuery.of(context).copyWith().size.width,
+                              height: MediaQuery.of(context).copyWith().size.height - 500,
                               child: buildGrid(pets, context)),
                         ])));
           }
