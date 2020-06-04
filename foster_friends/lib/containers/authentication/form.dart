@@ -36,6 +36,13 @@ class InputFormState extends State<InputForm> {
   bool isIndividual;
   bool _isLoading;
 
+  // text form field
+  final name = TextEditingController();
+  final phone = TextEditingController();
+  final description = TextEditingController();
+  final address = TextEditingController();
+  var photo;
+
   // Check if form is valid before perform login or signup
   bool validateAndSave() {
     final form = _formKey.currentState;
@@ -56,36 +63,6 @@ class InputFormState extends State<InputForm> {
   }
   
   // Perform login or signup
-  
-  // void validateAndSubmit() async {
-  //   setState(() {
-  //     _errorMessage = "";
-  //     _isLoading = true;
-  //   });
-  //   if (validateAndSave()) {
-  //     FirebaseUser user = await getCurrentUser();
-  //     try {
-  //       await pushProfile(user.uid, _phone, user.email, _address, _name, _address, 
-  //       _description, _photo, isIndividual);
-  //       uploadPic(context);
-        
-  //       store.dispatch(getFirebaseUser);
-        
-  //       Navigator.pop(context);
-
-  //       setState(() {
-  //         _isLoading = false;
-  //       });
-  //     } catch (e) {
-  //       print('Error: $e');
-  //       setState(() {
-  //         _isLoading = false;
-  //         _errorMessage = e.message;
-  //         _formKey.currentState.reset();
-  //       });
-  //     }
-  //   }
-  // }
 
   @override
   void initState() {
@@ -111,35 +88,72 @@ class InputFormState extends State<InputForm> {
   Widget build(BuildContext context) {
     //print("hi");
     var validateAndSubmit;
-    validateAndSubmit = () async {
-      uploadPic(context);
-      setState(() {
-        _errorMessage = "";
-        _isLoading = true;
-      });
-      if (validateAndSave()) {
-        FirebaseUser user = await getCurrentUser();
-        try {
-          await pushProfile(user.uid, _phone, user.email, _address, _name, _address, 
-          _description, _photo, isIndividual);
-          
-          store.dispatch(getFirebaseUser);
-          
-          Navigator.pop(context);
+    if (isIndividual == true) {
+      if (name.text!="" && phone.text!="" && photo!=null) {
+        validateAndSubmit = () async {
+          uploadPic(context);
+          setState(() {
+            _errorMessage = "";
+            _isLoading = true;
+          });
+          if (validateAndSave()) {
+            FirebaseUser user = await getCurrentUser();
+            try {
+              await pushProfile(user.uid, _phone, user.email, _address, _name, _address, 
+              _description, _photo, isIndividual);
+              
+              store.dispatch(getFirebaseUser);
+              
+              Navigator.pop(context);
 
-          setState(() {
-            _isLoading = false;
-          });
-        } catch (e) {
-          print('Error: $e');
-          setState(() {
-            _isLoading = false;
-            _errorMessage = e.message;
-            _formKey.currentState.reset();
-          });
-        }
+              setState(() {
+                _isLoading = false;
+              });
+            } catch (e) {
+              print('Error: $e');
+              setState(() {
+                _isLoading = false;
+                _errorMessage = e.message;
+                _formKey.currentState.reset();
+              });
+            }
+          }
+        };
       }
-    };
+    }
+    else {
+      if (name.text!="" && description.text!="" && phone.text!="" && address.text!="" && photo!=null) {
+        validateAndSubmit = () async {
+          uploadPic(context);
+          setState(() {
+            _errorMessage = "";
+            _isLoading = true;
+          });
+          if (validateAndSave()) {
+            FirebaseUser user = await getCurrentUser();
+            try {
+              await pushProfile(user.uid, _phone, user.email, _address, _name, _address, 
+              _description, _photo, isIndividual);
+              
+              store.dispatch(getFirebaseUser);
+              
+              Navigator.pop(context);
+
+              setState(() {
+                _isLoading = false;
+              });
+            } catch (e) {
+              print('Error: $e');
+              setState(() {
+                _isLoading = false;
+                _errorMessage = e.message;
+                _formKey.currentState.reset();
+              });
+            }
+          }
+        };
+      }
+    }
     return new Scaffold(
         appBar: new AppBar(
           title: new Text('Foster Friends'),
@@ -149,7 +163,7 @@ class InputFormState extends State<InputForm> {
             _showForm(),
             Center(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                padding: EdgeInsets.fromLTRB(0.0, 300.0, 0.0, 0.0),
                 child: SizedBox(
                   height: 40.0,
                   child: new RaisedButton(
@@ -250,41 +264,10 @@ class InputFormState extends State<InputForm> {
         onSaved: (value) {
           _name = value;
         },
+        controller: name,
       ),
     );
   }
-
-  // Widget showLastNameInput() {
-  //   if(isIndividual) {
-  //     return Padding(
-  //       padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
-  //       child: new TextFormField(
-  //         maxLines: 1,
-  //         keyboardType: TextInputType.text,
-  //         autofocus: false,
-  //         decoration: new InputDecoration(
-  //             hintText: 'Enter your last name',
-  //             icon: new Icon(
-  //               Icons.mail,
-  //               color: Colors.grey,
-  //             )),
-  //         validator: (value) {
-  //           value = value.trim();
-  //           RegExp last = new RegExp("[a-z]+");
-  //           if(!last.hasMatch(value.toLowerCase())) {
-  //             _isLoading = false;
-  //             return 'Please enter your last name';
-  //           }
-  //           return null;
-  //         },
-  //         onSaved: (value) {
-  //           _name += value;
-  //         },
-  //       ),
-  //     );
-  //   }
-  //   return SizedBox(height: 0);
-  // }
 
   Widget showAddressInput() {
     if (!isIndividual) {
@@ -313,6 +296,7 @@ class InputFormState extends State<InputForm> {
             return null;
           },
           onSaved: (value) => _address = value,
+          controller: address,
         ),
       );
     }
@@ -341,6 +325,7 @@ class InputFormState extends State<InputForm> {
             return null;
           },
           onSaved: (value) => _description = value,
+          controller: description,
         ),
       );
     }
@@ -375,6 +360,7 @@ class InputFormState extends State<InputForm> {
           return null;
         },
         onSaved: (value) => _phone = value,
+        controller: phone,
       ),
     );
     // }
@@ -382,9 +368,9 @@ class InputFormState extends State<InputForm> {
   }
 
   File _image;
-  var petImage;
   getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    photo = image;
     setState(() {
       _image = image;
     });
