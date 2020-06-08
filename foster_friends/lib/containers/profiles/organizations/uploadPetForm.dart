@@ -19,47 +19,50 @@ class UploadPetForm extends StatefulWidget {
 }
 
 class UploadPetFormState extends State<UploadPetForm> {
-  List<String> _organizations = [];
+  //List<String> _organizations = [];
 
   @override
   void initState() {
     super.initState();
-    ref.collection('organizations').snapshots().listen((snapshot) {
-      snapshot.documents.forEach((doc) {
-        this._organizations.add(doc.data['name']);
-      });
-    });
+    // ref.collection('organizations').snapshots().listen((snapshot) {
+    //   snapshot.documents.forEach((doc) {
+    //     this._organizations.add(doc.data['name']);
+    //   });
+    // });
   }
 
   // -------------------------- map location function -----------------------
-  // String _locationMessageCoordinate = "Get Coordinate *";
-  // String _locationMessageAddress = "Get Org Address *";
+  String _locationMessageCoordinate = "Get Coordinate *";
+  String _locationMessageAddress = "Get Org Address *";
   // Geoflutterfire geo = Geoflutterfire();
-  // String petLocation1 = "";
-  // String petLocation2 = "";
+  double petLocation1;
+  double petLocation2;
+  String petLocation3;
   // var myLocation;
   // bool getloc = false;
 
-  // void _getCurrentLocation() async {
-  //   // Geoflutterfire geo = Geoflutterfire();
+  void _getCurrentLocation() async {
+    // Geoflutterfire geo = Geoflutterfire();
 
-  //   final position = await Geolocator()
-  //       .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-  //   setState(() {
-  //     _locationMessageCoordinate = "Coordinate Get!";
-  //     petLocation1 = "${position.latitude},${position.longitude}";
-  //   });
-  // }
+    var pos = await Geolocator()
+            .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    setState(() {
+      _locationMessageCoordinate = "Coordinate Get!";
+      petLocation1 = pos.latitude;
+      petLocation2 = pos.longitude;
+    });
+  }
 
-  // void _getCurrentLocation2() async {
-  //   String temp = store.state.userData["address"];
-  //   setState(() {
-  //     //var temp = Firestore.instance.collection("organizations").snapshots();
-  //     //_locationMessageAddress = temp.data.documents[user.uid]['address'];
-  //     _locationMessageAddress = "Org Address Get!";
-  //     petLocation2 = temp;
-  //   });
-  // }
+  void _getCurrentLocation2() async {
+    String temp = store.state.userData["address"];
+    setState(() {
+      //var temp = Firestore.instance.collection("organizations").snapshots();
+      //_locationMessageAddress = temp.data.documents[user.uid]['address'];
+      temp = store.state.userData["address"];
+      _locationMessageAddress = "Org Address Get!";
+      petLocation3 = temp;
+    });
+  }
 
   // -------------------------- save user inputs ----------------------------
   final petAge = TextEditingController();
@@ -77,11 +80,9 @@ class UploadPetFormState extends State<UploadPetForm> {
   //static Map<String, List<String>> map = {'Dog':['Labrador Retrievers', 'German Shepherd Dogs', 'Golden Retrievers'],'Cat':['Maine Coon','Bengal','Siamese'],'Bird':['Maine Coon','Bengal','Siamese']};
   List<String> _petTypes = ['Dog', 'Cat', 'Others'];
   List<String> _dogBreed = [
-    'Labrador Retrievers',
-    'Golden Retrievers',
-    'Others'
-  ];
-  List<String> _catBreed = ['Maine Coon', 'Bengal', 'Siamese', 'Others'];
+    'Labrador Retriever',
+    'Golden Retriever'];
+  List<String> _catBreed = ['Maine Coon', 'Bengal', 'Siamese'];
   static List<String> _breedType = [];
   final List<String> selectedBreedType = <String>[];
   String _selectedPetTypes;
@@ -122,9 +123,10 @@ class UploadPetFormState extends State<UploadPetForm> {
   Color color = const Color(0xFFFFCC80);
 
   var maxWidthChild = SizedBox(
-      width: 130,
-      child: Text("View Entered Breed",
+      //width: 100,
+      child: Text("View Breed",
           maxLines: 1, overflow: TextOverflow.ellipsis));
+
 
   @override
   Widget build(BuildContext context) {
@@ -139,9 +141,53 @@ class UploadPetFormState extends State<UploadPetForm> {
               child: Wrap(
                 spacing: 10.0,
                 children: selectedBreedType.map((item) {
-                  return Chip(
+                  return RawChip(
                     backgroundColor: Colors.yellow,
                     label: Text(item),
+                    onPressed: () {
+                      if (_breedType.contains(item)) {
+                        showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            content: new Text("Please remove from the drop down menu"),
+                            actions: <Widget>[
+                              new FlatButton(
+                                child: new Text("Ok"),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        });
+                      }
+                      else {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              content: new Text("Remove breed? (please refresh after removing)"),
+                              actions: <Widget>[
+                                // usually buttons at the bottom of the dialog
+                                new FlatButton(
+                                  child: new Text("Cancel"),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                new FlatButton(
+                                  child: new Text("Confirm"),
+                                  onPressed: () {
+                                    selectedBreedType.remove(item);
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          });
+                      }
+                    },
                   );
                 }).toList(),
               ),
@@ -191,15 +237,13 @@ class UploadPetFormState extends State<UploadPetForm> {
         petSex.text != "" &&
         petActivityLevel.text != "" &&
         petDescription.text != "" &&
-        // petLocation1 != "" &&
-        // petLocation2 != "" &&
+        petLocation1 != null &&
+        petLocation2 != null &&
         petImage != null) {
       _onPressed = () async {
         DocumentReference petRef = ref.collection("pets").document();
         String petId = petRef.documentID;
         uploadPic(context);
-        var pos = await Geolocator()
-            .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
         petRef.setData({
           "id": petId,
@@ -207,10 +251,9 @@ class UploadPetFormState extends State<UploadPetForm> {
           "age": int.parse(petAge.text),
           "breed": petBreed,
           "description": petDescription.text,
-          "latitude": pos.latitude,
-          "lognitude": pos.longitude,
-          // "point": myLocation.data,
-          "orgAddress": store.state.userData["address"],
+          "latitude": petLocation1,
+          "lognitude": petLocation2,
+          "orgAddress": petLocation3,
           "name": petName.text,
           "sex": petSex.text,
           "activityLevel": petActivityLevel.text,
@@ -294,8 +337,7 @@ class UploadPetFormState extends State<UploadPetForm> {
 
     return Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     crossAxisAlignment: CrossAxisAlignment.center,
-     children: <
-        Widget>[
+     children: <Widget>[
       TextFormField(
         decoration: const InputDecoration(
           hintText: 'Pet Name *',
@@ -407,14 +449,14 @@ class UploadPetFormState extends State<UploadPetForm> {
             }).toList(),
           ),
         ),
-        // Padding(
-        //     padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-        //     child: FlatButton(
-        //         color: color,
-        //         child: maxWidthChild,
-        //         onPressed: () {
-        //           showSelectedBreed();
-        //         }))
+        Padding(
+            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+            child: FlatButton(
+                color: color,
+                child: maxWidthChild,
+                onPressed: () {
+                  showSelectedBreed();
+                }))
       ]),
       Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
         Expanded(
@@ -429,8 +471,6 @@ class UploadPetFormState extends State<UploadPetForm> {
                       return '';
                     } else {
                       otherBreed.text = value;
-                      controller:
-                      otherBreed;
                     }
                     return null;
                   },
@@ -499,26 +539,26 @@ class UploadPetFormState extends State<UploadPetForm> {
         },
         controller: petDescription,
       ),
-      // Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-      //   Padding(
-      //     padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-      //     child: FlatButton(
-      //         color: color,
-      //         child: Text(_locationMessageCoordinate),
-      //         onPressed: () {
-      //           _getCurrentLocation();
-      //         }),
-      //   ),
-      //   Padding(
-      //     padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-      //     child: FlatButton(
-      //         color: color,
-      //         child: Text(_locationMessageAddress),
-      //         onPressed: () {
-      //           _getCurrentLocation2();
-      //         }),
-      //   )
-      // ]),
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+        Padding(
+          padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+          child: FlatButton(
+              color: color,
+              child: Text(_locationMessageCoordinate),
+              onPressed: () {
+                _getCurrentLocation();
+              }),
+        ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+          child: FlatButton(
+              color: color,
+              child: Text(_locationMessageAddress),
+              onPressed: () {
+                _getCurrentLocation2();
+              }),
+        )
+      ]),
       SizedBox(
         height: 10,
       ),
