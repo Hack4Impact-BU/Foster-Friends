@@ -154,7 +154,8 @@ class UserState extends State<UserProfile> {
               child: CircularProgressIndicator(),
             );
           } else {
-            return SingleChildScrollView(
+            return Scaffold(
+              body: SingleChildScrollView(
                 child: Container(
                     margin: EdgeInsets.all(20),
                     child: Column(
@@ -189,7 +190,7 @@ class UserState extends State<UserProfile> {
                                         color: Theme.of(context).backgroundColor)),
                               onPressed: () {
                                 Navigator.pop(context);
-                                showDialog(context: context, builder: (BuildContext context) => EditIndividualProfile(data));
+                                showDialog(context: context, builder: (BuildContext context) => EditIndividualProfile(this.data));
                               })),
                               Padding(
                                 padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
@@ -213,7 +214,7 @@ class UserState extends State<UserProfile> {
                               width: MediaQuery.of(context).copyWith().size.width,
                               height: MediaQuery.of(context).copyWith().size.height - 500,
                               child: buildGrid(pets, context)),
-                        ])));
+                        ]))));
           }
         });
   }

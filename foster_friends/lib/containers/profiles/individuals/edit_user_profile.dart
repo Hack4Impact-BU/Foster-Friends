@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import './edit_user_profile_form.dart';
+import './edit_individual_profile_form.dart';
 
 // Define a custom Form widget.
 class EditUserProfile extends StatefulWidget {

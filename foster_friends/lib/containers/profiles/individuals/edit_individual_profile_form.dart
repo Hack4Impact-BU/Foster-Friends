@@ -1,42 +1,61 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/material.dart';
+import 'package:foster_friends/state/appState.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:path/path.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:foster_friends/database.dart';
 
-FirebaseUser user;
-String uid;
+String name;
+String email;
+String phoneNumber;
 
-class EditUserProfileForm extends StatefulWidget {
+class EditIndividualProfileForm extends StatefulWidget {
   @override
-  EditUserProfileFormState createState() {
-    return EditUserProfileFormState();
+  final data;
+  EditIndividualProfileForm(this.data);
+
+  EditIndividualProfileFormState createState() {
+    return EditIndividualProfileFormState(this.data);
   }
 }
 
-class EditUserProfileFormState extends State<EditUserProfileForm>{
+class EditIndividualProfileFormState extends State<EditIndividualProfileForm>{
+  Map<String, dynamic> data;
+  EditIndividualProfileFormState(this.data);
+
   final _formKey = GlobalKey<FormState>();
-  String _name;
-  String _email;
-  String _phoneNum;
-  String _location;
 
   void initState() {
     super.initState();
-    getUser();
-    uid = "UbHepIQJN5XiRaxKD3xALVgRvEJ3";
+    final data = store.state.userData;
+    name = data['name'];
+    email = data['email'];
+    phoneNumber = data['phone number'];
   }
+  
+  @override
+  void dispose() {
+    // store.dispatch(getFirebaseUser);
+    super.dispose();
+  }
+
+  bool _anyAreNull() {
+    final data = store.state.userData;
+
+    return data['name'] == null ||
+        data['email'] == null ||
+        data['phone number'] == null;
+  }
+
+
   
   @override 
   Widget build(BuildContext context){
-    return StreamBuilder(
-      stream: Firestore.instance.collection("individuals").document(uid).snapshots(),
-      builder: (context, snapshot){
-        if(snapshot.hasData){
-          _name = snapshot.data["name"];
-          _email = snapshot.data["email"];
-          _phoneNum = snapshot.data["phone number"];
-          _location = snapshot.data["location"];
-          return Form(
+    return Form(
             key: _formKey,
             child: Container(
               padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
@@ -45,7 +64,7 @@ class EditUserProfileFormState extends State<EditUserProfileForm>{
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     TextFormField(
-                      initialValue: _name,
+                      initialValue: name,
                       style: TextStyle(fontSize:18),
                       decoration:
                         InputDecoration(
@@ -62,7 +81,7 @@ class EditUserProfileFormState extends State<EditUserProfileForm>{
                       },
                     ),
                     TextFormField(
-                      initialValue: _email,
+                      initialValue: email,
                       style: TextStyle(fontSize:18),
                       keyboardType: TextInputType.emailAddress,
                       decoration: 
@@ -82,7 +101,7 @@ class EditUserProfileFormState extends State<EditUserProfileForm>{
                       },
                     ),
                     TextFormField(
-                      initialValue: _phoneNum,
+                      initialValue: phoneNumber,
                       style: TextStyle(fontSize:18),
                       keyboardType: TextInputType.number,
                       decoration: 
@@ -98,36 +117,25 @@ class EditUserProfileFormState extends State<EditUserProfileForm>{
                         return null;
                       },
                     ),
-                    TextFormField(
-                      initialValue: _location,
-                      style: TextStyle(fontSize:18),
-                      decoration: 
-                        InputDecoration(
-                          labelText: "Location",
-                          labelStyle: TextStyle(fontSize:20),
-                          icon: Icon(Icons.location_city)
-                          ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter your location';
-                        }
-                        return null;
-                      },
-                      onChanged: (value) => setState(() => _location = value),
-                    ),
+                    // TextFormField(
+                    //   initialValue: location,
+                    //   style: TextStyle(fontSize:18),
+                    //   decoration: 
+                    //     InputDecoration(
+                    //       labelText: "Location",
+                    //       labelStyle: TextStyle(fontSize:20),
+                    //       icon: Icon(Icons.location_city)
+                    //       ),
+                    //   validator: (value) {
+                    //     if (value.isEmpty) {
+                    //       return 'Please enter your location';
+                    //     }
+                    //     return null;
+                    //   },
+                    //   onChanged: (value) => setState(() => location = value),
+                    // ),
                   ],),
                 )
-          );
-        }
-        else{
-          return CircularProgressIndicator();
-        }
-      }
     );
-    
-  }
-
-  void getUser() async {
-    user = await FirebaseAuth.instance.currentUser();
   }
 }

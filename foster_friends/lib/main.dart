@@ -7,6 +7,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:foster_friends/state/appState.dart';
 import 'package:foster_friends/containers/profiles/organizations/org_profile.dart';
 import 'package:foster_friends/containers/home.dart';
+import './containers/profiles/individuals/user_profile.dart';
 void main() => runApp(new MyApp());
 
 ThemeData t = ThemeData(
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final data = store.state.userData;
     return StoreProvider<AppState>(
       store: store,
       child: new MaterialApp(
@@ -37,7 +39,7 @@ class MyApp extends StatelessWidget {
             // '/Form': (BuildContext context) => new InputForm(),
             // '/UploadPet': (BuildContext context) => new UploadPet(),
             // '/Org_Profile': (BuildContext context) => new OrgProfile(),
-            // '/User_Profile' : (BuildContext context) => new UserProfile(),
+            '/User_Profile' : (BuildContext context) => new UserProfile(data),
             //'/': (context) => OrgProfile(),
           }),
     );
