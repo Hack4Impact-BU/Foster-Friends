@@ -97,7 +97,7 @@ class UserState extends State<UserProfile> {
                                         fontWeight: FontWeight.bold,
                                         color: Theme.of(context).backgroundColor)),
                               onPressed: () {
-                                Navigator.pop(context);
+                                //Navigator.pop(context);
                                 showDialog(context: context, builder: (BuildContext context) => EditIndividualProfile(data));
                               })),
                               Padding(
