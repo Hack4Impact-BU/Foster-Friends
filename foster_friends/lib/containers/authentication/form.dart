@@ -60,6 +60,34 @@ class InputFormState extends State<InputForm> {
         FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+  // Perform login or signup
+  void validateAndSubmit() async {
+    setState(() {
+      _errorMessage = "";
+      _isLoading = true;
+    });
+    if (validateAndSave()) {
+      FirebaseUser user = await getCurrentUser();
+      try {
+        await pushProfile(user.uid, _phone, user.email, _address, _name, _address, 
+        _description, _photo, isIndividual);
+        
+        store.dispatch(getFirebaseUser);
+        
+        Navigator.popUntil(context, ModalRoute.withName('/'));
+
+        setState(() {
+          _isLoading = false;
+        });
+      } catch (e) {
+        print('Error: $e');
+        setState(() {
+          _isLoading = false;
+          _errorMessage = e.message;
+          _formKey.currentState.reset();
+        });
+      }
+    }
   }
   
   // Perform login or signup
@@ -159,6 +187,10 @@ class InputFormState extends State<InputForm> {
           title: new Text('Foster Friends'),
         ),
         body: Stack(
+    return new Card(
+
+        child: Stack(
+          alignment: Alignment.topCenter,
           children: <Widget>[
             _showForm(),
             Center(
