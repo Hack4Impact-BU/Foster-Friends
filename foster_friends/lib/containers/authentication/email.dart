@@ -46,7 +46,6 @@ class _EmailState extends State<Email> {
         if (_isLoginForm) {
           userId = await emailSignIn(_email, _password);
           print('Signed in: $userId');
-          Navigator.pop(context);
 
           existsInDatabase().then((isFound) {
               if (!isFound) {
