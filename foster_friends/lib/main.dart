@@ -7,6 +7,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:foster_friends/state/appState.dart';
 import 'package:foster_friends/containers/profiles/organizations/org_profile.dart';
 import 'package:foster_friends/containers/home.dart';
+import './containers/profiles/individuals/user_profile.dart';
 void main() => runApp(new MyApp());
 
 ThemeData t = ThemeData(
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
             // '/SignUp': (BuildContext context) => new InputForm(),
             // '/Form': (BuildContext context) => new InputForm(),
             // '/UploadPet': (BuildContext context) => new UploadPet(),
-             '/Org_Profile': (BuildContext context) => new OrgProfile(),
+            // '/Org_Profile': (BuildContext context) => new OrgProfile(),
             // '/User_Profile' : (BuildContext context) => new UserProfile(),
             //'/': (context) => OrgProfile(),
           }),

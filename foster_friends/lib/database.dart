@@ -7,6 +7,7 @@ import 'package:foster_friends/state/appState.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 
+
 final Firestore firestore = Firestore.instance;
 
 CollectionReference get indivs => firestore.collection('individuals');
@@ -66,7 +67,7 @@ Future<void> pushProfile(
 void pushIndividualProfile(String userID, String phoneNumber, String email,
     String location, String name, String photoLink) async {
   DocumentReference ref = firestore.collection("users").document(userID);
-
+  print(photoLink);
   await ref.setData({
     "email": email,
     "phone number": phoneNumber,
@@ -74,7 +75,7 @@ void pushIndividualProfile(String userID, String phoneNumber, String email,
     "name": name,
     "type": "individual",
     "pets": [],
-    "photo": ""
+    "photo": photoLink,
   }).then((value) => store.dispatch(getFirebaseUser));
   print("User profile submitted");
 }
