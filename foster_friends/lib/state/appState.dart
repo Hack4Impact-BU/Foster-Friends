@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:redux/redux.dart';
 import 'package:foster_friends/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:foster_friends/containers/authentication/authentication.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 
 final ref = Firestore.instance;

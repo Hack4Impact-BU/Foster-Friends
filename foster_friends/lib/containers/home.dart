@@ -44,8 +44,6 @@ class _HomeState extends State<HomeState> {
 
   _HomeState(this._user, this._userType, this._selectedIndex);
 
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   static List<Widget> _widgetOptions = <Widget>[Results(), Profile()];
 

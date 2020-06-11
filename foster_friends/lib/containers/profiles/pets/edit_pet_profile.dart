@@ -106,7 +106,7 @@ class EditPetState extends State<EditPetProfile> {
     StorageReference firebaseStorageRef =
         FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
-    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    await uploadTask.onComplete;
     setState(() {
       print("Profile Picture uploaded");
       Scaffold.of(context)

@@ -5,9 +5,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:foster_friends/database.dart';
-import 'package:foster_friends/main.dart';
+
 import 'package:foster_friends/containers/Home.dart';
 
 
@@ -91,7 +89,7 @@ class EditIndividualState extends State<EditIndividualProfile> {
     StorageReference firebaseStorageRef =
         FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
-    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    await uploadTask.onComplete;
     setState(() {
       print("Profile Picture uploaded");
       Scaffold.of(context)

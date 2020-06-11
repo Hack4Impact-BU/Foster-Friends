@@ -109,7 +109,7 @@ class UploadPetFormState extends State<UploadPetForm> {
     StorageReference firebaseStorageRef =
         FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
-    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    await uploadTask.onComplete;
     setState(() {
       print("Profile Picture uploaded");
       Scaffold.of(context)
@@ -409,8 +409,7 @@ class UploadPetFormState extends State<UploadPetForm> {
                     } else {
                       if (petType.text == "Others") {
                         petType.text = value;
-                        controller:
-                        petType;
+                        controller: petType;
                       }
                     }
                     return null;
