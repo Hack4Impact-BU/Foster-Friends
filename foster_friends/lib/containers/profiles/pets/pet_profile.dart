@@ -109,7 +109,7 @@ class PetState extends State<PetProfile> {
                   letterSpacing: 1.5)),
         ),
         Container(
-          padding: EdgeInsets.symmetric(vertical: 20),
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
           alignment: Alignment.center,
           child: Text(
             data['description'],
