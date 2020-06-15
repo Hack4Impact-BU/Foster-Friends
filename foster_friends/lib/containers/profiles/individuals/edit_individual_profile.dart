@@ -5,6 +5,9 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:foster_friends/database.dart';
+import './edit_individual_profile_form.dart';
 
 import 'package:foster_friends/containers/Home.dart';
 
@@ -71,7 +74,6 @@ class EditIndividualState extends State<EditIndividualProfile> {
         data['photo'] == null;
   }
 
-
 // -------------------------- upload photo -------------------------------
   File _image;
   Future getImage() async {
@@ -122,6 +124,9 @@ class EditIndividualState extends State<EditIndividualProfile> {
           Container(child: Column(
             children: <Widget>[
               SizedBox(height: 20,),
+              // CircleAvatar(
+              //   radius:70,
+              //   backgroundImage: NetworkImage(photo),
               
               CircleAvatar(
                 radius:70,

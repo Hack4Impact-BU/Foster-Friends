@@ -66,7 +66,8 @@ class UserState extends State<UserProfile> {
               child: CircularProgressIndicator(),
             );
           } else {
-            return SingleChildScrollView(
+            return Scaffold(
+              body: SingleChildScrollView(
                 child: Container(
                     margin: EdgeInsets.all(20),
                     child: Column(
@@ -76,14 +77,17 @@ class UserState extends State<UserProfile> {
                             radius: 70,
                             backgroundImage: NetworkImage(photo),
                           ),
+                          SizedBox(height: 10,),
                           Text(name,
                               style: Theme.of(context).textTheme.headline6),
-                          Text("Phone number: " + phoneNumber,
-                              style: TextStyle(color: Colors.red,fontFamily: 'roboto',
-                                  fontSize: 15.0,letterSpacing: 1.5)),
-                          Text("Email: " + email,
-                              style: TextStyle(color: Colors.red,fontFamily: 'roboto',
-                                  fontSize: 15.0,letterSpacing: 1.5)),
+                          SizedBox(height: 10,),
+                          Text(email,
+                              style: TextStyle(fontFamily: 'roboto',
+                                  fontSize: 16,letterSpacing: 1.5)),
+                          SizedBox(height: 5,),
+                          Text(phoneNumber,
+                              style: TextStyle(fontFamily: 'roboto',
+                                  fontSize: 16,letterSpacing: 1.5)),
                           Row (
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
@@ -122,7 +126,7 @@ class UserState extends State<UserProfile> {
                               width: MediaQuery.of(context).copyWith().size.width,
                               height: MediaQuery.of(context).copyWith().size.height - 500,
                               child: buildGrid(pets, context)),
-                        ])));
+                        ]))));
           }
         });
   }
