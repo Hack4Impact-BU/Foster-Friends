@@ -37,8 +37,8 @@ class PetState extends State<PetProfile> {
   @override
   void initState() {
     String petID = data['id'];
-
-    if (store.state.userData != null) {
+    String str_userState = store.state.userData.toString();
+    if (str_userState != "{}") {
       List<Map<String, dynamic>> favPets = store.state.userData['pets'];
 
       for (Map pet in favPets) {
@@ -131,8 +131,8 @@ class PetState extends State<PetProfile> {
   }
 
   bool _isCorrectOrganization() {
-    if (store.state.user != null) if (data['orgId'] ==
-        store.state.user.uid) return true;
+    if (store.state.user != null) if (data['organization'] ==
+        store.state.userData['name']) return true;
     return false;
   }
 
