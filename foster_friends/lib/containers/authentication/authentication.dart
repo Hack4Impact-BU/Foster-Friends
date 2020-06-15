@@ -7,7 +7,7 @@ final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
 // Only used for google users
 final GoogleSignIn googleSignIn = GoogleSignIn();
-String error='';
+String error = '';
 
 // Email sign in methods
 Future<String> emailSignIn(String email, String password) async {
@@ -42,7 +42,6 @@ Future<bool> isEmailVerified() async {
   return user.isEmailVerified;
 }
 
-
 // Sign in method google
 Future<String> signInWithGoogle() async {
   print('In signInWithGoogle');
@@ -56,16 +55,20 @@ Future<String> signInWithGoogle() async {
       accessToken: googleSignInAuthentication.accessToken,
       idToken: googleSignInAuthentication.idToken,
     );
-    await _firebaseAuth.signInWithCredential(credential);
-    
+    print("Finalied with credential: $credential");
+    try {
+      await _firebaseAuth.signInWithCredential(credential);
+    } catch (e) {
+      print("Firebase error $e");
+      return 'Firebase error';
+    };
+
   } catch (e) {
     print('Error $e');
-    error = 'Google Sign In Error. Please Try Again.';
+    return 'Google Sign In Error. Please Try Again.';
+  }
+  return "";
 }
-
-  return error;
-}
-
 
 // Handles both sign outs
 Future<void> signOut() async {

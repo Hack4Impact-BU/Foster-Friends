@@ -59,7 +59,7 @@ class InputFormState extends State<InputForm> {
     StorageReference firebaseStorageRef =
         FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
-    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    await uploadTask.onComplete;
   }
   
   // Perform login or signup

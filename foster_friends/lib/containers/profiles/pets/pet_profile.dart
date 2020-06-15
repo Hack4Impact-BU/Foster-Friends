@@ -131,8 +131,8 @@ class PetState extends State<PetProfile> {
   }
 
   bool _isCorrectOrganization() {
-    if (store.state.user != null) if (data['organization'] ==
-        store.state.userData['name']) return true;
+    if (store.state.user != null) if (data['orgId'] ==
+        store.state.user.uid) return true;
     return false;
   }
 
