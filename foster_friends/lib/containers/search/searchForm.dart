@@ -184,10 +184,10 @@ class SearchFormState extends State<SearchForm> {
                       hint: Text('Pet Type'), // Not necessary for Option 1
                       value: _selectedPetTypes,
                       onChanged: (newValue) {
-                        print("old value: $_selectedPetTypes");
+                        // print("old value: $_selectedPetTypes");
                         _selectedBreedTypes = null;
                         _selectedPetTypes = newValue;
-                        print("new value is $_selectedPetTypes");
+                        // print("new value is $_selectedPetTypes");
                         setState(() {
                           if (_selectedPetTypes == "Dog") {
                             _breedType = _dogBreed;
@@ -260,7 +260,6 @@ class SearchFormState extends State<SearchForm> {
                           }
                         });
                       },
-                      // ??????????????????????? if () _breedType
                       items: _activity.map((location) {
                         return DropdownMenuItem(
                           child: new Text(location),
@@ -281,7 +280,6 @@ class SearchFormState extends State<SearchForm> {
                           }
                         });
                       },
-                      // ??????????????????????? if () _breedType
                       items: _radiusOptions.map((location) {
                         return DropdownMenuItem(
                           child: new Text(location),

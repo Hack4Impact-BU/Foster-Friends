@@ -39,7 +39,6 @@ class OrgState extends State<OrgProfile> {
   @override
   void initState() {
     final data = store.state.userData;
-    //print("User data is $data");
     name = data['name'];
     description = data['description'];
     phoneNumber = data['phone number'];
@@ -51,6 +50,19 @@ class OrgState extends State<OrgProfile> {
    // print("Data is\n$name\n$description\n$phoneNumber\n$photo\n$pets");
 
     super.initState();
+  }
+
+  refresh() {
+    setState(() {
+      final data = store.state.userData;
+      name = data['name'];
+      description = data['description'];
+      phoneNumber = data['phone number'];
+      photo = data['photo'];
+      pets = data['pets'];
+      email = data['email'];
+      address = data['address'];
+    });
   }
 
   bool _anyAreNull() {
@@ -73,9 +85,12 @@ class OrgState extends State<OrgProfile> {
             return Center(
               child: CircularProgressIndicator(),
             );
+          } else if (store.state.userData == null){
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           } else {
             return Scaffold(
-              
                 body: Center(
                     //margin: EdgeInsets.all(20),
                     child: Column(
@@ -92,18 +107,19 @@ class OrgState extends State<OrgProfile> {
                           Text(name,
                               style: Theme.of(context).textTheme.headline6),
                           SizedBox(height: 10,),
-                          Text(email,
+                          Text("Email: "+data["email"],
                              style: TextStyle(fontFamily: 'roboto',
                                   fontSize: 15.0,letterSpacing: 1.5)),
-                          Text(phoneNumber,
+                          SizedBox(height: 5,),
+                          Text("Phone number: "+phoneNumber,
                                style: TextStyle(fontFamily: 'roboto',
                                   fontSize: 15.0,letterSpacing: 1.5)),
                           SizedBox(height: 5,),
-                          Text(address,
+                          Text("Address: "+address,
                              style: TextStyle(fontFamily: 'roboto',
                                   fontSize: 15.0,letterSpacing: 1.5)),
                           SizedBox(height: 5,),
-                          Text(description,
+                          Text("Description: "+description,
                               style: TextStyle(fontFamily: 'roboto',
                                   fontSize: 15.0,letterSpacing: 1.5)),
                         Row (
@@ -119,8 +135,7 @@ class OrgState extends State<OrgProfile> {
                                       fontWeight: FontWeight.bold,
                                       color: Theme.of(context).backgroundColor)),
                             onPressed: () {
-                              Navigator.pop(context);
-                              showDialog(context: context, builder: (BuildContext context) => EditOrgProfile(data));
+                              showDialog(context: context, builder: (BuildContext context) => EditOrgProfile(data,refresh));
                             })),
                           Padding(
                                 padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
@@ -130,12 +145,6 @@ class OrgState extends State<OrgProfile> {
                                   onPressed: () {
                                     signOut();
                                   },
-                                  // child: Text("Sign Out",
-                                  //     style: TextStyle(
-                                  //         fontSize: 18,
-                                  //         fontWeight: FontWeight.bold,
-                                  //         color:
-                                  //             Theme.of(context).backgroundColor)),
                                 )),
                           ],),
                           
@@ -144,7 +153,7 @@ class OrgState extends State<OrgProfile> {
                           Container(
                               margin: const EdgeInsets.all(10.0),
                               width: MediaQuery.of(context).copyWith().size.width,
-                              height: MediaQuery.of(context).copyWith().size.height - 550,
+                              height: MediaQuery.of(context).copyWith().size.height - 580,
                               child: buildGrid(pets, context)),
                           ])),
                           
@@ -163,11 +172,25 @@ class OrgState extends State<OrgProfile> {
 }
 
 class _ProfileViewModel {
+  final String name;
+  final String description;
+  final String email;
+  final String phoneNumber;
+  final String photo;
+  final String address;
   final List<Map<String, dynamic>> pets;
 
-  _ProfileViewModel({this.pets});
+  _ProfileViewModel({this.pets, this.description, this.name, this.email, this.phoneNumber, this.photo, this.address});
 
   static _ProfileViewModel fromStore(Store<AppState> store) {
-    return new _ProfileViewModel(pets: store.state.userData['pets']);
+    return new _ProfileViewModel(
+      name: store.state.userData["name"],
+      description: store.state.userData["description"],
+      email: store.state.userData["email"],
+      phoneNumber: store.state.userData["phone number"],
+      photo: store.state.userData["photo"],
+      address: store.state.userData["address"],
+      pets: store.state.userData['pets']
+    );
   }
 }

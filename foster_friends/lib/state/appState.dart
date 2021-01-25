@@ -31,7 +31,6 @@ class UpdateUserAction {
 
   FirebaseUser get user => this._user;
   Map<String, dynamic> get userData => this._userData;
-
   UpdateUserAction(this._user, this._userData);
 }
 
@@ -43,7 +42,6 @@ ThunkAction<AppState> getFirebaseUser = (Store<AppState> store) async {
       store.dispatch(new UpdateUserAction(null, {}));
     } else {
       final data = await getUserData(u.uid);
-
       store.dispatch(new UpdateUserAction(u, data));
     }
   });
@@ -54,7 +52,6 @@ ThunkAction<AppState> getFirebaseUser = (Store<AppState> store) async {
 class UpdateQueryAction {
   List<Map<String, dynamic>> _results;
   List<Map<String, dynamic>> get results => this._results;
-
   UpdateQueryAction(this._results);
 }
 
@@ -66,13 +63,9 @@ ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery =
     'Type', 'Breed', 'Sex', 'Age', 'Shelter', 'Address'
     Dispatches new information unto QueryViewModel
   */
-  print("Search params are $params");
   List<Map<String, dynamic>> petInfo = await databaseQuery(params);
-
-  print("$petInfo");
   if (petInfo.isEmpty) {
     store.dispatch(new UpdateQueryAction([{}]));
-    print([{}].isEmpty);
   } else {
     store.dispatch(new UpdateQueryAction(petInfo));
   }

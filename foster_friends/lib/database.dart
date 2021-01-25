@@ -67,7 +67,7 @@ Future<void> pushProfile(
 void pushIndividualProfile(String userID, String phoneNumber, String email,
     String location, String name, String photoLink) async {
   DocumentReference ref = firestore.collection("users").document(userID);
-  print(photoLink);
+  // print(photoLink);
   await ref.setData({
     "email": email,
     "phone number": phoneNumber,
@@ -77,7 +77,7 @@ void pushIndividualProfile(String userID, String phoneNumber, String email,
     "pets": [],
     "photo": photoLink,
   }).then((value) => store.dispatch(getFirebaseUser));
-  print("User profile submitted");
+  // print("User profile submitted");
 }
 
 void pushOrganizationProfile(String userID, String address, String description,
@@ -94,7 +94,7 @@ void pushOrganizationProfile(String userID, String address, String description,
     "type": "organization",
     "pets": []
   });
-  print("Organization profile submitted");
+  // print("Organization profile submitted");
 }
 
 Future<bool> existsInDatabase() async {
@@ -127,14 +127,14 @@ Future<Map<String, dynamic>> getUserData(String uid) async {
   if(s.data['pets'] != null){
     for (var petID in s.data['pets']) {
       final pet = await pets.document(petID).get();
-      print("Pet is $pet");
+      // print("Pet is $pet");
       Map<String,dynamic> petMap = Map.from(pet.data);
       petMap['image'] = await getNetworkUrl(petMap['image']);
       petInfo.add(petMap);
     }
   }
 
-  print("Pet info is $petInfo");
+  // print("Pet info is $petInfo");
 
   return {
     'name': s.data['name'],
@@ -157,10 +157,10 @@ Future<List<Map<String, dynamic>>> databaseQuery(
   Query query = firestore.collection('pets');
   for (String elem in params.keys) {
     if (params[elem] != null && elem != 'distance') {
-      print("Searching for $elem " +
-          params[elem].runtimeType.toString() +
-          " " +
-          params[elem].toString());
+      // print("Searching for $elem " +
+      //     params[elem].runtimeType.toString() +
+      //     " " +
+      //     params[elem].toString());
       if (elem == 'minAge') {
         query = query.where('age', isGreaterThanOrEqualTo: params[elem]);
       } else if (elem == 'maxAge') {
@@ -172,6 +172,22 @@ Future<List<Map<String, dynamic>>> databaseQuery(
   }
   return filterByLocation(
       await query.getDocuments(), params['distance'], params.isNotEmpty);
+}
+
+Future<List<Map<String, dynamic>>> databaseQueryOrgInfo(Map<String, dynamic> params) async {
+  /* 
+    Queries based on given age range, type, breed, sex, and activity level.
+    Then determines which are at proper distance
+  */
+  Query query = firestore.collection('users');
+  for (String elem in params.keys) {
+    List<Map<String, dynamic>> orgInfo = [];
+    //Map<String, dynamic> pet = Map.from(snapshot.data);
+    //orgInfo.add(pet);
+  }
+  
+  //return filterByLocation(
+  //    await query.getDocuments(), params['distance'], params.isNotEmpty);
 }
 
 Future<List<Map<String, dynamic>>> filterByLocation(
@@ -278,5 +294,3 @@ void deletePet (String petID) async {
 
     });
   }
-    
-  
