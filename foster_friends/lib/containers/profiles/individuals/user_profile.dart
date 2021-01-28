@@ -35,16 +35,24 @@ class UserState extends State<UserProfile> {
   @override
   void initState() {
     final data = store.state.userData;
-    //print("User data is $data");
     name = data['name'];
     email = data['email'];
     phoneNumber = data['phone number'];
     photo = data['photo'];
     pets = data['pets'];
 
-   // print("Data is\n$name\n$description\n$phoneNumber\n$photo\n$pets");
-
     super.initState();
+  }
+
+  refresh() {
+    setState(() {
+      final data = store.state.userData;
+      name = data['name'];
+      email = data['email'];
+      phoneNumber = data['phone number'];
+      photo = data['photo'];
+      pets = data['pets'];
+    });
   }
 
   bool _anyAreNull() {
@@ -102,7 +110,7 @@ class UserState extends State<UserProfile> {
                                         color: Theme.of(context).backgroundColor)),
                               onPressed: () {
                                 //Navigator.pop(context);
-                                showDialog(context: context, builder: (BuildContext context) => EditIndividualProfile(data));
+                                showDialog(context: context, builder: (BuildContext context) => EditIndividualProfile(data,refresh));
                               })),
                               Padding(
                                 padding: EdgeInsets.fromLTRB(10, 10, 0, 0),

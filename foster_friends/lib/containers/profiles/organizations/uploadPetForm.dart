@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 // import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+// import 'package:multi_image_picker/multi_image_picker.dart';
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -47,9 +48,9 @@ class UploadPetFormState extends State<UploadPetForm> {
     var pos = await Geolocator()
             .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     setState(() {
-      _locationMessageCoordinate = "Coordinate Get!";
       petLocation1 = pos.latitude;
       petLocation2 = pos.longitude;
+      _locationMessageCoordinate = "Coordinate Get: "+petLocation1.toString() + ", "+petLocation2.toString();
     });
   }
 
@@ -59,7 +60,7 @@ class UploadPetFormState extends State<UploadPetForm> {
       //var temp = Firestore.instance.collection("organizations").snapshots();
       //_locationMessageAddress = temp.data.documents[user.uid]['address'];
       temp = store.state.userData["address"];
-      _locationMessageAddress = "Org Address Get!";
+      _locationMessageAddress = "Org Address Get: "+temp;
       petLocation3 = temp;
     });
   }
@@ -107,15 +108,46 @@ class UploadPetFormState extends State<UploadPetForm> {
     String fileName = basename(_image.path);
     petImage = fileName;
     StorageReference firebaseStorageRef =
-        FirebaseStorage.instance.ref().child(fileName);
+        FirebaseStorage.instance.ref().child(petImage);
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
+    print(petImage);
     await uploadTask.onComplete;
     setState(() {
-      print("Profile Picture uploaded");
+      // print("Profile Picture uploaded");
       Scaffold.of(context)
           .showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
     });
   }
+
+  // -------------------------- multiple photo -------------------------
+  // List<Asset> images = List<Asset>();
+  // String _error;
+  // Future<void> loadAssets() async {
+  //   setState(() {
+  //     images = List<Asset>();
+  //   });
+
+  //   List<Asset> resultList;
+  //   String error;
+
+  //   try {
+  //     resultList = await MultiImagePicker.pickImages(
+  //       maxImages: 300,
+  //     );
+  //   } on Exception catch (e) {
+  //     error = e.toString();
+  //   }
+
+  //   // If the widget was removed from the tree while the asynchronous platform
+  //   // message was in flight, we want to discard the reply rather than calling
+  //   // setState to update our non-existent appearance.
+  //   if (!mounted) return;
+
+  //   setState(() {
+  //     images = resultList;
+  //     if (error == null) _error = 'No Error Dectected';
+  //   });
+  // }
 
   // -------------------------- enable / disable SUBMIT button ----------------------------
   // bool _enabled = false;
@@ -266,7 +298,7 @@ class UploadPetFormState extends State<UploadPetForm> {
           }).then((value) => store.dispatch(getFirebaseUser));
         });
 
-        print("haro");
+        // print("haro");
         _showDialog();
       };
     }
@@ -538,26 +570,24 @@ class UploadPetFormState extends State<UploadPetForm> {
         },
         controller: petDescription,
       ),
-      Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-        Padding(
-          padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-          child: FlatButton(
-              color: color,
-              child: Text(_locationMessageCoordinate),
-              onPressed: () {
-                _getCurrentLocation();
-              }),
-        ),
-        Padding(
-          padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-          child: FlatButton(
-              color: color,
-              child: Text(_locationMessageAddress),
-              onPressed: () {
-                _getCurrentLocation2();
-              }),
-        )
-      ]),
+      Padding(
+        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+        child: FlatButton(
+            color: color,
+            child: Text(_locationMessageCoordinate),
+            onPressed: () {
+              _getCurrentLocation();
+            }),
+      ),
+      Padding(
+        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+        child: FlatButton(
+            color: color,
+            child: Text(_locationMessageAddress),
+            onPressed: () {
+              _getCurrentLocation2();
+            }),
+      ),
       SizedBox(
         height: 10,
       ),
@@ -605,6 +635,14 @@ class UploadPetFormState extends State<UploadPetForm> {
           ],
         )
       ]),
+      // SizedBox(
+      //   height: 10,
+      // ),
+      // FlatButton(
+      //   color: color,
+      //   child: Text("Upload images"),
+      //   onPressed: loadAssets
+      // ),
       Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
         Padding(
             padding: EdgeInsets.fromLTRB(0, 30, 30, 0),

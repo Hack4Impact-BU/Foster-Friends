@@ -47,7 +47,8 @@ class PetState extends State<PetProfile> {
         }
       }
     }
-    print("initial is $_isSelected");
+    
+    // print("initial is $_isSelected");
     super.initState();
   }
 
@@ -67,7 +68,6 @@ class PetState extends State<PetProfile> {
   @override
   Widget build(BuildContext context) {
     return Card(
-        // color: Colors.white,
         child: ListView(shrinkWrap: true, children: <Widget>[
       _header(),
       _summary(),
@@ -120,7 +120,7 @@ class PetState extends State<PetProfile> {
           visible: _isCorrectOrganization(),
           child: FlatButton(
               child: Text('Edit Pet Profile'),
-              color: Colors.black12,
+              color: Theme.of(context).buttonColor,
               onPressed: () {
                 Navigator.pop(context);
                 showDialog(context: context, builder: (BuildContext context) => EditPetProfile(data));
@@ -131,8 +131,8 @@ class PetState extends State<PetProfile> {
   }
 
   bool _isCorrectOrganization() {
-    if (store.state.user != null) if (data['organization'] ==
-        store.state.userData['name']) return true;
+    if (store.state.user != null)
+      if (data['orgId'] == store.state.user.uid) return true;
     return false;
   }
 

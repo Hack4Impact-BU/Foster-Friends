@@ -80,7 +80,6 @@ class EditPetState extends State<EditPetProfile> {
   }
 
   Map<String, dynamic> data;
-
   EditPetState(this.data);
 
   @override
@@ -96,7 +95,6 @@ class EditPetState extends State<EditPetProfile> {
 
     setState(() {
       _image = image;
-      print('Image Path $_image');
     });
   }
 
@@ -108,7 +106,6 @@ class EditPetState extends State<EditPetProfile> {
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
     await uploadTask.onComplete;
     setState(() {
-      print("Profile Picture uploaded");
       Scaffold.of(context)
           .showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
     });
@@ -417,7 +414,7 @@ class EditPetState extends State<EditPetProfile> {
                                   } else {
                                     if (type == "Others") {
                                       type = value;
-                                      print(type);
+                                      // print(type);
                                     }
                                   }
                                   return null;
@@ -556,7 +553,7 @@ class EditPetState extends State<EditPetProfile> {
                       children: <Widget>[
                         FlatButton(
                             child: Text('Submit'),
-                            color: Colors.black12,
+                            color: Theme.of(context).buttonColor,
                             onPressed: () {
                               saveEdit(context);
                             }),
@@ -569,7 +566,6 @@ class EditPetState extends State<EditPetProfile> {
   saveEdit(BuildContext context) async {
     DocumentReference ref =
         Firestore.instance.collection("pets").document(petID);
-    //uploadPic(context);
     await ref.updateData({
       "age": int.parse(petAge.text),
       "breed": selectedBreedType,
@@ -579,6 +575,7 @@ class EditPetState extends State<EditPetProfile> {
       "type": _selectedPetTypes,
       "image": image,
     });
+    store.dispatch(new UpdateUserAction(null,{}));
     store.dispatch(getFirebaseUser);
     Navigator.pop(context);
   }

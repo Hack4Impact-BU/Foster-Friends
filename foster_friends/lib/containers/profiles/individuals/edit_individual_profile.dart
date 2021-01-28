@@ -5,36 +5,30 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:foster_friends/database.dart';
-import './edit_individual_profile_form.dart';
-
-import 'package:foster_friends/containers/Home.dart';
-
-
+import 'package:redux/redux.dart';
 
 String name;
 String email;
 String phoneNumber;
 String photo;
-//String description;
 
 // Define a custom Form widget.
 class EditIndividualProfile extends StatefulWidget {
+
   final data;
-  EditIndividualProfile(this.data);
+  final refresh;
+  EditIndividualProfile(this.data,this.refresh);
 
   @override
-  EditIndividualState createState() {
-    return EditIndividualState(this.data);
-  }
+  EditIndividualState createState() => EditIndividualState(data,this.refresh);
 }
 
 
 
 class EditIndividualState extends State<EditIndividualProfile> {
   Map<String, dynamic> data;
-  EditIndividualState(this.data);
+  final Function refresh;
+  EditIndividualState(this.data,this.refresh);
 
   final _formKey = GlobalKey<FormState>();
   TextEditingController nameCon = TextEditingController();
@@ -44,7 +38,6 @@ class EditIndividualState extends State<EditIndividualProfile> {
   @override
   void initState() {
     super.initState();
-    //setting local variables
     final data = store.state.userData;
     name = data['name'];
     email = data['email'];
@@ -81,7 +74,7 @@ class EditIndividualState extends State<EditIndividualProfile> {
 
     setState(() {
       _image = image;
-      print('Image Path $_image');
+      // print('Image Path $_image');
     });
   }
 
@@ -93,10 +86,26 @@ class EditIndividualState extends State<EditIndividualProfile> {
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
     await uploadTask.onComplete;
     setState(() {
-      print("Profile Picture uploaded");
+      // print("Profile Picture uploaded");
       Scaffold.of(context)
           .showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
     });
+  }
+
+  void _saveEdit(BuildContext context) async {
+    DocumentReference ref =
+      Firestore.instance.collection("users").document(store.state.user.uid);
+    await ref.updateData({
+      "name": nameCon.text,
+      "email": emailCon.text,
+      "phone number": phoneNumCon.text,
+      "photo": photo,
+    });
+
+    store.dispatch(new UpdateUserAction(null,{}));
+    store.dispatch(getFirebaseUser);
+    widget.refresh();
+    Navigator.pop(context);
   }
 
   @override
@@ -108,17 +117,14 @@ class EditIndividualState extends State<EditIndividualProfile> {
         centerTitle: true,
         actions: <Widget>[
           FlatButton(
-            onPressed: (){
-              print("Pressed done");
-              saveEdit(context);
-              // Navigator.of(context).pop();
-            },
             child: Text("Done",
               style: TextStyle(fontSize: 20.0, color: Colors.red[500]),
-              ),
-            )
+            ),
+            onPressed: () {
+              _saveEdit(context);
+          }),
         ]
-        ),
+      ),
       body: ListView(
         children: <Widget>[
           Container(child: Column(
@@ -147,11 +153,10 @@ class EditIndividualState extends State<EditIndividualProfile> {
                     ),
                   ),
               ),
-              // SizedBox(height: 20,),
               Center(
                 child: FlatButton(
                   onPressed: (){
-                    print("Pressed change profile photo");
+                    // print("Pressed change profile photo");
                     getImage();
                   },
                   child: Text("Change Profile Photo",
@@ -159,7 +164,6 @@ class EditIndividualState extends State<EditIndividualProfile> {
                     ),
               ),),
               SizedBox(height: 10,),
-              // EditIndividualProfileForm(this.data),
               Form(
                 key: _formKey,
                 child: Container(
@@ -170,7 +174,6 @@ class EditIndividualState extends State<EditIndividualProfile> {
                       children: <Widget>[
                         TextFormField(
                           controller: nameCon,
-                          // initialValue: name,
                           style: TextStyle(fontSize:18),
                           decoration:
                             InputDecoration(
@@ -178,7 +181,6 @@ class EditIndividualState extends State<EditIndividualProfile> {
                               labelStyle: TextStyle(fontSize:20),
                               icon: Icon(Icons.person),
                               ),
-                              
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Please enter your name';
@@ -188,7 +190,6 @@ class EditIndividualState extends State<EditIndividualProfile> {
                         ),
                         TextFormField(
                           controller: emailCon,
-                          // initialValue: email,
                           style: TextStyle(fontSize:18),
                           keyboardType: TextInputType.emailAddress,
                           decoration: 
@@ -225,23 +226,6 @@ class EditIndividualState extends State<EditIndividualProfile> {
                             return null;
                           },
                         ),
-                        // TextFormField(
-                        //   initialValue: location,
-                        //   style: TextStyle(fontSize:18),
-                        //   decoration: 
-                        //     InputDecoration(
-                        //       labelText: "Location",
-                        //       labelStyle: TextStyle(fontSize:20),
-                        //       icon: Icon(Icons.location_city)
-                        //       ),
-                        //   validator: (value) {
-                        //     if (value.isEmpty) {
-                        //       return 'Please enter your location';
-                        //     }
-                        //     return null;
-                        //   },
-                        //   onChanged: (value) => setState(() => location = value),
-                        // ),
                       ],),
                     )
               ),
@@ -251,19 +235,27 @@ class EditIndividualState extends State<EditIndividualProfile> {
       
       ));
   } 
-  saveEdit(BuildContext context) async {
-    DocumentReference ref =
-      Firestore.instance.collection("users").document(store.state.user.uid);
-    await ref.updateData({
-      "name": nameCon.text,
-      "email": emailCon.text,
-      "phone number": phoneNumCon.text,
-    });
-    store.dispatch(getFirebaseUser);
-    Navigator.pop(context);
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Home()),
+}
+
+
+
+class _QueryViewModel {
+  final List<Map<String,dynamic>> pets;
+
+  _QueryViewModel({
+    this.pets
+  });
+
+  static _QueryViewModel fromStore(Store<AppState> store){
+    return new _QueryViewModel(
+      pets: store.state.query 
     );
   }
+
+}
+
+Widget loading() {
+  return Center(
+    child: CircularProgressIndicator(),
+  );
 }

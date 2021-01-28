@@ -45,7 +45,7 @@ class _EmailState extends State<Email> {
       try {
         if (_isLoginForm) {
           userId = await emailSignIn(_email, _password);
-          print('Signed in: $userId');
+          // print('Signed in: $userId');
 
           existsInDatabase().then((isFound) {
               if (!isFound) {
@@ -62,7 +62,7 @@ class _EmailState extends State<Email> {
           userId = await emailSignUp(_email, _password);
           //widget.auth.sendEmailVerification();
           //_showVerifyEmailSentDialog();
-          print('Signed up user: $userId');
+          // print('Signed up user: $userId');
         }
         setState(() {
           _isLoading = false;
@@ -113,7 +113,7 @@ class _EmailState extends State<Email> {
 
   @override
   Widget build(BuildContext context) {
-    print("hi");
+    // print("hi");
     return new Scaffold(
         appBar: new AppBar(
           title: new Text('Foster Friends'),
