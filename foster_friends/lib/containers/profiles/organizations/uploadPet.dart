@@ -56,4 +56,3 @@ class UploadPetState extends State<UploadPet> {
                     ]))]));
   }
 }
-

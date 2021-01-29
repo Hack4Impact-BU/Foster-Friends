@@ -95,7 +95,6 @@ class _LoginPageState extends State<LoginPage> {
     return OutlineButton(
       splashColor: Colors.grey,
       onPressed: () {
-        print('Pressed Email');
         Navigator.push(context,
             MaterialPageRoute(builder: (BuildContext context) => new Email()));
       },

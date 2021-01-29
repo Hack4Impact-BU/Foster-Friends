@@ -30,6 +30,7 @@ class _HomeState extends State<HomeState> {
   @override
   void initState() {
     store.dispatch(getFirebaseUser);
+    store.dispatch(getFirebaseUserPet);
     store.dispatch(makeQuery(store, {}));
 
     super.initState();

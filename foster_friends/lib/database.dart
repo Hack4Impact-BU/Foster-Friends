@@ -93,7 +93,7 @@ void pushOrganizationProfile(String userID, String address, String description,
     "photo": photoLink,
     "type": "organization",
     "pets": []
-  });
+  }).then((value) => store.dispatch(getFirebaseUser));
   // print("Organization profile submitted");
 }
 
@@ -134,8 +134,6 @@ Future<Map<String, dynamic>> getUserData(String uid) async {
     }
   }
 
-  // print("Pet info is $petInfo");
-
   return {
     'name': s.data['name'],
     'phone number': s.data['phone number'],
@@ -145,6 +143,22 @@ Future<Map<String, dynamic>> getUserData(String uid) async {
     'pets': petInfo,
     'type': s.data['type'],
     'description': s.data['description']
+  };
+}
+
+Future<Map<String, dynamic>> getUserPetData(String uid) async {
+  final ref = Firestore.instance; 
+  DocumentSnapshot s = await ref.collection("users").document(uid).get();
+
+  return {
+    'name': s.data['name'],
+    // 'phone number': s.data['phone number'],
+    // 'email': s.data['email'],
+    'address': s.data['address'],
+    // 'photo': await getNetworkUrl(s.data['photo']),
+    // 'pets': s.data['pets'],
+    // 'type': s.data['type'],
+    // 'description': s.data['description']
   };
 }
 
@@ -234,8 +248,6 @@ Future<Map<String, dynamic>> getPetData(String petID) async {
     'description': s.data['description'],
     'id': s.data['id'],
     'image': s.data['image'],
-    'orgAddress': s.data['orgAddress'],
-    'organization': s.data['organization'],
     'sex': s.data['sex'],
     'type': s.data['type'],
   };

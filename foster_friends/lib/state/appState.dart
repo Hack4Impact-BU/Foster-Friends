@@ -12,13 +12,15 @@ Geoflutterfire geo = Geoflutterfire();
 class AppState {
   FirebaseUser _user;
   Map<String, dynamic> _userData;
+  Map<String, dynamic> _userPetData;
   List<Map<String, dynamic>> _query;
 
   FirebaseUser get user => _user;
   Map<String, dynamic> get userData => _userData;
+  Map<String, dynamic> get userPetData => _userPetData;
   List<Map<String, dynamic>> get query => _query;
 
-  AppState(this._user, this._userData, this._query);
+  AppState(this._user, this._userData, this._userPetData, this._query);
 
   get index => null;
 }
@@ -36,7 +38,6 @@ class UpdateUserAction {
 
 // Async function that pulls user profile from database
 ThunkAction<AppState> getFirebaseUser = (Store<AppState> store) async {
-//  await signOut();
   FirebaseAuth.instance.currentUser().then((u) async {
     if (u == null) {
       store.dispatch(new UpdateUserAction(null, {}));
@@ -45,6 +46,27 @@ ThunkAction<AppState> getFirebaseUser = (Store<AppState> store) async {
       store.dispatch(new UpdateUserAction(u, data));
     }
   });
+};
+
+/* --------------------- USER PET --------------------- */
+// User information class
+class UpdateUserPetAction {
+  Map<String, dynamic> _userPetData;
+
+  Map<String, dynamic> get userPetData => this._userPetData;
+  UpdateUserPetAction(this._userPetData);
+}
+
+// Async function that pulls user profile from database
+ThunkActionWithExtraArgument<AppState, String> getFirebaseUserPet = (Store<AppState> store, String uid) async {
+    // print("uid");
+    // print(uid);
+    if (uid == null) {
+      store.dispatch(new UpdateUserPetAction({}));
+    } else {
+      final data = await getUserPetData(uid);
+      store.dispatch(new UpdateUserPetAction(data));
+    }
 };
 
 /* --------------------- QUERIES  --------------------- */
@@ -75,11 +97,15 @@ ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery =
 AppState reducer(AppState prev, dynamic action) {
   if (action is UpdateUserAction) {
     AppState newAppState =
-        new AppState(action.user, action.userData, prev._query);
+        new AppState(action.user, action.userData, prev.userPetData, prev._query);
+    return newAppState;
+  } else if (action is UpdateUserPetAction) {
+    AppState newAppState =
+        new AppState(prev.user, prev.userData, action.userPetData, prev._query);
     return newAppState;
   } else if (action is UpdateQueryAction) {
     AppState newAppState =
-        new AppState(prev.user, prev.userData, action.results);
+        new AppState(prev.user, prev.userData, prev.userPetData, action.results);
     return newAppState;
   } else {
     return prev;
@@ -88,4 +114,4 @@ AppState reducer(AppState prev, dynamic action) {
 
 /* --------------------- INITIALIZATION OF STORE  --------------------- */
 final store = new Store<AppState>(reducer,
-    initialState: new AppState(null, null, []), middleware: [thunkMiddleware]);
+    initialState: new AppState(null, null, null, []), middleware: [thunkMiddleware]);

@@ -6,18 +6,22 @@ import 'package:foster_friends/database.dart';
 // Define a custom Form widget.
 class PetProfile extends StatefulWidget {
   final data;
+  final userData;
+  
 
-  PetProfile(this.data);
+  PetProfile(this.data, this.userData);
 
   @override
   PetState createState() {
-    return PetState(this.data);
+    return PetState(this.data, this.userData);
   }
 }
 
 class PetState extends State<PetProfile> {
   Map<String, dynamic> data;
-  PetState(this.data);
+  Map<String, dynamic> userData;
+  Map<String, dynamic> petUser = store.state.userPetData;
+  PetState(this.data, this.userData);
 
   List<bool> _isSelected = [false];
 
@@ -47,8 +51,7 @@ class PetState extends State<PetProfile> {
         }
       }
     }
-    
-    // print("initial is $_isSelected");
+
     super.initState();
   }
 
@@ -60,20 +63,30 @@ class PetState extends State<PetProfile> {
           .dispatch(getFirebaseUser)
           .then((value) =>
               store.dispatch(new UpdateQueryAction(store.state.query))));
-    }
-
-    
+    }  
   }
 
+  bool _anyAreNull() {
+
+    return petUser['name'] == null ||
+        petUser['address'] == null;
+  }
+  
   @override
   Widget build(BuildContext context) {
-    return Card(
+    if (_anyAreNull()) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    } else {
+      return Card(
         child: ListView(shrinkWrap: true, children: <Widget>[
-      _header(),
-      _summary(),
-      Divider(color: Colors.grey),
-      _details()
-    ]));
+        _header(),
+        _summary(),
+        Divider(color: Colors.grey),
+        _details()
+      ]));
+    }
   }
 
   Widget _header() {
@@ -131,8 +144,9 @@ class PetState extends State<PetProfile> {
   }
 
   bool _isCorrectOrganization() {
-    if (store.state.user != null)
+    if (store.state.user != null) {
       if (data['orgId'] == store.state.user.uid) return true;
+    }
     return false;
   }
 
@@ -159,7 +173,7 @@ class PetState extends State<PetProfile> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Text("Organization", style: labelStyle),
-            Text(data['organization'], style: dataStyle)
+            Text(petUser['name'], style: dataStyle)
           ]),
       SizedBox(height: 20),
       Column(
@@ -187,7 +201,7 @@ class PetState extends State<PetProfile> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Text("Organization Address", style: labelStyle),
-            Text(data['orgAddress'], style: dataStyle)
+            Text(petUser['address'], style: dataStyle)
           ]),
     ]);
   }

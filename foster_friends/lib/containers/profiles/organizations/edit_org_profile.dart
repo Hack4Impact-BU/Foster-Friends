@@ -62,7 +62,6 @@ class EditOrgState extends State<EditOrgProfile> {
 
   @override
   void dispose() {
-    // store.dispatch(getFirebaseUser);
     super.dispose();
     nameCon.dispose();
     emailCon.dispose();
@@ -131,6 +130,7 @@ class EditOrgState extends State<EditOrgProfile> {
     });
     store.dispatch(new UpdateUserAction(null,{}));
     store.dispatch(getFirebaseUser);
+
     widget.refresh();
     Navigator.pop(context);
   }

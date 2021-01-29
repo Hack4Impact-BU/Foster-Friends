@@ -46,9 +46,6 @@ class OrgState extends State<OrgProfile> {
     pets = data['pets'];
     email = data['email'];
     address = data['address'];
-
-   // print("Data is\n$name\n$description\n$phoneNumber\n$photo\n$pets");
-
     super.initState();
   }
 
@@ -67,7 +64,6 @@ class OrgState extends State<OrgProfile> {
 
   bool _anyAreNull() {
     final data = store.state.userData;
-
     return data['name'] == null ||
         data['description'] == null ||
         data['phone number'] == null ||
@@ -154,7 +150,7 @@ class OrgState extends State<OrgProfile> {
                               margin: const EdgeInsets.all(10.0),
                               width: MediaQuery.of(context).copyWith().size.width,
                               height: MediaQuery.of(context).copyWith().size.height - 580,
-                              child: buildGrid(pets, context)),
+                              child: buildGrid(pets, context, data)),
                           ])),
                           
                           floatingActionButton: FloatingActionButton(

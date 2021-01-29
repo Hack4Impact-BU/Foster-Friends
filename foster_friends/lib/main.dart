@@ -22,7 +22,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final data = store.state.userData;
     return StoreProvider<AppState>(
       store: store,
       child: new MaterialApp(
@@ -31,85 +30,10 @@ class MyApp extends StatelessWidget {
           initialRoute: '/',
           routes: {
             '/': (context) => Home(),
-            // '/LogIn': (BuildContext context) => new LoginPage(),
-            // '/Redirect': (BuildContext context) => new Redirect(auth: new Auth()),
-            // '/SignUp': (BuildContext context) => new InputForm(),
-            // '/Form': (BuildContext context) => new InputForm(),
-            // '/UploadPet': (BuildContext context) => new UploadPet(),
-            // '/Org_Profile': (BuildContext context) => new OrgProfile(),
-            // '/User_Profile' : (BuildContext context) => new UserProfile(data),
-            //'/': (context) => OrgProfile(),
           }),
     );
   }
 }
-
-// class MyHomePage extends StatefulWidget {
-//   MyHomePage({Key key, this.title}) : super(key: key);
-
-//   final String title;
-
-//   @override
-//   _MyHomePageState createState() => new _MyHomePageState();
-// }
-
-// class _MyHomePageState extends State<MyHomePage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return new Scaffold(
-//       appBar: new AppBar(
-//         title: new Text(widget.title),
-//       ),
-//       body: new Center(
-//         child: new Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: <Widget>[
-//             StoreConnector<AppState, AppState>(
-//               converter: (store) => store.state,
-//               builder: (_, state) {
-//                 return new Text(
-//                   '${state.user}',
-//                   textAlign: TextAlign.center,
-//                   style: const TextStyle(fontSize: 20.0),
-//                 );
-//               },
-//             ),
-            // StoreConnector<AppState, GenerateUser>(
-            //   converter: (store) => () => store.dispatch(getFirebaseUser),
-            //   builder: (_, generateUserCallback) {
-            //     return new FlatButton(
-            //         color: Colors.lightBlue,
-            //         onPressed: generateUserCallback,
-            //         child: new Text("Get user"));
-            //   },
-            // ),
-//           ],
-//         ),
-//       ),
-//  // This trailing comma makes auto-formatting nicer for build methods.
-//     );
-//   }
-// }
-
-// void main() => runApp(MaterialApp(
-//   title: 'Navigation',
-
-//   ),
-
-//   initialRoute: '/Search',
-//   routes: {
-//     '/': (context) => MyApp(),
-//     '/LogIn': (BuildContext context) => new LoginPage(),
-//     // '/Redirect': (BuildContext context) => new Redirect(auth: new Auth()),
-//     '/SignUp': (BuildContext context) => new InputForm(),
-//     '/Search': (BuildContext context) => new Search(),
-//     '/Form': (BuildContext context) => new InputForm(),
-//     '/UploadPet': (BuildContext context) => new UploadPet(),
-//     '/Org_Profile' : (BuildContext context) => new OrgProfile(),
-//     '/Pet_Profile' : (BuildContext context) => new PetProfile(),
-//     // '/User_Profile' : (BuildContext context) => new UserProfile(),
-//   }
-// ));
 
 class TopWaveClipper extends CustomClipper<Path> {
   @override

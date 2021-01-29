@@ -73,6 +73,10 @@ class UserState extends State<UserProfile> {
             return Center(
               child: CircularProgressIndicator(),
             );
+          }  else if (store.state.userData == null){
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           } else {
             return Scaffold(
               body: SingleChildScrollView(
@@ -133,7 +137,7 @@ class UserState extends State<UserProfile> {
                               margin: const EdgeInsets.all(10.0),
                               width: MediaQuery.of(context).copyWith().size.width,
                               height: MediaQuery.of(context).copyWith().size.height - 500,
-                              child: buildGrid(pets, context)),
+                              child: buildGrid(pets, context, data)),
                         ]))));
           }
         });

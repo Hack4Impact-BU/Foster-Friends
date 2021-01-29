@@ -27,7 +27,7 @@ class _Results extends State<Results> {
         }
         else {
           if(store.state.query.first.isNotEmpty) {
-            return buildGrid(store.state.query, context);
+            return buildGrid(store.state.query, context, {});
           }
           else
             return new Text("No results found", textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.bold),);

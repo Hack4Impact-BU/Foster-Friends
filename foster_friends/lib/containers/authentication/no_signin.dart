@@ -18,7 +18,6 @@ class NoSignIn extends StatelessWidget {
         ),
         RaisedButton(
           onPressed: () {
-            print('Going to sign in');
             Navigator.push(
                 context,
                 MaterialPageRoute(

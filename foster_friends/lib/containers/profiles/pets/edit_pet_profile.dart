@@ -27,8 +27,6 @@ String type;
 String description;
 int age;
 String petID;
-String organization;
-String orgAddress;
 String activityLevel;
 List pets = [];
 
@@ -67,8 +65,6 @@ class EditPetState extends State<EditPetProfile> {
     age = data['age'];
     image = data['image'];
     petID = data['id'];
-    organization = data['organization'];
-    orgAddress = data['orgAddress'];
     activityLevel = data['activityLevel'];
 
     //setting initial text field values
@@ -84,7 +80,6 @@ class EditPetState extends State<EditPetProfile> {
 
   @override
   void dispose() {
-    // store.dispatch(getFirebaseUser);
     super.dispose();
   }
 
@@ -281,17 +276,16 @@ class EditPetState extends State<EditPetProfile> {
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
                                             FlatButton(
-                                              child: Text('Yes'),
+                                              child: Text('No'),
                                               onPressed: () {
-                                                deletePet(petID);
-
-                                                Navigator.pop(context);
                                                 Navigator.pop(context);
                                               },
                                             ),
                                             FlatButton(
-                                              child: Text('No'),
+                                              child: Text('Yes'),
                                               onPressed: () {
+                                                deletePet(petID);
+                                                Navigator.pop(context);
                                                 Navigator.pop(context);
                                               },
                                             ),
@@ -576,6 +570,7 @@ class EditPetState extends State<EditPetProfile> {
       "image": image,
     });
     store.dispatch(new UpdateUserAction(null,{}));
+    store.dispatch(new UpdateUserPetAction({}));
     store.dispatch(getFirebaseUser);
     Navigator.pop(context);
   }

@@ -51,7 +51,6 @@ class EditIndividualState extends State<EditIndividualProfile> {
 
   @override
   void dispose() {
-    // store.dispatch(getFirebaseUser);
     super.dispose();
     nameCon.dispose();
     emailCon.dispose();
