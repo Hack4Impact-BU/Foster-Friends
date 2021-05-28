@@ -32,7 +32,7 @@ dependencies:
   # For example, to use Firebase Authentication and Cloud Firestore
   firebase_auth: ^0.14.0+5
   firebase_storage: ^3.0.10
-  cloud_firestore: ^0.13.0+1
+  cloud_firestore: ^0.13.2+1
   google_sign_in: ^4.1.1
   geolocator: ^5.3.1
   geoflutterfire: ^2.1.0
