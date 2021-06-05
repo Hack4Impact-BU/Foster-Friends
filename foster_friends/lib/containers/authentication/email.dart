@@ -48,16 +48,17 @@ class _EmailState extends State<Email> {
           // print('Signed in: $userId');
 
           existsInDatabase().then((isFound) {
-              if (!isFound) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => new InputForm()));
-              } else{
-                store.dispatch(getFirebaseUser);
-              }
-            });
-        
+            if (!isFound) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => new InputForm()));
+              // Navigator.of(context).pop();
+            } else {
+              store.dispatch(getFirebaseUser);
+              Navigator.of(context).pop();
+            }
+          });
         } else {
           userId = await emailSignUp(_email, _password);
           //widget.auth.sendEmailVerification();
@@ -69,11 +70,10 @@ class _EmailState extends State<Email> {
         });
 
         setState(() {
-          if(!_isLoginForm) {
+          if (!_isLoginForm) {
             _isLoginForm = true;
           }
         });
-
       } catch (e) {
         print('Error: $e');
         setState(() {
@@ -105,9 +105,10 @@ class _EmailState extends State<Email> {
       _isLoginForm = !_isLoginForm;
     });
   }
+
   void togglePass(bool hide) {
     setState(() {
-      _hidePass= !_hidePass;
+      _hidePass = !_hidePass;
     });
   }
 
@@ -192,8 +193,9 @@ class _EmailState extends State<Email> {
             _isLoading = false;
             return 'Please enter your email';
           }
-          RegExp email = new RegExp(".+@[^.]+\.[^.]{2,}"); // Must be a valid email address, including a prefix, @, and domain with one period.  
-          if(!email.hasMatch(value)) {
+          RegExp email = new RegExp(
+              ".+@[^.]+\.[^.]{2,}"); // Must be a valid email address, including a prefix, @, and domain with one period.
+          if (!email.hasMatch(value)) {
             _isLoading = false;
             return "Must be a valid email address";
           }
@@ -208,7 +210,7 @@ class _EmailState extends State<Email> {
   }
 
   Widget showConfirmEmailInput() {
-    if(!_isLoginForm) {
+    if (!_isLoginForm) {
       return Padding(
         padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
         child: new TextFormField(
@@ -226,11 +228,11 @@ class _EmailState extends State<Email> {
               _isLoading = false;
               return 'Please confirm your email';
             }
-            if(_emailMatch.length > 0 && value != _emailMatch) {
-                _isLoading = false;
-                return 'Emails must match';
+            if (_emailMatch.length > 0 && value != _emailMatch) {
+              _isLoading = false;
+              return 'Emails must match';
             }
-              return null;
+            return null;
           },
           onSaved: (value) {
             _email = value.trim();
@@ -239,7 +241,7 @@ class _EmailState extends State<Email> {
       );
     }
     return SizedBox(height: 0);
-  }  
+  }
 
   Widget showPasswordInput() {
     return Padding(
@@ -264,25 +266,30 @@ class _EmailState extends State<Email> {
           RegExp lower = new RegExp(".*[a-z].*");
           RegExp upper = new RegExp(".*[A-Z].*");
           RegExp nums = new RegExp(".*[0-9].*");
-          RegExp special = new RegExp(".*[\x21-\x2F\x3A-\x40\x5B-\x60\x7B-\x7E].*");
-          if(value.length > 7) {
+          RegExp special =
+              new RegExp(".*[\x21-\x2F\x3A-\x40\x5B-\x60\x7B-\x7E].*");
+          if (value.length > 7) {
             met++;
           }
-          if(lower.hasMatch(value)) {
+          if (lower.hasMatch(value)) {
             met++;
           }
-          if(upper.hasMatch(value)) {
+          if (upper.hasMatch(value)) {
             met++;
           }
-          if(nums.hasMatch(value)) {
+          if (nums.hasMatch(value)) {
             met++;
           }
-          if(special.hasMatch(value)) {
+          if (special.hasMatch(value)) {
             met++;
           }
-          if(met != reqs) {
+          if (met != reqs) {
             _isLoading = false;
-            return 'Password must be at least 8 characters, \n and include at least one upper case letter, \n lower case letter, number, and special character. \n' + (reqs - met).toString() + ' of the ' + reqs.toString() + ' requirements are unmet.';
+            return 'Password must be at least 8 characters, \n and include at least one upper case letter, \n lower case letter, number, and special character. \n' +
+                (reqs - met).toString() +
+                ' of the ' +
+                reqs.toString() +
+                ' requirements are unmet.';
           }
           _passMatch = value;
           return null;
@@ -293,7 +300,7 @@ class _EmailState extends State<Email> {
   }
 
   Widget showConfirmPasswordInput() {
-    if(!_isLoginForm) {
+    if (!_isLoginForm) {
       return Padding(
         padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
         child: new TextFormField(
@@ -311,7 +318,7 @@ class _EmailState extends State<Email> {
               _isLoading = false;
               return 'Please confirm your password';
             }
-            if(_passMatch.length > 0 && value != _passMatch) {
+            if (_passMatch.length > 0 && value != _passMatch) {
               _isLoading = false;
               return 'Passwords must match';
             }
@@ -327,8 +334,7 @@ class _EmailState extends State<Email> {
 
   Widget showTertiaryButton() {
     return new CheckboxListTile(
-        title: new Text(
-            'Show password',
+        title: new Text('Show password',
             style: new TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300)),
         value: !_hidePass,
         onChanged: togglePass);

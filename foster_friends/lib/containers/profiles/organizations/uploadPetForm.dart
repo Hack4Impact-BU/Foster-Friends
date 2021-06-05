@@ -628,18 +628,6 @@ class UploadPetFormState extends State<UploadPetForm> {
                 padding: EdgeInsets.fromLTRB(0, 30, 30, 0),
                 child: Center(
                     child: RaisedButton(
-                  color: Theme.of(context).buttonColor,
-                  onPressed: _onPressed,
-                  child: Text("SUBMIT",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).backgroundColor)),
-                ))),
-            Padding(
-                padding: EdgeInsets.fromLTRB(30, 30, 0, 0),
-                child: Center(
-                    child: RaisedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -649,7 +637,19 @@ class UploadPetFormState extends State<UploadPetForm> {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       )),
-                )))
+                ))),
+            Padding(
+                padding: EdgeInsets.fromLTRB(30, 30, 0, 0),
+                child: Center(
+                    child: RaisedButton(
+                  color: Theme.of(context).buttonColor,
+                  onPressed: _onPressed,
+                  child: Text("SUBMIT",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).backgroundColor)),
+                ))),
           ]),
         ]);
   }
