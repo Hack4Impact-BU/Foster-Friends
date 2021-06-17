@@ -61,6 +61,7 @@ class UploadPetFormState extends State<UploadPetForm> {
   final petSex = TextEditingController();
   final petActivityLevel = TextEditingController();
   final petType = TextEditingController();
+  final otherTypeString = TextEditingController();
   final otherBreed = TextEditingController();
   final petOrganization = TextEditingController();
   var petImage;
@@ -72,7 +73,6 @@ class UploadPetFormState extends State<UploadPetForm> {
   static List<String> _breedType = [];
   final List<String> selectedBreedType = <String>[];
   String _selectedPetTypes;
-  String _selectedBreedTypes;
   String _selectedSex;
   String _selectedActivityLevel;
   List<String> _sex = ['Female', 'Male'];
@@ -241,7 +241,7 @@ class UploadPetFormState extends State<UploadPetForm> {
     var _onPressed;
     if (petName.text != "" &&
         petAge.text != "" &&
-        petType.text != "" &&
+        (petType.text != "" || otherTypeString.text != "") &&
         selectedBreedType.isNotEmpty &&
         petSex.text != "" &&
         petActivityLevel.text != "" &&
@@ -258,7 +258,8 @@ class UploadPetFormState extends State<UploadPetForm> {
           "id": petId,
           "orgId": store.state.user.uid,
           "age": int.parse(petAge.text),
-          "breed": petBreed,
+          "type": petType.text == "" ? otherTypeString.text : petType.text,
+          "breed": selectedBreedType,
           "description": petDescription.text,
           "latitude": petLocation1,
           "lognitude": petLocation2,
@@ -266,7 +267,6 @@ class UploadPetFormState extends State<UploadPetForm> {
           "name": petName.text,
           "sex": petSex.text,
           "activityLevel": petActivityLevel.text,
-          "type": petType.text,
           "organization": store.state.userData["name"],
           "image": petImage,
         }).then((value) {
@@ -280,7 +280,7 @@ class UploadPetFormState extends State<UploadPetForm> {
     }
 
     void _showDialogAdd(addnew) {
-      if (petType.text != "" && addnew != "") {
+      if ((otherTypeString.text != "" || petType.text != "") && addnew != "") {
         showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -305,14 +305,13 @@ class UploadPetFormState extends State<UploadPetForm> {
                 ],
               );
             });
-      } else if (petType.text == "") {
+      } else if (otherTypeString.text == "") {
         showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
                 content: new Text("Please select a pet type first"),
                 actions: <Widget>[
-                  // usually buttons at the bottom of the dialog
                   new FlatButton(
                     child: new Text("Back"),
                     onPressed: () {
@@ -378,7 +377,6 @@ class UploadPetFormState extends State<UploadPetForm> {
                       Text('Select a Pet Type *'), // Not necessary for Option 1
                   value: _selectedPetTypes,
                   onChanged: (newValue) {
-                    _selectedBreedTypes = null;
                     selectedBreedType.removeRange(0, selectedBreedType.length);
                     setState(() {
                       petType.text = newValue;
@@ -412,15 +410,10 @@ class UploadPetFormState extends State<UploadPetForm> {
                       decoration: const InputDecoration(
                         hintText: 'If "Others", please specify',
                       ),
+                      controller: otherTypeString,
                       validator: (value) {
-                        if (value.isEmpty) {
-                          return '';
-                        } else {
-                          if (petType.text == "Others") {
-                            petType.text = value;
-                            controller:
-                            petType;
-                          }
+                        if (_selectedPetTypes == "Others") {
+                          otherTypeString.text = value;
                         }
                         return null;
                       },
@@ -430,10 +423,12 @@ class UploadPetFormState extends State<UploadPetForm> {
             Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: DropdownButton(
-                hint: Text(
-                    'Select Breed Type(s) *'), // Not necessary for Option 1
-                value:
-                    selectedBreedType.isEmpty ? null : selectedBreedType.last,
+                hint: Text('Select Breed Type(s) *'),
+                value: selectedBreedType.isEmpty
+                    ? null
+                    : _breedType.contains(selectedBreedType.last)
+                        ? selectedBreedType.last
+                        : null,
                 onChanged: (String newValue) {
                   setState(() {
                     if (selectedBreedType.contains(newValue)) {
@@ -492,7 +487,6 @@ class UploadPetFormState extends State<UploadPetForm> {
                 child: RaisedButton(
                     color: color,
                     child: Text("Add"),
-                    //onPressed: _showAdd,
                     onPressed: () {
                       String add = otherBreed.text;
                       _showDialogAdd(add);
