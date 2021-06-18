@@ -31,23 +31,24 @@ String activityLevel;
 List pets = [];
 
 //for current dropdown item
-String _selectedPetTypes = type;
-String _selectedSex = sex;
-String _selectedActivityLevel = activityLevel;
+String _selectedPetTypes;
+String _selectedSex;
+String _selectedActivityLevel;
 
 List<String> _petTypes = ['Dog', 'Cat', 'Others'];
 List<String> _sex = ['Female', 'Male'];
 List<String> _activity = ['High', 'Medium', 'Low'];
 List<String> _breedType = [];
 List<String> selectedBreedType;
-List<String> _dogBreed = ['Labrador Retrievers', 'Golden Retrievers'];
+List<String> _dogBreed = ['Labrador Retriever', 'Golden Retriever'];
+List<String> _dogBreedTemp;
 List<String> _catBreed = ['Maine Coon', 'Bengal', 'Siamese'];
+List<String> _catBreedTemp;
 final otherTypeString = TextEditingController();
 final otherBreed = TextEditingController();
 
 class EditPetState extends State<EditPetProfile> {
   final petAge = TextEditingController();
-  //final petBreed = TextEditingController();
   final petDescription = TextEditingController();
   final petName = TextEditingController();
 
@@ -64,13 +65,24 @@ class EditPetState extends State<EditPetProfile> {
     image = data['image'];
     petID = data['id'];
     activityLevel = data['activityLevel'];
+    _selectedSex = sex;
+    _selectedPetTypes = type;
+    _selectedActivityLevel = activityLevel;
+    selectedBreedType = List.from(breed);
+    _dogBreedTemp = List.from(_dogBreed);
+    _catBreedTemp = List.from(_catBreed);
 
     //setting initial text field values
     petName.text = name;
     petDescription.text = description;
     petAge.text = age.toString();
-    //petBreed.text = breed;
-    selectedBreedType = breed;
+    if (type == "Dog") {
+      _dogBreedTemp.removeWhere((item) => breed.contains(item));
+      _breedType = _dogBreedTemp;
+    } else if (type == "Cat") {
+      _catBreedTemp.removeWhere((item) => breed.contains(item));
+      _breedType = _catBreedTemp;
+    }
   }
 
   Map<String, dynamic> data;
@@ -212,7 +224,7 @@ class EditPetState extends State<EditPetProfile> {
                 ],
               );
             });
-      } else if (otherTypeString == "") {
+      } else if (otherTypeString.text == "") {
         showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -251,7 +263,14 @@ class EditPetState extends State<EditPetProfile> {
 
     return Container(
         child: Scaffold(
-            appBar: AppBar(),
+            appBar: AppBar(
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back, color: Colors.black),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
             body: ListView(children: <Widget>[
               Container(
                 margin: EdgeInsets.all(20),
@@ -299,13 +318,6 @@ class EditPetState extends State<EditPetProfile> {
                                 style: TextStyle(color: Colors.red),
                               ),
                             )
-
-                            // IconButton(
-                            //   icon: Icon(Icons.delete_outline,color: Colors.red),
-                            //   iconSize: 20,
-                            //   onPressed: null
-
-                            // ),
                           ]),
                       SizedBox(
                         height: 20.0,
@@ -376,8 +388,13 @@ class EditPetState extends State<EditPetProfile> {
                                       : "Others",
                                   elevation: 16,
                                   onChanged: (String newValue) {
+                                    selectedBreedType.removeRange(
+                                        0, selectedBreedType.length);
                                     setState(() {
-                                      if (newValue == "Dog") {
+                                      if (newValue == _selectedPetTypes) {
+                                        _selectedPetTypes = newValue;
+                                        _breedType = [];
+                                      } else if (newValue == "Dog") {
                                         _selectedPetTypes = newValue;
                                         _breedType = _dogBreed;
                                       } else if (newValue == "Cat") {
@@ -415,56 +432,58 @@ class EditPetState extends State<EditPetProfile> {
                                       },
                                     ))),
                           ]),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              child: DropdownButton(
-                                hint: Text(
-                                    'Select Breed Type(s) *'), // Not necessary for Option 1
-                                value: selectedBreedType.isEmpty
-                                    ? null
-                                    : _breedType
-                                            .contains(selectedBreedType.last)
-                                        ? selectedBreedType.last
-                                        : null,
-                                onChanged: (String newValue) {
-                                  setState(() {
-                                    if (selectedBreedType.contains(newValue)) {
-                                      selectedBreedType.remove(newValue);
-                                    } else {
-                                      selectedBreedType.add(newValue);
-                                    }
-                                    breed = selectedBreedType;
-                                  });
-                                },
-                                items: _breedType.map((location) {
-                                  return DropdownMenuItem<String>(
-                                    value: location,
-                                    child: Row(children: <Widget>[
-                                      Icon(
-                                        Icons.check,
-                                        color:
-                                            selectedBreedType.contains(location)
-                                                ? Colors.black
-                                                : Colors.transparent,
-                                      ),
-                                      Text(location)
-                                    ]),
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-                            Padding(
-                                padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                child: FlatButton(
-                                    color: color,
-                                    child: maxWidthChild,
-                                    onPressed: () {
-                                      showSelectedBreed();
-                                    }))
-                          ]),
+                      (_breedType != [])
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                    child: DropdownButton(
+                                      hint: Text(
+                                          'Select Breed Type(s) *'), // Not necessary for Option 1
+                                      value: selectedBreedType.isEmpty
+                                          ? null
+                                          : _breedType.contains(
+                                                  selectedBreedType.last)
+                                              ? selectedBreedType.last
+                                              : null,
+                                      onChanged: (String newValue) {
+                                        setState(() {
+                                          if (selectedBreedType
+                                              .contains(newValue)) {
+                                            selectedBreedType.remove(newValue);
+                                          } else {
+                                            selectedBreedType.add(newValue);
+                                          }
+                                        });
+                                      },
+                                      items: _breedType.map((location) {
+                                        return DropdownMenuItem<String>(
+                                          value: location,
+                                          child: Row(children: <Widget>[
+                                            Icon(
+                                              Icons.check,
+                                              color: selectedBreedType
+                                                      .contains(location)
+                                                  ? Colors.black
+                                                  : Colors.transparent,
+                                            ),
+                                            Text(location)
+                                          ]),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                  Padding(
+                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                      child: FlatButton(
+                                          color: color,
+                                          child: maxWidthChild,
+                                          onPressed: () {
+                                            showSelectedBreed();
+                                          }))
+                                ])
+                          : SizedBox(),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
@@ -578,7 +597,7 @@ class EditPetState extends State<EditPetProfile> {
       "description": petDescription.text,
       "name": petName.text,
       "sex": sex,
-      "type": type == "" ? otherTypeString : type,
+      "type": type == "" ? otherTypeString.text : type,
       "image": image,
     });
     store.dispatch(new UpdateUserAction(null, {}));

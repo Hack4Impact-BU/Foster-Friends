@@ -7,7 +7,6 @@ import 'package:foster_friends/database.dart';
 class PetProfile extends StatefulWidget {
   final data;
   final userData;
-  
 
   PetProfile(this.data, this.userData);
 
@@ -41,9 +40,8 @@ class PetState extends State<PetProfile> {
   @override
   void initState() {
     String petID = data['id'];
-    String str_userState = store.state.userData.toString();
-    if (str_userState != "{}") {
-      List<Map<String, dynamic>> favPets = store.state.userData['pets'];
+    if (store.state.userData.toString() != "{}") {
+      final favPets = store.state.userData['pets'];
 
       for (Map pet in favPets) {
         if (pet['id'] == petID) {
@@ -51,27 +49,26 @@ class PetState extends State<PetProfile> {
         }
       }
     }
-
     super.initState();
   }
 
   @override
   void dispose() async {
     super.dispose();
-    if (store.state.user == null || ( store.state.user != null && store.state.userData['type'] != 'organization')) {
+    if (store.state.user == null ||
+        (store.state.user != null &&
+            store.state.userData['type'] != 'organization')) {
       await toggleFavPet(data['id'], _isSelected[0]).then((value) => store
           .dispatch(getFirebaseUser)
           .then((value) =>
               store.dispatch(new UpdateQueryAction(store.state.query))));
-    }  
+    }
   }
 
   bool _anyAreNull() {
-
-    return petUser['name'] == null ||
-        petUser['address'] == null;
+    return petUser['name'] == null || petUser['address'] == null;
   }
-  
+
   @override
   Widget build(BuildContext context) {
     if (_anyAreNull()) {
@@ -80,7 +77,7 @@ class PetState extends State<PetProfile> {
       );
     } else {
       return Card(
-        child: ListView(shrinkWrap: true, children: <Widget>[
+          child: ListView(shrinkWrap: true, children: <Widget>[
         _header(),
         _summary(),
         Divider(color: Colors.grey),
@@ -136,7 +133,9 @@ class PetState extends State<PetProfile> {
               color: Theme.of(context).buttonColor,
               onPressed: () {
                 Navigator.pop(context);
-                showDialog(context: context, builder: (BuildContext context) => EditPetProfile(data));
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) => EditPetProfile(data));
               }),
         ),
       ],
@@ -207,7 +206,9 @@ class PetState extends State<PetProfile> {
   }
 
   Widget _showFavorite() {
-    if (store.state.user == null || ( store.state.user != null && store.state.userData['type'] != 'organization')) {
+    if (store.state.user == null ||
+        (store.state.user != null &&
+            store.state.userData['type'] != 'organization')) {
       return ToggleButtons(
         children: [Icon(Icons.favorite)],
         isSelected: _isSelected,
