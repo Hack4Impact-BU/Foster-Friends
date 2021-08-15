@@ -59,14 +59,14 @@ class UpdateUserPetAction {
 
 // Async function that pulls user profile from database
 ThunkActionWithExtraArgument<AppState, String> getFirebaseUserPet = (Store<AppState> store, String uid) async {
-    // print("uid");
-    // print(uid);
-    if (uid == null) {
-      store.dispatch(new UpdateUserPetAction({}));
-    } else {
-      final data = await getUserPetData(uid);
-      store.dispatch(new UpdateUserPetAction(data));
-    }
+  // print("uid");
+  // print(uid);
+  if (uid == null) {
+    store.dispatch(new UpdateUserPetAction({}));
+  } else {
+    final data = await getUserPetData(uid);
+    store.dispatch(new UpdateUserPetAction(data));
+  }
 };
 
 /* --------------------- QUERIES  --------------------- */
@@ -78,8 +78,7 @@ class UpdateQueryAction {
 }
 
 // async function that pulls data based on query from database
-ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery =
-    (Store<AppState> store, Map<String, dynamic> params) async {
+ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery = (Store<AppState> store, Map<String, dynamic> params) async {
   /* 
     Firebase Query of:
     'Type', 'Breed', 'Sex', 'Age', 'Shelter', 'Address'
@@ -96,16 +95,13 @@ ThunkActionWithExtraArgument<AppState, Map<String, dynamic>> makeQuery =
 /* --------------------- REDUCER: HANDLES ACTION TYPES  --------------------- */
 AppState reducer(AppState prev, dynamic action) {
   if (action is UpdateUserAction) {
-    AppState newAppState =
-        new AppState(action.user, action.userData, prev.userPetData, prev._query);
+    AppState newAppState = new AppState(action.user, action.userData, prev.userPetData, prev._query);
     return newAppState;
   } else if (action is UpdateUserPetAction) {
-    AppState newAppState =
-        new AppState(prev.user, prev.userData, action.userPetData, prev._query);
+    AppState newAppState = new AppState(prev.user, prev.userData, action.userPetData, prev._query);
     return newAppState;
   } else if (action is UpdateQueryAction) {
-    AppState newAppState =
-        new AppState(prev.user, prev.userData, prev.userPetData, action.results);
+    AppState newAppState = new AppState(prev.user, prev.userData, prev.userPetData, action.results);
     return newAppState;
   } else {
     return prev;
@@ -113,5 +109,4 @@ AppState reducer(AppState prev, dynamic action) {
 }
 
 /* --------------------- INITIALIZATION OF STORE  --------------------- */
-final store = new Store<AppState>(reducer,
-    initialState: new AppState(null, null, null, []), middleware: [thunkMiddleware]);
+final store = new Store<AppState>(reducer, initialState: new AppState(null, null, null, []), middleware: [thunkMiddleware]);
