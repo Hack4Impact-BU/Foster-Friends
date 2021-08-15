@@ -5,8 +5,6 @@ import 'package:foster_friends/containers/authentication/email.dart';
 import 'package:foster_friends/containers/authentication/form.dart';
 import 'package:foster_friends/database.dart';
 import 'package:foster_friends/state/appState.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:http/http.dart' as http;
 
 // Current default page, includes google, email, and gmail sign in
 
@@ -29,16 +27,15 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: Platform.isIOS
                 ? <Widget>[
-                    SizedBox(height: 25),
+                    SizedBox(height: MediaQuery.of(context).size.width < MediaQuery.of(context).size.height ? 25 : 10),
                     _esignInButton(),
                     SizedBox(height: 25),
                     _gsignInButton(),
                     SizedBox(height: 25),
                     _asignInButton(),
-                    Padding(padding: EdgeInsets.fromLTRB(0, 50, 0, 0), child: showErrorMessage()),
                   ]
                 : <Widget>[
-                    SizedBox(height: 25),
+                    SizedBox(height: MediaQuery.of(context).size.width < MediaQuery.of(context).size.height ? 25 : 10),
                     _esignInButton(),
                     SizedBox(height: 25),
                     _gsignInButton(),
