@@ -3,9 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>366301121640-fd5a8oin1gr11q6c0nggfrdgreqe7oa6.apps.googleusercontent.com</string>
+	<string>366301121640-f3o7ravj7komle7jbhnkrehl923tp9lo.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.366301121640-fd5a8oin1gr11q6c0nggfrdgreqe7oa6</string>
+	<string>com.googleusercontent.apps.366301121640-f3o7ravj7komle7jbhnkrehl923tp9lo</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>366301121640-ej7j8nho2gvpq5d7sn0d44enecc0uomt.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyAYT0dVGzSYICNChRPO4pflDuStd9HaIq4</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,26 +15,24 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.h4ibu.fosterFriends</string>
+	<string>com.h4ibu.fosterFriendsInc</string>
 	<key>PROJECT_ID</key>
 	<string>foster-friends</string>
 	<key>STORAGE_BUCKET</key>
 	<string>foster-friends.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_GCM_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:366301121640:ios:f59f971f29419c974effdd</string>
+	<string>1:366301121640:ios:7d92335c5ce7cebc4effdd</string>
 	<key>DATABASE_URL</key>
 	<string>https://foster-friends.firebaseio.com</string>
-	<key>CFBundleIdentifier</key>
-	<string></string>
 </dict>
 </plist>

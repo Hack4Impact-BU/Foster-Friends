@@ -1,9 +1,12 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:foster_friends/containers/authentication/authentication.dart';
 import 'package:foster_friends/containers/authentication/email.dart';
 import 'package:foster_friends/containers/authentication/form.dart';
 import 'package:foster_friends/database.dart';
 import 'package:foster_friends/state/appState.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:http/http.dart' as http;
 
 // Current default page, includes google, email, and gmail sign in
 
@@ -24,16 +27,56 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(height: 50),
-              _gsignInButton(),
-              SizedBox(height: 25),
-              _esignInButton(),
-              Padding(
-                  padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
-                  child: showErrorMessage()),
-            ],
+            children: Platform.isIOS
+                ? <Widget>[
+                    SizedBox(height: 25),
+                    _esignInButton(),
+                    SizedBox(height: 25),
+                    _gsignInButton(),
+                    SizedBox(height: 25),
+                    _asignInButton(),
+                    Padding(padding: EdgeInsets.fromLTRB(0, 50, 0, 0), child: showErrorMessage()),
+                  ]
+                : <Widget>[
+                    SizedBox(height: 25),
+                    _esignInButton(),
+                    SizedBox(height: 25),
+                    _gsignInButton(),
+                    Padding(padding: EdgeInsets.fromLTRB(0, 50, 0, 0), child: showErrorMessage()),
+                  ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _esignInButton() {
+    return OutlineButton(
+      splashColor: Colors.grey,
+      onPressed: () {
+        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => new Email()));
+      },
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+      highlightElevation: 0,
+      borderSide: BorderSide(color: Colors.grey),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(Icons.email, size: 35.0),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(
+                'Sign in with Email',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.grey,
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -50,11 +93,8 @@ class _LoginPageState extends State<LoginPage> {
             existsInDatabase().then((isFound) {
               print("Is found $isFound");
               if (!isFound) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => new InputForm()));
-              } else{
+                Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => new InputForm()));
+              } else {
                 store.dispatch(getFirebaseUser);
               }
             });
@@ -91,48 +131,64 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _esignInButton() {
-    return OutlineButton(
-      splashColor: Colors.grey,
-      onPressed: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (BuildContext context) => new Email()));
-      },
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-      highlightElevation: 0,
-      borderSide: BorderSide(color: Colors.grey),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Icon(Icons.email, size: 35.0),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Text(
-                'Sign in with Email',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.grey,
+  Widget _asignInButton() {
+    return DecoratedBox(
+        decoration: ShapeDecoration(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)), color: Colors.black),
+        child: Theme(
+            data: Theme.of(context).copyWith(buttonTheme: ButtonTheme.of(context).copyWith(materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)),
+            child: OutlineButton(
+              splashColor: Colors.grey,
+              onPressed: () async {
+                signInWithApple().then((e) {
+                  print("Done with $e");
+
+                  if (e == '') {
+                    existsInDatabase().then((isFound) {
+                      print("Is found $isFound");
+                      if (!isFound) {
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => new InputForm()));
+                      } else {
+                        store.dispatch(getFirebaseUser);
+                      }
+                    });
+                  }
+
+                  setState(() {
+                    _errorMessage = e;
+                  });
+                });
+              },
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+              highlightElevation: 0,
+              borderSide: BorderSide(color: Colors.grey),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image(image: AssetImage("assets/apple_logo.jpg"), height: 35.0),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Text(
+                        'Sign in with Apple',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            )
-          ],
-        ),
-      ),
-    );
+            )));
   }
 
   Widget showErrorMessage() {
     if (_errorMessage.length > 0 && _errorMessage != null) {
       return new Text(
         _errorMessage,
-        style: TextStyle(
-            fontSize: 13.0,
-            color: Colors.red,
-            height: 1.0,
-            fontWeight: FontWeight.w300),
+        style: TextStyle(fontSize: 13.0, color: Colors.red, height: 1.0, fontWeight: FontWeight.w300),
       );
     } else {
       return new Container(
