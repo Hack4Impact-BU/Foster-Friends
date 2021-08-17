@@ -24,18 +24,9 @@ class PetState extends State<PetProfile> {
 
   List<bool> _isSelected = [false];
 
-  TextStyle labelStyle = TextStyle(
-      color: Colors.red,
-      fontWeight: FontWeight.bold,
-      fontFamily: 'roboto',
-      fontSize: 15.0,
-      letterSpacing: 1.5);
+  TextStyle labelStyle = TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontFamily: 'roboto', fontSize: 15.0, letterSpacing: 1.5);
 
-  TextStyle dataStyle = TextStyle(
-      color: Colors.black,
-      fontFamily: 'roboto',
-      fontSize: 15.0,
-      letterSpacing: 1.5);
+  TextStyle dataStyle = TextStyle(color: Colors.black, fontFamily: 'roboto', fontSize: 15.0, letterSpacing: 1.5);
 
   @override
   void initState() {
@@ -55,13 +46,9 @@ class PetState extends State<PetProfile> {
   @override
   void dispose() async {
     super.dispose();
-    if (store.state.user == null ||
-        (store.state.user != null &&
-            store.state.userData['type'] != 'organization')) {
-      await toggleFavPet(data['id'], _isSelected[0]).then((value) => store
-          .dispatch(getFirebaseUser)
-          .then((value) =>
-              store.dispatch(new UpdateQueryAction(store.state.query))));
+    if (store.state.user == null || (store.state.user != null && store.state.userData['type'] != 'organization')) {
+      await toggleFavPet(data['id'], _isSelected[0])
+          .then((value) => store.dispatch(getFirebaseUser).then((value) => store.dispatch(new UpdateQueryAction(store.state.query))));
     }
   }
 
@@ -76,13 +63,7 @@ class PetState extends State<PetProfile> {
         child: CircularProgressIndicator(),
       );
     } else {
-      return Card(
-          child: ListView(shrinkWrap: true, children: <Widget>[
-        _header(),
-        _summary(),
-        Divider(color: Colors.grey),
-        _details()
-      ]));
+      return Card(child: ListView(shrinkWrap: true, children: <Widget>[_header(), _summary(), Divider(color: Colors.grey), _details()]));
     }
   }
 
@@ -106,17 +87,11 @@ class PetState extends State<PetProfile> {
   Widget _summary() {
     return Column(
       children: <Widget>[
-        Image.network(data['image'],
-            height: 200, width: 400, fit: BoxFit.cover),
+        Image.network(data['image'], height: 200, width: 400, fit: BoxFit.cover),
         Container(
           padding: EdgeInsets.only(top: 30),
           alignment: Alignment.center,
-          child: Text(data['name'],
-              style: TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'roboto',
-                  fontSize: 40.0,
-                  letterSpacing: 1.5)),
+          child: Text(data['name'], style: TextStyle(color: Colors.black, fontFamily: 'roboto', fontSize: 40.0, letterSpacing: 1.5)),
         ),
         Container(
           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -133,9 +108,7 @@ class PetState extends State<PetProfile> {
               color: Theme.of(context).buttonColor,
               onPressed: () {
                 Navigator.pop(context);
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) => EditPetProfile(data));
+                showDialog(context: context, builder: (BuildContext context) => EditPetProfile(data));
               }),
         ),
       ],
@@ -153,62 +126,40 @@ class PetState extends State<PetProfile> {
     return Column(children: <Widget>[
       Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Text("Pet Type", style: labelStyle),
-            Text(data['type'], style: dataStyle)
-          ]),
+          children: <Widget>[Text("Pet Type", style: labelStyle), Text(data['type'], style: dataStyle)]),
+      SizedBox(height: 20),
+      Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
+        Text(
+          "Breed",
+          style: labelStyle,
+        ),
+        Text(data['breed'].toString(), style: dataStyle)
+      ]),
       SizedBox(height: 20),
       Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Text(
-              "Breed",
-              style: labelStyle,
-            ),
-            Text(data['breed'].toString(), style: dataStyle)
-          ]),
+          children: <Widget>[Text("Organization", style: labelStyle), Text(petUser['name'], style: dataStyle)]),
       SizedBox(height: 20),
       Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Text("Organization", style: labelStyle),
-            Text(petUser['name'], style: dataStyle)
-          ]),
+          children: <Widget>[Text("Activity Level", style: labelStyle), Text(data['activityLevel'], style: dataStyle)]),
       SizedBox(height: 20),
       Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Text("Activity Level", style: labelStyle),
-            Text(data['activityLevel'], style: dataStyle)
-          ]),
+          children: <Widget>[Text("Gender", style: labelStyle), Text(data['sex'], style: dataStyle)]),
       SizedBox(height: 20),
       Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Text("Gender", style: labelStyle),
-            Text(data['sex'], style: dataStyle)
-          ]),
+          children: <Widget>[Text("Age", style: labelStyle), Text(data['age'].toString(), style: dataStyle)]),
       SizedBox(height: 20),
       Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Text("Age", style: labelStyle),
-            Text(data['age'].toString(), style: dataStyle)
-          ]),
-      SizedBox(height: 20),
-      Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Text("Organization Address", style: labelStyle),
-            Text(petUser['address'], style: dataStyle)
-          ]),
+          children: <Widget>[Text("Organization Address", style: labelStyle), Text(petUser['address'], style: dataStyle)]),
     ]);
   }
 
   Widget _showFavorite() {
-    if (store.state.user == null ||
-        (store.state.user != null &&
-            store.state.userData['type'] != 'organization')) {
+    if (store.state.user == null || (store.state.user != null && store.state.userData['type'] != 'organization')) {
       return ToggleButtons(
         children: [Icon(Icons.favorite)],
         isSelected: _isSelected,
@@ -220,9 +171,7 @@ class PetState extends State<PetProfile> {
         splashColor: Colors.white,
         onPressed: (int index) {
           if (store.state.user == null) {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) => _notSignedIn());
+            showDialog(context: context, builder: (BuildContext context) => _notSignedIn());
           } else {
             setState(() {
               _isSelected[index] = !_isSelected[index];
@@ -255,9 +204,7 @@ class PetState extends State<PetProfile> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text("OK",
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w800))),
+              child: Text("OK", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800))),
         ],
       ),
     );

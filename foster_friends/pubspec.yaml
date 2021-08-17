@@ -14,7 +14,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.2.0 <3.0.0"
+  sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -30,10 +30,12 @@ dependencies:
 
   # Add the dependencies for the Firebase products you want to use in your app
   # For example, to use Firebase Authentication and Cloud Firestore
-  firebase_auth: ^0.14.0+5
+  firebase_auth: ^0.15.3+1
   firebase_storage: ^3.0.10
   cloud_firestore: ^0.13.2+1
   google_sign_in: ^4.1.1
+  sign_in_with_apple: ^2.5.4
+  crypto: ^2.1.5
   geolocator: ^5.3.1
   geoflutterfire: ^2.1.0
   location: ^2.0.0
@@ -63,6 +65,7 @@ flutter:
   assets:
     - dog.png
     - google_logo.png
+    - apple_logo.jpg
     - logo.png
 
 
