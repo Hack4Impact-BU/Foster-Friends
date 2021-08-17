@@ -37,9 +37,9 @@ class SearchFormState extends State<SearchForm> {
   List<String> _petTypes = ['', 'Dog', 'Cat', 'Bird'];
   List<String> _dogBreed = [
     '',
-    'Labrador Retrievers',
-    'German Shepherd Dogs',
-    'Golden Retrievers'
+    'Labrador Retriever',
+    'German Shepherd Dog',
+    'Golden Retriever'
   ];
   List<String> _catBreed = ['', 'Maine Coon', 'Bengal', 'Siamese'];
   List<String> _birdBreed = [''];
@@ -67,7 +67,8 @@ class SearchFormState extends State<SearchForm> {
     19
   ];
 
-  List<String> _radiusOptions = [''] + List.generate(10, (index) => ((index+1)*5).toString());
+  List<String> _radiusOptions =
+      [''] + List.generate(10, (index) => ((index + 1) * 5).toString());
 
   static List<String> _breedType = [];
 
@@ -101,7 +102,8 @@ class SearchFormState extends State<SearchForm> {
       'activityLevel': _selectedActivityLevel,
       'minAge': minAge,
       'maxAge': maxAge,
-      'distance': (_radius == '' || _radius==null) ? null : double.parse(_radius)
+      'distance':
+          (_radius == '' || _radius == null) ? null : double.parse(_radius)
     };
     store.dispatch(new UpdateQueryAction([]));
     store.dispatch(makeQuery(store, params));
@@ -268,8 +270,7 @@ class SearchFormState extends State<SearchForm> {
                       }).toList(),
                     ),
                     DropdownButton(
-                      hint:
-                          Text('Within'), // Not necessary for Option 1
+                      hint: Text('Within'), // Not necessary for Option 1
                       value: _radius,
                       onChanged: (newValue) {
                         setState(() {
